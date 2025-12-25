@@ -39,6 +39,10 @@ android {
     }
 }
 
+dependencies {
+    implementation(files("/libs/main.jar"))
+}
+
 flutter {
     source = "../.."
 }

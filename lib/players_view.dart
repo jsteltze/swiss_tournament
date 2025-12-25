@@ -24,26 +24,31 @@ class PlayersView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Players: $playerCount',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          Stack(
-            alignment: Alignment.centerLeft,
-            children: [
-              const Icon(Icons.circle_outlined, size: 14),
-              Text(' / ', style: Theme.of(context).textTheme.titleMedium),
-              Text(
-                '     ${averageRating.toStringAsFixed(0)}',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
+          if (tournament.players.isNotEmpty)
+            Column(
+              children: [
+                Text(
+                  'Players: $playerCount',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    const Icon(Icons.circle_outlined, size: 14),
+                    Text(' / ', style: Theme.of(context).textTheme.titleMedium),
+                    Text(
+                      '     ${averageRating.toStringAsFixed(0)}',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           Expanded(
             child: tournament.players.isEmpty
-                ? const Text('No players added yet.')
+                ? const Center(child: Text('No players added yet.'))
                 : ListView.builder(
                     itemCount: tournament.players.length,
                     itemBuilder: (context, index) {

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'data/tournament.dart';
 import 'players_view.dart';
+import 'rounds_view.dart';
 
 class TournamentDetailsPage extends StatefulWidget {
   final Tournament tournament;
@@ -127,19 +128,15 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
   Widget build(BuildContext context) {
     Widget bodyContent;
     switch (_selectedIndex) {
-      case 0:
-        bodyContent = PlayersView(tournament: widget.tournament);
-        break;
       case 1:
-        bodyContent = const Center(
-          child: Text('Rounds will be displayed here'),
-        );
+        bodyContent = RoundsView(tournament: widget.tournament);
         break;
       case 2:
         bodyContent = const Center(
           child: Text('Ranking will be displayed here'),
         );
         break;
+      case 0:
       default:
         bodyContent = PlayersView(tournament: widget.tournament);
     }
@@ -152,7 +149,9 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
             Text(widget.tournament.title),
             Text(
               'Rounds: ${widget.tournament.numberOfRounds}',
-              style: Theme.of(context).textTheme.titleSmall,
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
           ],
         ),
