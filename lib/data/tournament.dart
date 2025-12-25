@@ -30,6 +30,7 @@ class Tournament {
     'title': title,
     'numberOfRounds': numberOfRounds,
     'players': players.map((p) => p.toJson()).toList(),
+    'rounds': rounds.map((r) => r.toJson()).toList(),
   };
 
   factory Tournament.fromJson(Map<String, dynamic> json) {
@@ -38,6 +39,9 @@ class Tournament {
       numberOfRounds: json['numberOfRounds'],
       players: (json['players'] as List<dynamic>?)
           ?.map((e) => Player.fromJson(e))
+          .toList(),
+      rounds: (json['rounds'] as List<dynamic>?)
+          ?.map((e) => Round.fromJson(e))
           .toList(),
     );
   }
