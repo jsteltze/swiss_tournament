@@ -1,9 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:jni/jni.dart';
+import 'package:swiss_tournament/single_round_view.dart';
 
 import 'data/tournament.dart';
-import 'java.g.dart';
 
 // stores ExpansionPanel state information
 class RoundsPanel {
@@ -20,36 +18,24 @@ class RoundsPanel {
 
 List<RoundsPanel> generateItems(Tournament tournament) {
   int numberOfItems = 1;
-  var playerRatings = tournament.players
-      .map((player) => player.rating)
-      .toList();
-  JIntArray arr = JIntArray(playerRatings.length);
-  arr.setRange(0, playerRatings.length, playerRatings);
   return List<RoundsPanel>.generate(numberOfItems, (int index) {
     return RoundsPanel(
       headerValue: 'Round ${index + 1}',
-      expandedValue: ElevatedButton.icon(
-        onPressed: () {
-          var response = Sample.initTournament(
-            Jni.androidActivity(PlatformDispatcher.instance.engineId!),
-            JString.fromString("xxx"),
-            arr,
-            tournament.numberOfRounds,
-          );
-          print(response?.toDartString());
-        },
-        icon: Icon(Icons.play_arrow),
-        label: Text('Start Round ${index + 1}'),
-      ),
+      expandedValue: SingleRound(tournament: tournament, roundIndex: index),
       isExpanded: index == numberOfItems - 1,
     );
   });
 }
 
 class RoundsView extends StatefulWidget {
-  const RoundsView({super.key, required this.tournament});
-
   final Tournament tournament;
+  final VoidCallback? onTournamentChanged;
+
+  const RoundsView({
+    super.key,
+    required this.tournament,
+    this.onTournamentChanged,
+  });
 
   @override
   State<RoundsView> createState() => _RoundsViewState();
@@ -74,20 +60,7 @@ class _RoundsViewState extends State<RoundsView> {
           headerBuilder: (BuildContext context, bool isExpanded) {
             return ListTile(title: Text(item.headerValue));
           },
-          body: ListTile(
-            title: item.expandedValue,
-            subtitle: const Text(
-              'To delete this panel, tap the trash can icon',
-            ),
-            trailing: const Icon(Icons.delete),
-            onTap: () {
-              setState(() {
-                data.removeWhere(
-                  (RoundsPanel currentItem) => item == currentItem,
-                );
-              });
-            },
-          ),
+          body: item.expandedValue,
           isExpanded: item.isExpanded,
         );
       }).toList(),
