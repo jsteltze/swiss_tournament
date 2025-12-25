@@ -1,15 +1,19 @@
 import 'player.dart';
+import 'round.dart';
 
 class Tournament {
   String title;
   int numberOfRounds;
   final List<Player> players;
+  final List<Round> rounds;
 
   Tournament({
     required this.title,
     required this.numberOfRounds,
     List<Player>? players,
-  }) : players = players ?? [] {
+    List<Round>? rounds,
+  }) : players = players ?? [],
+       rounds = rounds ?? [] {
     _sortPlayers();
   }
 
