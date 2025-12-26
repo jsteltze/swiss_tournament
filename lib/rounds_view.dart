@@ -16,12 +16,19 @@ class RoundsPanel {
   bool isExpanded;
 }
 
-List<RoundsPanel> generateItems(Tournament tournament) {
+List<RoundsPanel> generateItems(
+  Tournament tournament,
+  VoidCallback? onTournamentChanged,
+) {
   int numberOfItems = 1;
   return List<RoundsPanel>.generate(numberOfItems, (int index) {
     return RoundsPanel(
       headerValue: 'Round ${index + 1}',
-      expandedValue: SingleRound(tournament: tournament, roundIndex: index),
+      expandedValue: SingleRound(
+        tournament: tournament,
+        roundIndex: index,
+        onTournamentChanged: onTournamentChanged,
+      ),
       isExpanded: index == numberOfItems - 1,
     );
   });
@@ -48,7 +55,10 @@ class _RoundsViewState extends State<RoundsView> {
   }
 
   Widget _buildPanel() {
-    final List<RoundsPanel> data = generateItems(widget.tournament);
+    final List<RoundsPanel> data = generateItems(
+      widget.tournament,
+      widget.onTournamentChanged,
+    );
     return ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
