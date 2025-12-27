@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'package:sqflite/sqflite.dart';
+
 import 'package:path/path.dart';
-import 'tournament.dart';
+import 'package:sqflite/sqflite.dart';
+
 import 'player.dart';
 import 'round.dart';
+import 'tournament.dart';
 
 class TournamentStorage {
   static Database? _database;
@@ -41,7 +43,8 @@ class TournamentStorage {
     final List<Map<String, dynamic>> maps = await db.query(_tableName);
 
     return List.generate(maps.length, (i) {
-      return Tournament(
+      var t = Tournament(
+        id: maps[i]['id'],
         title: maps[i]['title'],
         numberOfRounds: maps[i]['numberOfRounds'],
         players: (jsonDecode(maps[i]['players']) as List)
@@ -49,10 +52,12 @@ class TournamentStorage {
             .toList(),
         rounds: maps[i]['rounds'] != null
             ? (jsonDecode(maps[i]['rounds']) as List)
-                .map((e) => Round.fromJson(e))
-                .toList()
+                  .map((e) => Round.fromJson(e))
+                  .toList()
             : [],
       );
+      t.update = () => updateTournament(t);
+      return t;
     });
   }
 
@@ -69,5 +74,26 @@ class TournamentStorage {
         });
       }
     });
+  }
+
+  Future<void> updateTournament(Tournament tournament) async {
+    final db = await database;
+    final values = {
+      'title': tournament.title,
+      'numberOfRounds': tournament.numberOfRounds,
+      'players': jsonEncode(tournament.players.map((e) => e.toJson()).toList()),
+      'rounds': jsonEncode(tournament.rounds.map((e) => e.toJson()).toList()),
+    };
+
+    if (tournament.id != null) {
+      await db.update(
+        _tableName,
+        values,
+        where: 'id = ?',
+        whereArgs: [tournament.id],
+      );
+    } else {
+      tournament.id = await db.insert(_tableName, values);
+    }
   }
 }

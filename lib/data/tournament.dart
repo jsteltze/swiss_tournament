@@ -2,18 +2,23 @@ import 'player.dart';
 import 'round.dart';
 
 class Tournament {
+  int? id;
   String title;
   int numberOfRounds;
   final List<Player> players;
   final List<Round> rounds;
+  Function update;
 
   Tournament({
+    this.id,
     required this.title,
     required this.numberOfRounds,
     List<Player>? players,
     List<Round>? rounds,
+    Function? update,
   }) : players = players ?? [],
-       rounds = rounds ?? [] {
+       rounds = rounds ?? [],
+       update = update ?? (() {}) {
     _sortPlayers();
   }
 
@@ -27,6 +32,7 @@ class Tournament {
   }
 
   Map<String, dynamic> toJson() => {
+    'id': id,
     'title': title,
     'numberOfRounds': numberOfRounds,
     'players': players.map((p) => p.toJson()).toList(),
@@ -35,6 +41,7 @@ class Tournament {
 
   factory Tournament.fromJson(Map<String, dynamic> json) {
     return Tournament(
+      id: json['id'],
       title: json['title'],
       numberOfRounds: json['numberOfRounds'],
       players: (json['players'] as List<dynamic>?)

@@ -125,7 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
       MaterialPageRoute(
         builder: (context) => TournamentDetailsPage(
           tournament: tournament,
-          onTournamentChanged: _saveTournaments,
           onDeleteTournament: () => _deleteTournament(tournament),
         ),
       ),

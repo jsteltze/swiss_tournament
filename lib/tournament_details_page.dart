@@ -7,13 +7,11 @@ import 'rounds_view.dart';
 
 class TournamentDetailsPage extends StatefulWidget {
   final Tournament tournament;
-  final VoidCallback? onTournamentChanged;
   final VoidCallback? onDeleteTournament;
 
   const TournamentDetailsPage({
     super.key,
     required this.tournament,
-    this.onTournamentChanged,
     this.onDeleteTournament,
   });
 
@@ -33,7 +31,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
   void _addPlayer() {
     showAddPlayerDialog(context, widget.tournament, () {
       setState(() {});
-      widget.onTournamentChanged?.call();
+      widget.tournament.update();
     });
   }
 
@@ -83,7 +81,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                       roundsController.text,
                     );
                   });
-                  widget.onTournamentChanged?.call();
+                  widget.tournament.update();
                   Navigator.pop(context);
                 }
               },
