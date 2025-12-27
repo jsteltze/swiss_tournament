@@ -38,26 +38,30 @@ class TournamentStorage {
     );
   }
 
+  Tournament parseTournament(Map<String, dynamic> json) {
+    var t = Tournament(
+      id: json['id'],
+      title: json['title'],
+      numberOfRounds: json['numberOfRounds'],
+      players: (jsonDecode(json['players']) as List)
+          .map((e) => Player.fromJson(e))
+          .toList(),
+      rounds: json['rounds'] != null
+          ? (jsonDecode(json['rounds']) as List)
+                .map((e) => Round.fromJson(e))
+                .toList()
+          : [],
+    );
+    t.update = () => updateTournament(t);
+    return t;
+  }
+
   Future<List<Tournament>> loadTournaments() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(_tableName);
 
     return List.generate(maps.length, (i) {
-      var t = Tournament(
-        id: maps[i]['id'],
-        title: maps[i]['title'],
-        numberOfRounds: maps[i]['numberOfRounds'],
-        players: (jsonDecode(maps[i]['players']) as List)
-            .map((e) => Player.fromJson(e))
-            .toList(),
-        rounds: maps[i]['rounds'] != null
-            ? (jsonDecode(maps[i]['rounds']) as List)
-                  .map((e) => Round.fromJson(e))
-                  .toList()
-            : [],
-      );
-      t.update = () => updateTournament(t);
-      return t;
+      return parseTournament(maps[i]);
     });
   }
 
@@ -74,6 +78,19 @@ class TournamentStorage {
         });
       }
     });
+  }
+
+  Future<Tournament?> getTournament(int id) async {
+    final db = await database;
+    List<Map<String, dynamic>> maps = await db.query(
+      _tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (maps.isNotEmpty) {
+      return parseTournament(maps[0]);
+    }
+    return null;
   }
 
   Future<void> updateTournament(Tournament tournament) async {

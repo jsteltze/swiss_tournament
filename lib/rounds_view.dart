@@ -2,11 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:jni/jni.dart';
-import 'package:swiss_tournament/single_round_view.dart';
+import 'package:swiss_tournament/encounters_view.dart';
 
 import 'data/encounter.dart';
 import 'data/round.dart';
 import 'data/tournament.dart';
+import 'data/tournament_storage.dart';
 import 'java.g.dart';
 
 // stores ExpansionPanel state information
@@ -30,11 +31,7 @@ RoundsPanel generateItem(
   int numberOfItems = tournament.rounds.length;
   return RoundsPanel(
     headerValue: 'Round ${index + 1}',
-    expandedValue: SingleRound(
-      tournament: tournament,
-      roundIndex: index,
-      updateParent: updateParent,
-    ),
+    expandedValue: EncountersView(tournament: tournament, roundIndex: index),
     isExpanded: index == numberOfItems - 1,
   );
 }
@@ -50,6 +47,7 @@ class RoundsView extends StatefulWidget {
 
 class _RoundsViewState extends State<RoundsView> {
   final List<RoundsPanel> _data = [];
+  final TournamentStorage _storage = TournamentStorage();
 
   @override
   void initState() {
@@ -103,7 +101,52 @@ class _RoundsViewState extends State<RoundsView> {
     );
   }
 
-  void startNewRound() {
+  void notifyUnfinishedEncounters(List<Encounter> encounters) {
+    var unfinished = encounters.where((e) => e.result.isEmpty).toList();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Missing results'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text(
+                  'Cannot proceed to the next round because there are missing results:',
+                ),
+                const SizedBox(height: 10),
+                ...unfinished.map(
+                  (e) => Text(
+                    '${widget.tournament.players[e.playerIdW].name} vs ${widget.tournament.players[e.playerIdB].name}',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void startNewRound() async {
+    var currentDbState = await _storage.getTournament(widget.tournament.id!);
+    if (currentDbState == null) {
+      print('no such tournament found!');
+      return;
+    }
+    if (currentDbState.rounds.isNotEmpty &&
+        currentDbState.rounds.last.encounters.any((e) => e.result.isEmpty)) {
+      notifyUnfinishedEncounters(currentDbState.rounds.last.encounters);
+      return;
+    }
+
     var playerRatings = widget.tournament.players
         .map((player) => player.rating)
         .toList();
@@ -116,7 +159,9 @@ class _RoundsViewState extends State<RoundsView> {
       arr,
       widget.tournament.numberOfRounds,
     );
-    parseResponse(response!);
+    var round = parseResponse(response!);
+    widget.tournament.rounds.add(round);
+    widget.tournament.update();
     setState(() {
       for (var item in _data) {
         item.isExpanded = false;
@@ -131,7 +176,7 @@ class _RoundsViewState extends State<RoundsView> {
     });
   }
 
-  void parseResponse(JString response) {
+  Round parseResponse(JString response) {
     var respStr = response.toDartString();
     print(respStr);
     var lines = respStr.split('\n');
@@ -151,6 +196,6 @@ class _RoundsViewState extends State<RoundsView> {
       );
     }
     response.release();
-    widget.tournament.rounds.add(round);
+    return round;
   }
 }
