@@ -2,38 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
-class SingleEncounterView extends StatefulWidget {
+class SingleEncounterView extends StatelessWidget {
   final Encounter encounter;
   final Tournament tournament;
+  final updateParent;
 
   const SingleEncounterView({
     super.key,
     required this.encounter,
     required this.tournament,
+    required this.updateParent,
   });
 
   @override
-  State<SingleEncounterView> createState() => _SingleEncounterViewState();
-}
-
-class _SingleEncounterViewState extends State<SingleEncounterView> {
-  @override
   Widget build(BuildContext context) {
     return Material(
-      color: widget.encounter.result.isNotEmpty
+      color: encounter.result.isNotEmpty
           ? Theme.of(context).colorScheme.primary.withAlpha(10)
           : Colors.transparent,
       child: InkWell(
-        onTap: () => _showResultDialog(widget.encounter),
+        onTap: () => _showResultDialog(encounter, context),
         child: Row(
           children: <Widget>[
             Expanded(
               child: ListTile(
-                title: Text(
-                  widget.tournament.players[widget.encounter.playerIdW].name,
-                ),
+                title: Text(tournament.players[encounter.playerIdW].name),
                 subtitle: Text(
-                  '#${widget.encounter.playerIdW + 1} Rating: ${widget.tournament.players[widget.encounter.playerIdW].rating}',
+                  '#${encounter.playerIdW + 1} Rating: ${tournament.players[encounter.playerIdW].rating}',
                 ),
                 leading: const Icon(Icons.person),
               ),
@@ -41,20 +36,14 @@ class _SingleEncounterViewState extends State<SingleEncounterView> {
             SizedBox(
               width: 50,
               child: Center(
-                child: Text(
-                  widget.encounter.result.isEmpty
-                      ? 'vs'
-                      : widget.encounter.result,
-                ),
+                child: Text(encounter.result.isEmpty ? 'vs' : encounter.result),
               ),
             ),
             Expanded(
               child: ListTile(
-                title: Text(
-                  widget.tournament.players[widget.encounter.playerIdB].name,
-                ),
+                title: Text(tournament.players[encounter.playerIdB].name),
                 subtitle: Text(
-                  '#${widget.encounter.playerIdB + 1} Rating: ${widget.tournament.players[widget.encounter.playerIdB].rating}',
+                  '#${encounter.playerIdB + 1} Rating: ${tournament.players[encounter.playerIdB].rating}',
                 ),
                 trailing: const Icon(Icons.person),
               ),
@@ -65,7 +54,7 @@ class _SingleEncounterViewState extends State<SingleEncounterView> {
     );
   }
 
-  void _showResultDialog(Encounter encounter) {
+  void _showResultDialog(Encounter encounter, BuildContext context) {
     String? selectedResult =
         ["1-0", "0-1", "0.5-0.5"].contains(encounter.result)
         ? encounter.result
@@ -83,7 +72,7 @@ class _SingleEncounterViewState extends State<SingleEncounterView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Enter result for ${widget.tournament.players[encounter.playerIdW].name} vs ${widget.tournament.players[encounter.playerIdB].name}",
+                    "Enter result for ${tournament.players[encounter.playerIdW].name} vs ${tournament.players[encounter.playerIdB].name}",
                   ),
                   const SizedBox(height: 20),
                   DropdownButton<String>(
@@ -116,12 +105,9 @@ class _SingleEncounterViewState extends State<SingleEncounterView> {
                 TextButton(
                   child: const Text('Save'),
                   onPressed: () {
-                    if (selectedResult != null) {
-                      setState(() {
-                        encounter.result = selectedResult!;
-                      });
-                    }
+                    encounter.result = selectedResult!;
                     Navigator.of(context).pop();
+                    updateParent();
                   },
                 ),
               ],

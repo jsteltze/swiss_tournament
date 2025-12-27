@@ -3,7 +3,7 @@ import 'package:swiss_tournament/data/tournament.dart';
 
 import 'single_encounter_view.dart';
 
-class EncountersView extends StatelessWidget {
+class EncountersView extends StatefulWidget {
   final Tournament tournament;
   final int roundIndex;
 
@@ -14,8 +14,13 @@ class EncountersView extends StatelessWidget {
   });
 
   @override
+  State<EncountersView> createState() => _EncountersViewState();
+}
+
+class _EncountersViewState extends State<EncountersView> {
+  @override
   Widget build(BuildContext context) {
-    var encounters = tournament.rounds[roundIndex].encounters;
+    var encounters = widget.tournament.rounds[widget.roundIndex].encounters;
     var pairings = encounters.length;
     var open = encounters.where((e) => e.result == "").length;
 
@@ -23,15 +28,11 @@ class EncountersView extends StatelessWidget {
       children: [
         Text("Pairings: ${pairings - open}/$pairings"),
         ...encounters.map(
-          (encounter) =>
-              SingleEncounterView(encounter: encounter, tournament: tournament),
-        ),
-        ElevatedButton.icon(
-          icon: Icon(Icons.play_arrow),
-          label: Text('Start Round ${roundIndex + 2}'),
-          onPressed: encounters.every((e) => e.result.isNotEmpty)
-              ? () => {}
-              : null,
+          (encounter) => SingleEncounterView(
+            encounter: encounter,
+            tournament: widget.tournament,
+            updateParent: () => setState(() {}),
+          ),
         ),
       ],
     );

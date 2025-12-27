@@ -1,7 +1,13 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:jni/jni.dart';
 import 'package:swiss_tournament/single_round_view.dart';
 
+import 'data/encounter.dart';
+import 'data/round.dart';
 import 'data/tournament.dart';
+import 'java.g.dart';
 
 // stores ExpansionPanel state information
 class RoundsPanel {
@@ -16,64 +22,135 @@ class RoundsPanel {
   bool isExpanded;
 }
 
-List<RoundsPanel> generateItems(
+RoundsPanel generateItem(
   Tournament tournament,
-  VoidCallback? onTournamentChanged,
+  int index,
+  Function updateParent,
 ) {
-  int numberOfItems = 1;
-  return List<RoundsPanel>.generate(numberOfItems, (int index) {
-    return RoundsPanel(
-      headerValue: 'Round ${index + 1}',
-      expandedValue: SingleRound(
-        tournament: tournament,
-        roundIndex: index,
-        onTournamentChanged: onTournamentChanged,
-      ),
-      isExpanded: index == numberOfItems - 1,
-    );
-  });
+  int numberOfItems = tournament.rounds.length;
+  return RoundsPanel(
+    headerValue: 'Round ${index + 1}',
+    expandedValue: SingleRound(
+      tournament: tournament,
+      roundIndex: index,
+      updateParent: updateParent,
+    ),
+    isExpanded: index == numberOfItems - 1,
+  );
 }
 
 class RoundsView extends StatefulWidget {
   final Tournament tournament;
-  final VoidCallback? onTournamentChanged;
 
-  const RoundsView({
-    super.key,
-    required this.tournament,
-    this.onTournamentChanged,
-  });
+  const RoundsView({super.key, required this.tournament});
 
   @override
   State<RoundsView> createState() => _RoundsViewState();
 }
 
 class _RoundsViewState extends State<RoundsView> {
+  final List<RoundsPanel> _data = [];
+
+  @override
+  void initState() {
+    super.initState();
+    for (var i = 0; i < widget.tournament.rounds.length; i++) {
+      _data.add(generateItem(widget.tournament, i, () => {setState(() {})}));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(child: Container(child: _buildPanel()));
   }
 
   Widget _buildPanel() {
-    final List<RoundsPanel> data = generateItems(
-      widget.tournament,
-      widget.onTournamentChanged,
-    );
-    return ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
-        setState(() {
-          data[index].isExpanded = isExpanded;
-        });
-      },
-      children: data.map<ExpansionPanel>((RoundsPanel item) {
-        return ExpansionPanel(
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return ListTile(title: Text(item.headerValue));
+    return Column(
+      children: [
+        ExpansionPanelList(
+          expansionCallback: (int index, bool isExpanded) {
+            setState(() {
+              _data[index].isExpanded = isExpanded;
+            });
           },
-          body: item.expandedValue,
-          isExpanded: item.isExpanded,
-        );
-      }).toList(),
+          children: _data.map<ExpansionPanel>((RoundsPanel item) {
+            return ExpansionPanel(
+              headerBuilder: (BuildContext context, bool isExpanded) {
+                return ListTile(title: Text(item.headerValue));
+              },
+              body: item.expandedValue,
+              isExpanded: item.isExpanded,
+            );
+          }).toList(),
+        ),
+        ElevatedButton.icon(
+          icon: Icon(
+            Icons.play_arrow,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+          label: Text(
+            'Start Round ${widget.tournament.rounds.length + 1}',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
+          onPressed: startNewRound,
+        ),
+      ],
     );
+  }
+
+  void startNewRound() {
+    var playerRatings = widget.tournament.players
+        .map((player) => player.rating)
+        .toList();
+    JIntArray arr = JIntArray(playerRatings.length);
+    arr.setRange(0, playerRatings.length, playerRatings);
+
+    var response = Sample.initTournament(
+      Jni.androidActivity(PlatformDispatcher.instance.engineId!),
+      JString.fromString("xxx"),
+      arr,
+      widget.tournament.numberOfRounds,
+    );
+    parseResponse(response!);
+    setState(() {
+      for (var item in _data) {
+        item.isExpanded = false;
+      }
+      _data.add(
+        generateItem(
+          widget.tournament,
+          widget.tournament.rounds.length - 1,
+          () => {setState(() {})},
+        ),
+      );
+    });
+  }
+
+  void parseResponse(JString response) {
+    var respStr = response.toDartString();
+    print(respStr);
+    var lines = respStr.split('\n');
+    var round = Round(roundNum: widget.tournament.rounds.length + 1);
+    for (var i = 1; i < lines.length; i++) {
+      var line = lines[i];
+      if (line.isEmpty) {
+        continue;
+      }
+      print('line=$line');
+      var parts = line.split(' ');
+      round.encounters.add(
+        Encounter(
+          playerIdW: int.parse(parts[0]) - 1,
+          playerIdB: int.parse(parts[1]) - 1,
+        ),
+      );
+    }
+    response.release();
+    widget.tournament.rounds.add(round);
   }
 }
