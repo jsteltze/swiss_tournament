@@ -18,6 +18,8 @@ class EncountersView extends StatefulWidget {
 }
 
 class _EncountersViewState extends State<EncountersView> {
+  bool _filterOpen = false;
+
   @override
   Widget build(BuildContext context) {
     var encounters = widget.tournament.rounds[widget.roundIndex].encounters;
@@ -26,14 +28,31 @@ class _EncountersViewState extends State<EncountersView> {
 
     return Column(
       children: [
-        Text("Pairings: ${pairings - open}/$pairings"),
-        ...encounters.map(
-          (encounter) => SingleEncounterView(
-            encounter: encounter,
-            tournament: widget.tournament,
-            updateParent: () => setState(() {}),
-          ),
+        Text(
+          "Pairings: ${pairings - open}/$pairings",
+          style: Theme.of(context).textTheme.bodySmall,
         ),
+        LinearProgressIndicator(value: 1.0 - open / pairings, minHeight: 5),
+        const SizedBox(height: 10),
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          value: _filterOpen,
+          title: Text('filter open ($open)'),
+          onChanged: (checked) => {
+            setState(() {
+              _filterOpen = checked!;
+            }),
+          },
+        ),
+        ...encounters
+            .where((e) => _filterOpen ? e.result == "" : true)
+            .map(
+              (encounter) => SingleEncounterView(
+                encounter: encounter,
+                tournament: widget.tournament,
+                updateParent: () => setState(() {}),
+              ),
+            ),
       ],
     );
   }
