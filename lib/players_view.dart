@@ -12,11 +12,17 @@ class PlayersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int playerCount = tournament.players.length;
+    final int playersWithRating = tournament.players
+        .where((p) => p.rating > 0)
+        .length;
     double averageRating = 0;
     if (playerCount > 0) {
       averageRating =
-          tournament.players.map((p) => p.rating).fold(0, (a, b) => a + b) /
-          playerCount;
+          tournament.players
+              .where((p) => p.rating > 0)
+              .map((p) => p.rating)
+              .fold(0, (a, b) => a + b) /
+          playersWithRating;
     }
 
     return Column(
@@ -70,7 +76,9 @@ class PlayersView extends StatelessWidget {
                     final player = tournament.players[index];
                     return ListTile(
                       title: Text(player.name),
-                      subtitle: Text('#${index + 1} Rating: ${player.rating}'),
+                      subtitle: Text(
+                        '#${index + 1} Rating: ${player.rating > 0 ? player.rating : 'N/A'}',
+                      ),
                       leading: const Icon(Icons.person),
                     );
                   },
@@ -117,12 +125,15 @@ void showAddPlayerDialog(
           ),
           TextButton(
             onPressed: () {
-              if (nameController.text.isNotEmpty &&
-                  ratingController.text.isNotEmpty) {
+              if (nameController.text.isNotEmpty) {
                 tournament.addPlayer(
                   Player(
                     name: nameController.text,
-                    rating: int.parse(ratingController.text),
+                    rating: int.parse(
+                      ratingController.text.isEmpty
+                          ? '0'
+                          : ratingController.text,
+                    ),
                   ),
                 );
                 onPlayerAdded();
