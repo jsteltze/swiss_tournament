@@ -15,11 +15,13 @@ class RoundsPanel {
   RoundsPanel({
     required this.expandedValue,
     required this.headerValue,
+    required this.headerIcon,
     this.isExpanded = false,
   });
 
   Widget expandedValue;
   String headerValue;
+  Icon headerIcon;
   bool isExpanded;
 }
 
@@ -31,6 +33,9 @@ RoundsPanel generateItem(
   int numberOfItems = tournament.rounds.length;
   return RoundsPanel(
     headerValue: 'Round ${index + 1}',
+    headerIcon: index == numberOfItems - 1
+        ? const Icon(Icons.change_circle)
+        : const Icon(Icons.check_circle),
     expandedValue: EncountersView(tournament: tournament, roundIndex: index),
     isExpanded: index == numberOfItems - 1,
   );
@@ -74,7 +79,11 @@ class _RoundsViewState extends State<RoundsView> {
           children: _data.map<ExpansionPanel>((RoundsPanel item) {
             return ExpansionPanel(
               headerBuilder: (BuildContext context, bool isExpanded) {
-                return ListTile(title: Text(item.headerValue));
+                return ListTile(
+                  title: Text(item.headerValue),
+                  leading: item.headerIcon,
+                  //tileColor: Theme.of(context).colorScheme.secondaryContainer,
+                );
               },
               body: item.expandedValue,
               isExpanded: item.isExpanded,
