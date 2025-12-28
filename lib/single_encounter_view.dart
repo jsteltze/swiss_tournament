@@ -106,6 +106,7 @@ class SingleEncounterView extends StatelessWidget {
                   child: const Text('Save'),
                   onPressed: () {
                     encounter.result = selectedResult!;
+                    tournament.update();
                     Navigator.of(context).pop();
                     updateParent();
                   },
