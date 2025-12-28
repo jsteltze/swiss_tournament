@@ -144,9 +144,26 @@ class _MyHomePageState extends State<MyHomePage> {
               itemCount: _tournaments.length,
               itemBuilder: (context, index) {
                 final tournament = _tournaments[index];
+                var state = 'new (0/${tournament.numberOfRounds})';
+                if (tournament.rounds.isNotEmpty) {
+                  if (tournament.rounds.length == tournament.numberOfRounds) {
+                    state =
+                        'finished (${tournament.rounds.length}/${tournament.numberOfRounds})';
+                  } else {
+                    state =
+                        'in Progress (${tournament.rounds.length}/${tournament.numberOfRounds})';
+                  }
+                }
                 return ListTile(
                   title: Text(tournament.title),
-                  subtitle: Text('Rounds: ${tournament.numberOfRounds}'),
+                  subtitle: Row(
+                    children: [
+                      Expanded(
+                        child: Text('Rounds: ${tournament.numberOfRounds}'),
+                      ),
+                      Text(state),
+                    ],
+                  ),
                   leading: const Icon(Icons.emoji_events),
                   onTap: () => _navigateToTournamentDetails(tournament),
                 );
