@@ -19,52 +19,64 @@ class PlayersView extends StatelessWidget {
           playerCount;
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (tournament.players.isNotEmpty)
-            Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (tournament.players.isNotEmpty)
+          Container(
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              //crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'Players: $playerCount',
-                  style: Theme.of(context).textTheme.titleLarge,
+                Expanded(
+                  child: Text(
+                    'Players: $playerCount',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                 ),
-                const SizedBox(height: 8),
                 Stack(
                   alignment: Alignment.centerLeft,
                   children: [
-                    const Icon(Icons.circle_outlined, size: 14),
-                    Text(' / ', style: Theme.of(context).textTheme.titleMedium),
+                    Icon(
+                      Icons.circle_outlined,
+                      size: 14,
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
+                    Text(
+                      ' / ',
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
                     Text(
                       '     ${averageRating.toStringAsFixed(0)}',
-                      style: Theme.of(context).textTheme.titleSmall,
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
               ],
             ),
-          Expanded(
-            child: tournament.players.isEmpty
-                ? const Center(child: Text('No players added yet.'))
-                : ListView.builder(
-                    itemCount: tournament.players.length,
-                    itemBuilder: (context, index) {
-                      final player = tournament.players[index];
-                      return ListTile(
-                        title: Text(player.name),
-                        subtitle: Text(
-                          '#${index + 1} Rating: ${player.rating}',
-                        ),
-                        leading: const Icon(Icons.person),
-                      );
-                    },
-                  ),
           ),
-        ],
-      ),
+        Expanded(
+          child: tournament.players.isEmpty
+              ? const Center(child: Text('No players added yet.'))
+              : ListView.builder(
+                  itemCount: tournament.players.length,
+                  itemBuilder: (context, index) {
+                    final player = tournament.players[index];
+                    return ListTile(
+                      title: Text(player.name),
+                      subtitle: Text('#${index + 1} Rating: ${player.rating}'),
+                      leading: const Icon(Icons.person),
+                    );
+                  },
+                ),
+        ),
+      ],
     );
   }
 }

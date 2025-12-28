@@ -161,7 +161,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         child: Text('Rounds: ${tournament.numberOfRounds}'),
                       ),
-                      Text(state),
+                      Text(
+                        state,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
+                      ),
                     ],
                   ),
                   leading: const Icon(Icons.emoji_events),
