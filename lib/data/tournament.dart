@@ -19,15 +19,15 @@ class Tournament {
   }) : players = players ?? [],
        rounds = rounds ?? [],
        update = update ?? (() {}) {
-    _sortPlayers();
+    sortPlayers();
   }
 
   void addPlayer(Player player) {
     players.add(player);
-    _sortPlayers();
+    sortPlayers();
   }
 
-  void _sortPlayers() {
+  void sortPlayers() {
     players.sort((a, b) => b.rating.compareTo(a.rating));
   }
 
