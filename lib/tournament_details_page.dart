@@ -28,11 +28,13 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
     });
   }
 
+  void _onUpdatePlayers() {
+    setState(() {});
+    widget.tournament.update();
+  }
+
   void _addPlayer() {
-    showAddPlayerDialog(context, widget.tournament, () {
-      setState(() {});
-      widget.tournament.update();
-    });
+    showAddPlayerDialog(context, widget.tournament, _onUpdatePlayers);
   }
 
   void _editTournament() {
@@ -136,7 +138,10 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         break;
       case 0:
       default:
-        bodyContent = PlayersView(tournament: widget.tournament);
+        bodyContent = PlayersView(
+          tournament: widget.tournament,
+          onPlayersChanged: _onUpdatePlayers,
+        );
     }
 
     return Scaffold(

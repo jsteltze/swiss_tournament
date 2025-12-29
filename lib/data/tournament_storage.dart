@@ -94,6 +94,7 @@ class TournamentStorage {
   }
 
   Future<void> updateTournament(Tournament tournament) async {
+    print('updateTournament');
     final db = await database;
     final values = {
       'title': tournament.title,

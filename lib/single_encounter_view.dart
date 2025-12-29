@@ -5,7 +5,7 @@ import 'package:swiss_tournament/data/tournament.dart';
 class SingleEncounterView extends StatelessWidget {
   final Encounter encounter;
   final Tournament tournament;
-  final updateParent;
+  final VoidCallback updateParent;
 
   const SingleEncounterView({
     super.key,
@@ -34,9 +34,13 @@ class SingleEncounterView extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 50,
+              width: 30,
               child: Center(
-                child: Text(encounter.result.isEmpty ? 'vs' : encounter.result),
+                child: Text(
+                  encounter.result.isEmpty
+                      ? 'vs'
+                      : encounter.result.replaceAll('0.5', '\u{00BD}'),
+                ),
               ),
             ),
             Expanded(
