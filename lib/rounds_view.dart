@@ -28,15 +28,21 @@ class RoundsPanel {
 RoundsPanel generateItem(
   Tournament tournament,
   int index,
-  Function updateParent,
+  VoidCallback? updateParent,
 ) {
   int numberOfItems = tournament.rounds.length;
   return RoundsPanel(
     headerValue: 'Round ${index + 1}',
-    headerIcon: index == numberOfItems - 1
+    headerIcon:
+        index == numberOfItems - 1 &&
+            tournament.rounds[index].encounters.any((e) => e.result.isEmpty)
         ? const Icon(Icons.change_circle)
         : const Icon(Icons.check_circle),
-    expandedValue: EncountersView(tournament: tournament, roundIndex: index),
+    expandedValue: EncountersView(
+      tournament: tournament,
+      roundIndex: index,
+      notifyRoundFinished: updateParent,
+    ),
     isExpanded: index == numberOfItems - 1,
   );
 }
@@ -58,7 +64,7 @@ class _RoundsViewState extends State<RoundsView> {
   void initState() {
     super.initState();
     for (var i = 0; i < widget.tournament.rounds.length; i++) {
-      _data.add(generateItem(widget.tournament, i, () => {setState(() {})}));
+      _data.add(generateItem(widget.tournament, i, _finishLastRound));
     }
   }
 
@@ -104,7 +110,7 @@ class _RoundsViewState extends State<RoundsView> {
               color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
-          onPressed: startNewRound,
+          onPressed: _startNewRound,
         ),
       ],
     );
@@ -144,7 +150,7 @@ class _RoundsViewState extends State<RoundsView> {
     );
   }
 
-  void startNewRound() async {
+  void _startNewRound() async {
     var currentDbState = await _storage.getTournament(widget.tournament.id!);
     if (currentDbState == null) {
       print('no such tournament found!');
@@ -168,7 +174,7 @@ class _RoundsViewState extends State<RoundsView> {
       arr,
       widget.tournament.numberOfRounds,
     );
-    var round = parseResponse(response!);
+    var round = _parseResponse(response!);
     widget.tournament.rounds.add(round);
     widget.tournament.update();
     setState(() {
@@ -179,13 +185,21 @@ class _RoundsViewState extends State<RoundsView> {
         generateItem(
           widget.tournament,
           widget.tournament.rounds.length - 1,
-          () => {setState(() {})},
+          _finishLastRound,
         ),
       );
     });
   }
 
-  Round parseResponse(JString response) {
+  void _finishLastRound() {
+    setState(() {
+      _data.last.headerIcon = Icon(Icons.check_circle);
+      widget.tournament.rounds.last.finishedAt = DateTime.now();
+      widget.tournament.update();
+    });
+  }
+
+  Round _parseResponse(JString response) {
     var respStr = response.toDartString();
     print(respStr);
     var lines = respStr.split('\n');
