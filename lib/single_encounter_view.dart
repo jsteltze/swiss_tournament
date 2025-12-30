@@ -43,7 +43,9 @@ class SingleEncounterView extends StatelessWidget {
           ? Theme.of(context).colorScheme.primary.withAlpha(10)
           : Colors.transparent,
       child: InkWell(
-        onTap: () => _showResultDialog(encounter, context),
+        onTap: encounter.playerIdW == -1 || encounter.playerIdB == -1
+            ? null
+            : () => _showResultDialog(encounter, context),
         child: Row(
           children: <Widget>[
             SizedBox(
@@ -88,7 +90,7 @@ class SingleEncounterView extends StatelessWidget {
 
   void _showResultDialog(Encounter encounter, BuildContext context) {
     String? selectedResult =
-        ["1-0", "0-1", "0.5-0.5"].contains(encounter.result)
+        ["1-0", "0-1", "0.5-0.5", "+ -", "- +"].contains(encounter.result)
         ? encounter.result
         : null;
 
@@ -104,19 +106,78 @@ class SingleEncounterView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Enter result for ${tournament.players[encounter.playerIdW].name} vs ${tournament.players[encounter.playerIdB].name}",
+                    "Enter result for:\n${tournament.players[encounter.playerIdW].name} vs ${tournament.players[encounter.playerIdB].name}",
                   ),
                   const SizedBox(height: 20),
                   DropdownButton<String>(
                     isExpanded: true,
                     value: selectedResult,
                     hint: const Text("Select result"),
-                    items: const [
-                      DropdownMenuItem(value: "1-0", child: Text("1-0")),
-                      DropdownMenuItem(value: "0-1", child: Text("0-1")),
+                    items: [
+                      DropdownMenuItem(
+                        value: "1-0",
+                        child: Row(
+                          children: [
+                            Expanded(child: Text("1-0")),
+                            Text(
+                              "(white win)",
+                              style: Theme.of(context).textTheme.bodySmall!
+                                  .copyWith(fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: "0-1",
+                        child: Row(
+                          children: [
+                            Expanded(child: Text("0-1")),
+                            Text(
+                              "(black win)",
+                              style: Theme.of(context).textTheme.bodySmall!
+                                  .copyWith(fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ),
                       DropdownMenuItem(
                         value: "0.5-0.5",
-                        child: Text("0.5-0.5"),
+                        child: Row(
+                          children: [
+                            Expanded(child: Text("\u{00BD}-\u{00BD}")),
+                            Text(
+                              "(draw)",
+                              style: Theme.of(context).textTheme.bodySmall!
+                                  .copyWith(fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: "+ -",
+                        child: Row(
+                          children: [
+                            Expanded(child: Text("+ -")),
+                            Text(
+                              "(uncontested white)",
+                              style: Theme.of(context).textTheme.bodySmall!
+                                  .copyWith(fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownMenuItem(
+                        value: "- +",
+                        child: Row(
+                          children: [
+                            Expanded(child: Text("- +")),
+                            Text(
+                              "(uncontested black)",
+                              style: Theme.of(context).textTheme.bodySmall!
+                                  .copyWith(fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                     onChanged: (String? newValue) {
