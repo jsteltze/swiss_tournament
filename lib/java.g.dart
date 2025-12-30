@@ -2703,7 +2703,7 @@ class Sample extends jni$_.JObject {
 
   static final _id_initTournament = _class.staticMethodId(
     r'initTournament',
-    r'(Landroid/app/Activity;Ljava/lang/String;[II)Ljava/lang/String;',
+    r'(Landroid/app/Activity;Ljava/lang/String;)Ljava/lang/String;',
   );
 
   static final _initTournament =
@@ -2713,12 +2713,7 @@ class Sample extends jni$_.JObject {
                 jni$_.Pointer<jni$_.Void>,
                 jni$_.JMethodIDPtr,
                 jni$_.VarArgs<
-                  (
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Pointer<jni$_.Void>,
-                    jni$_.Int32,
-                  )
+                  (jni$_.Pointer<jni$_.Void>, jni$_.Pointer<jni$_.Void>)
                 >,
               )
             >
@@ -2729,29 +2724,22 @@ class Sample extends jni$_.JObject {
               jni$_.JMethodIDPtr,
               jni$_.Pointer<jni$_.Void>,
               jni$_.Pointer<jni$_.Void>,
-              jni$_.Pointer<jni$_.Void>,
-              int,
             )
           >();
 
-  /// from: `static public java.lang.String initTournament(android.app.Activity activity, java.lang.String tournamentId, int[] playerRatings, int numRounds)`
+  /// from: `static public java.lang.String initTournament(android.app.Activity activity, java.lang.String trfFileContent)`
   /// The returned object must be released after use, by calling the [release] method.
   static jni$_.JString? initTournament(
     jni$_.JObject? activity,
-    jni$_.JString? tournamentId,
-    jni$_.JIntArray? playerRatings,
-    int numRounds,
+    jni$_.JString? trfFileContent,
   ) {
     final _$activity = activity?.reference ?? jni$_.jNullReference;
-    final _$tournamentId = tournamentId?.reference ?? jni$_.jNullReference;
-    final _$playerRatings = playerRatings?.reference ?? jni$_.jNullReference;
+    final _$trfFileContent = trfFileContent?.reference ?? jni$_.jNullReference;
     return _initTournament(
       _class.reference.pointer,
       _id_initTournament as jni$_.JMethodIDPtr,
       _$activity.pointer,
-      _$tournamentId.pointer,
-      _$playerRatings.pointer,
-      numRounds,
+      _$trfFileContent.pointer,
     ).object<jni$_.JString?>(const jni$_.$JString$NullableType$());
   }
 }

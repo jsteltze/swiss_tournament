@@ -1,14 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:jni/jni.dart';
 import 'package:swiss_tournament/encounters_view.dart';
 
 import 'data/encounter.dart';
-import 'data/round.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
-import 'java.g.dart';
+import 'javafo_utils.dart';
 
 // stores ExpansionPanel state information
 class RoundsPanel {
@@ -165,19 +161,7 @@ class _RoundsViewState extends State<RoundsView> {
       return;
     }
 
-    var playerRatings = widget.tournament.players
-        .map((player) => player.rating)
-        .toList();
-    JIntArray arr = JIntArray(playerRatings.length);
-    arr.setRange(0, playerRatings.length, playerRatings);
-
-    var response = Sample.initTournament(
-      Jni.androidActivity(PlatformDispatcher.instance.engineId!),
-      JString.fromString("xxx"),
-      arr,
-      widget.tournament.numberOfRounds,
-    );
-    var round = _parseResponse(response!);
+    var round = callJavaFo(widget.tournament);
     widget.tournament.rounds.add(round);
     widget.tournament.update();
     setState(() {
@@ -200,28 +184,5 @@ class _RoundsViewState extends State<RoundsView> {
       widget.tournament.rounds.last.finishedAt = DateTime.now();
       widget.tournament.update();
     });
-  }
-
-  Round _parseResponse(JString response) {
-    var respStr = response.toDartString();
-    print(respStr);
-    var lines = respStr.split('\n');
-    var round = Round(roundNum: widget.tournament.rounds.length + 1);
-    for (var i = 1; i < lines.length; i++) {
-      var line = lines[i];
-      if (line.isEmpty) {
-        continue;
-      }
-      print('line=$line');
-      var parts = line.split(' ');
-      round.encounters.add(
-        Encounter(
-          playerIdW: int.parse(parts[0]) - 1,
-          playerIdB: int.parse(parts[1]) - 1,
-        ),
-      );
-    }
-    response.release();
-    return round;
   }
 }

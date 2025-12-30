@@ -17,28 +17,17 @@ public class Sample {
         return a + b;
     }
 
-    public static String initTournament(Activity activity, String tournamentId, int[] playerRatings, int numRounds) {
+    public static String initTournament(Activity activity, String trfFileContent) {
         try {
-            Arrays.sort(playerRatings);
-            File f = new File(activity.getCacheDir(), tournamentId);
+            File f = new File(activity.getCacheDir(), "tournament.trf");
             BufferedWriter writer = new BufferedWriter(new FileWriter(f));
-            writer.write("012 " + tournamentId + "\n");
-            writer.write("022 City\n");
-            writer.write("032 GER\n");
-            writer.write("102 Arbiter\n");
-            writer.write("XXR " + numRounds + "\n");
-            for (int i = 1; i <= playerRatings.length; i++) {
-                String line = String.format(Locale.ENGLISH, "001 %4d m    Playername                        %4d GER     2212072 1981        0.0 %4d\n", i, playerRatings[i - 1], i);
-                writer.write(line);
-            }
+            writer.write(trfFileContent);
             writer.close();
-
-            return JaVaFoApi.exec(1000, new FileInputStream(f));
+            String response = JaVaFoApi.exec(1000, new FileInputStream(f));
+            f.delete();
+            return response;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
-
     }
 }
