@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/tournament.dart';
+import 'package:swiss_tournament/player_tile.dart';
 
 class SingleEncounterView extends StatelessWidget {
   final Encounter encounter;
@@ -25,12 +26,9 @@ class SingleEncounterView extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Expanded(
-              child: ListTile(
-                title: Text(tournament.players[encounter.playerIdW].name),
-                subtitle: Text(
-                  '#${encounter.playerIdW + 1} Rating: ${tournament.players[encounter.playerIdW].rating}',
-                ),
-                leading: const Icon(Icons.person),
+              child: PlayerTile(
+                player: tournament.players[encounter.playerIdW],
+                index: encounter.playerIdW,
               ),
             ),
             SizedBox(
@@ -44,12 +42,10 @@ class SingleEncounterView extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: ListTile(
-                title: Text(tournament.players[encounter.playerIdB].name),
-                subtitle: Text(
-                  '#${encounter.playerIdB + 1} Rating: ${tournament.players[encounter.playerIdB].rating}',
-                ),
-                trailing: const Icon(Icons.person),
+              child: PlayerTile(
+                player: tournament.players[encounter.playerIdB],
+                index: encounter.playerIdB,
+                alignLeft: false,
               ),
             ),
           ],

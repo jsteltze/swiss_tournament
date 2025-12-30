@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:swiss_tournament/player_tile.dart';
 
 import 'data/player.dart';
 import 'data/tournament.dart';
@@ -17,8 +18,9 @@ class PlayersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int playerCount = tournament.players.length;
-    final int playersWithRating =
-        tournament.players.where((p) => p.rating > 0).length;
+    final int playersWithRating = tournament.players
+        .where((p) => p.rating > 0)
+        .length;
     double averageRating = 0;
     if (playerCount > 0) {
       averageRating =
@@ -39,9 +41,22 @@ class PlayersView extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(
-                    'Players: $playerCount',
-                    style: Theme.of(context).textTheme.titleLarge,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Players: $playerCount',
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      Text(
+                        '(active: ${tournament.players.where((p) => p.leftAt == null).length})',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Stack(
@@ -66,58 +81,80 @@ class PlayersView extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
               ],
             ),
           ),
         Expanded(
-          child:
-              tournament.players.isEmpty
-                  ? const Center(child: Text('No players added yet.'))
-                  : ListView.builder(
-                    itemCount: tournament.players.length,
-                    itemBuilder: (context, index) {
-                      final player = tournament.players[index];
-                      return ListTile(
-                        title: Text(player.name),
-                        subtitle: Text(
-                          '#${index + 1} Rating: ${player.rating > 0 ? player.rating : 'N/A'}',
-                        ),
-                        leading: const Icon(Icons.person),
-                        trailing: PopupMenuButton<String>(
-                          onSelected: (value) {
-                            if (value == 'edit') {
-                              _showEditPlayerDialog(
-                                context,
-                                tournament,
-                                player,
-                                onPlayersChanged,
-                              );
-                            } else if (value == 'delete') {
-                              _confirmDeletePlayer(
-                                context,
-                                tournament,
-                                player,
-                                onPlayersChanged,
-                              );
-                            }
-                          },
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              const PopupMenuItem(
-                                value: 'edit',
-                                child: Text('Edit'),
-                              ),
-                              const PopupMenuItem(
-                                value: 'delete',
-                                child: Text('Delete'),
-                              ),
-                            ];
-                          },
-                        ),
-                      );
-                    },
-                  ),
+          child: tournament.players.isEmpty
+              ? const Center(child: Text('No players added yet.'))
+              : ListView.builder(
+                  itemCount: tournament.players.length,
+                  itemBuilder: (context, index) {
+                    final player = tournament.players[index];
+                    var popup = PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          _showEditPlayerDialog(
+                            context,
+                            tournament,
+                            player,
+                            onPlayersChanged,
+                          );
+                        } else if (value == 'delete') {
+                          _confirmDeletePlayer(
+                            context,
+                            tournament,
+                            player,
+                            onPlayersChanged,
+                          );
+                        } else if (value == 'disable') {
+                          _confirmDisablePlayer(
+                            context,
+                            tournament,
+                            player,
+                            onPlayersChanged,
+                          );
+                        } else if (value == 're-enable') {
+                          _confirmReenablePlayer(
+                            context,
+                            tournament,
+                            player,
+                            onPlayersChanged,
+                          );
+                        }
+                      },
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          const PopupMenuItem(
+                            value: 'edit',
+                            child: Text('Edit'),
+                          ),
+                          PopupMenuItem(
+                            value: 'delete',
+                            enabled: tournament.rounds.isEmpty,
+                            child: const Text('Delete'),
+                          ),
+                          if (player.leftAt == null)
+                            PopupMenuItem(
+                              value: 'disable',
+                              child: const Text('Disable'),
+                            ),
+                          if (player.leftAt != null)
+                            PopupMenuItem(
+                              value: 're-enable',
+                              child: const Text('Re-enable'),
+                            ),
+                        ];
+                      },
+                    );
+                    return PlayerTile(
+                      player: player,
+                      index: index,
+                      detailed: true,
+                      popup: popup,
+                    );
+                  },
+                ),
         ),
       ],
     );
@@ -146,8 +183,79 @@ class PlayersView extends StatelessWidget {
                 onPlayersChanged?.call();
                 Navigator.pop(context);
               },
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
               child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _confirmDisablePlayer(
+    BuildContext context,
+    Tournament tournament,
+    Player player,
+    VoidCallback? onPlayersChanged,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Disable Player'),
+          content: Text(
+            'Are you sure you want to disable "${player.name}"?\nDisabled players will not be paired in future rounds.',
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                player.leftAt = tournament.rounds.length;
+                onPlayersChanged?.call();
+                Navigator.pop(context);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: const Text('Disable'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _confirmReenablePlayer(
+    BuildContext context,
+    Tournament tournament,
+    Player player,
+    VoidCallback? onPlayersChanged,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Re-enable Player'),
+          content: Text(
+            'Are you sure you want to re-enable "${player.name}"?\nThis player will be paired again in future rounds.',
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                player.leftAt = null;
+                onPlayersChanged?.call();
+                Navigator.pop(context);
+              },
+              child: const Text('Re-enable'),
             ),
           ],
         );
