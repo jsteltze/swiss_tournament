@@ -30,7 +30,15 @@ class SingleEncounterView extends StatelessWidget {
         onTap: () => _showResultDialog(encounter, context),
         child: Row(
           children: <Widget>[
-            SizedBox(width: 20, child: Text('#${index + 1}')),
+            SizedBox(
+              width: 30,
+              child: Text(
+                '#${index + 1}',
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.primary.withAlpha(160),
+                ),
+              ),
+            ),
             Expanded(
               child: PlayerTile(
                 player: tournament.players[encounter.playerIdW],
