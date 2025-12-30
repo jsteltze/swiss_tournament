@@ -12,7 +12,7 @@ class Round {
   Map<String, dynamic> toJson() => {
     'encounters': encounters.map((e) => e.toJson()).toList(),
     'startedAt': startedAt.toIso8601String(),
-    'finishedAt': finishedAt?.toIso8601String(),
+    if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
   };
 
   factory Round.fromJson(Map<String, dynamic> json) {
