@@ -37,13 +37,21 @@ class PlayerTile extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              'Rating: ${player.rating > 0 ? player.rating : 'N/A'}',
+              '${detailed ? 'Rating: ' : '('}${player.rating > 0 ? player.rating : 'N/A'}${detailed ? '' : ')'}',
               style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
             ),
           ),
           if (detailed && player.leftAt != null)
             Text(
               'left after round ${player.leftAt}',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          if (detailed && player.joinedAt > 0 && player.leftAt == null)
+            Text(
+              'joined after round ${player.joinedAt}',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontStyle: FontStyle.italic,

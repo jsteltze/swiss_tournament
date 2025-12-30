@@ -24,7 +24,7 @@ class Tournament {
 
   void addPlayer(Player player) {
     players.add(player);
-    sortPlayers();
+    if (rounds.isEmpty) sortPlayers();
   }
 
   void sortPlayers() {

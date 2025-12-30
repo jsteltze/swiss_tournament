@@ -30,6 +30,10 @@ class PlayersView extends StatelessWidget {
               .fold(0, (a, b) => a + b) /
           playersWithRating;
     }
+    final int firstLateJoiner = tournament.players.indexWhere(
+      (p) => p.joinedAt > 0,
+    );
+    print('firstLateJoiner=$firstLateJoiner');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +91,15 @@ class PlayersView extends StatelessWidget {
         Expanded(
           child: tournament.players.isEmpty
               ? const Center(child: Text('No players added yet.'))
-              : ListView.builder(
+              : ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      index == firstLateJoiner - 1
+                      ? Divider(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withAlpha(100),
+                        )
+                      : Divider(color: Colors.transparent),
                   itemCount: tournament.players.length,
                   itemBuilder: (context, index) {
                     final player = tournament.players[index];
@@ -331,14 +343,20 @@ void showAddPlayerDialog(
   final TextEditingController nameController = TextEditingController();
   final TextEditingController ratingController = TextEditingController();
 
+  final isLateJoin = tournament.rounds.isNotEmpty;
+
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Add Player'),
+        title: Text('Add Player${isLateJoin ? ' (Late Join)' : ''}'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (isLateJoin)
+              Text(
+                'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
+              ),
             TextField(
               controller: nameController,
               decoration: const InputDecoration(hintText: 'Player Name'),
@@ -368,6 +386,7 @@ void showAddPlayerDialog(
                           ? '0'
                           : ratingController.text,
                     ),
+                    joinedAt: tournament.rounds.length,
                   ),
                 );
                 onPlayerAdded();
