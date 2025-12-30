@@ -31,6 +31,33 @@ class Tournament {
     players.sort((a, b) => b.rating.compareTo(a.rating));
   }
 
+  double getPoints(int playerId, int roundIndex) {
+    double points = 0.0;
+    for (int r = 0; r < rounds.length && r < roundIndex; r++) {
+      for (int e = 0; e < rounds[r].encounters.length; e++) {
+        final encounter = rounds[r].encounters[e];
+        if (encounter.playerIdW == playerId &&
+            (encounter.result == "1-0" || encounter.result == "+ -")) {
+          // win (white)
+          points += 1;
+        } else if (encounter.playerIdW == playerId &&
+            encounter.result == "0.5-0.5") {
+          // draw (white)
+          points += 0.5;
+        } else if (encounter.playerIdB == playerId &&
+            encounter.result == "0.5-0.5") {
+          // draw (black)
+          points += 0.5;
+        } else if (encounter.playerIdB == playerId &&
+            (encounter.result == "0-1" || encounter.result == "- +")) {
+          // win (black)
+          points += 1;
+        }
+      }
+    }
+    return points;
+  }
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,

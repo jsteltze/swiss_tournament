@@ -24,50 +24,14 @@ class SingleEncounterView extends StatelessWidget {
     final index = round.encounters.indexOf(encounter);
     final playerW = tournament.players[encounter.playerIdW];
     final playerB = tournament.players[encounter.playerIdB];
-    var pointsW = 0.0;
-    var pointsB = 0.0;
-    for (int r = 0; r < tournament.rounds.length; r++) {
-      final round = tournament.rounds[r];
-      if (round == this.round) {
-        break;
-      }
-      for (int e = 0; e < round.encounters.length; e++) {
-        final encounter = round.encounters[e];
-        if (encounter.playerIdW == this.encounter.playerIdW &&
-            (encounter.result == "1-0" || encounter.result == "+ -")) {
-          // win (white)
-          pointsW += 1;
-        } else if (encounter.playerIdW == this.encounter.playerIdW &&
-            encounter.result == "0.5-0.5") {
-          // draw (white)
-          pointsW += 0.5;
-        } else if (encounter.playerIdB == this.encounter.playerIdW &&
-            encounter.result == "0.5-0.5") {
-          // draw (white)
-          pointsW += 0.5;
-        } else if (encounter.playerIdB == this.encounter.playerIdW &&
-            (encounter.result == "0-1" || encounter.result == "- +")) {
-          // win (white)
-          pointsW += 1;
-        } else if (encounter.playerIdB == this.encounter.playerIdB &&
-            (encounter.result == "0-1" || encounter.result == "- +")) {
-          // win (black)
-          pointsB += 1;
-        } else if (encounter.playerIdB == this.encounter.playerIdB &&
-            encounter.result == "0.5-0.5") {
-          // draw (black)
-          pointsB += 0.5;
-        } else if (encounter.playerIdW == this.encounter.playerIdB &&
-            encounter.result == "0.5-0.5") {
-          // draw (black)
-          pointsB += 0.5;
-        } else if (encounter.playerIdW == this.encounter.playerIdB &&
-            (encounter.result == "1-0" || encounter.result == "+ -")) {
-          // win (black)
-          pointsB += 1;
-        }
-      }
-    }
+    var pointsW = tournament.getPoints(
+      encounter.playerIdW,
+      tournament.rounds.indexOf(round),
+    );
+    var pointsB = tournament.getPoints(
+      encounter.playerIdB,
+      tournament.rounds.indexOf(round),
+    );
 
     return Material(
       color: encounter.result.isNotEmpty
