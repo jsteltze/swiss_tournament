@@ -4,6 +4,7 @@ import 'data/player.dart';
 
 class PlayerTile extends StatelessWidget {
   final Player player;
+  final double? points;
   final int index;
   final bool detailed;
   final bool alignLeft;
@@ -15,6 +16,7 @@ class PlayerTile extends StatelessWidget {
     required this.index,
     bool? detailed,
     bool? alignLeft,
+    this.points,
     this.popup,
   }) : detailed = detailed ?? false,
        alignLeft = alignLeft ?? true;
@@ -59,8 +61,31 @@ class PlayerTile extends StatelessWidget {
             ),
         ],
       ),
-      leading: alignLeft ? const Icon(Icons.person) : null,
-      trailing: popup ?? (alignLeft ? null : const Icon(Icons.person)),
+      leading: alignLeft ? PlayerIcon(points: points) : null,
+      trailing: popup ?? (alignLeft ? null : PlayerIcon(points: points)),
+    );
+  }
+}
+
+class PlayerIcon extends StatelessWidget {
+  final double? points;
+
+  const PlayerIcon({super.key, this.points});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.person),
+        if (points != null)
+          Text(
+            points!.toStringAsFixed(1),
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+      ],
     );
   }
 }
