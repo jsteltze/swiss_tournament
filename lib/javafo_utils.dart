@@ -84,7 +84,7 @@ Round callJavaFo(Tournament tournament) {
   var respStr = response!.toDartString();
   print(respStr);
   var lines = respStr.split('\n');
-  var round = Round(roundNum: tournament.rounds.length + 1);
+  var round = Round();
   for (var i = 1; i < lines.length; i++) {
     var line = lines[i];
     if (line.isEmpty) {
