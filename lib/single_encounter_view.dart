@@ -3,6 +3,7 @@ import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/player_tile.dart';
 
+import 'data/player.dart';
 import 'data/round.dart';
 
 class SingleEncounterView extends StatelessWidget {
@@ -22,8 +23,12 @@ class SingleEncounterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final index = round.encounters.indexOf(encounter);
-    final playerW = tournament.players[encounter.playerIdW];
-    final playerB = tournament.players[encounter.playerIdB];
+    final playerW = encounter.playerIdW == -1
+        ? Player.bye
+        : tournament.players[encounter.playerIdW];
+    final playerB = encounter.playerIdB == -1
+        ? Player.bye
+        : tournament.players[encounter.playerIdB];
     var pointsW = tournament.getPoints(
       encounter.playerIdW,
       tournament.rounds.indexOf(round),

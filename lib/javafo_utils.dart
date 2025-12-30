@@ -92,12 +92,17 @@ Round callJavaFo(Tournament tournament) {
     }
     print('line=$line');
     var parts = line.split(' ');
-    round.encounters.add(
-      Encounter(
-        playerIdW: int.parse(parts[0]) - 1,
-        playerIdB: int.parse(parts[1]) - 1,
-      ),
+    var encounter = Encounter(
+      playerIdW: int.parse(parts[0]) - 1,
+      playerIdB: int.parse(parts[1]) - 1,
     );
+    if (encounter.playerIdW == -1) {
+      encounter.result = "- +";
+    }
+    if (encounter.playerIdB == -1) {
+      encounter.result = "+ -";
+    }
+    round.encounters.add(encounter);
   }
   response.release();
   return round;

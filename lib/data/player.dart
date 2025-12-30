@@ -7,6 +7,8 @@ class Player {
   Player({required this.name, required this.rating, int? joinedAt})
     : joinedAt = joinedAt ?? 0;
 
+  static Player bye = Player(name: 'Bye', rating: 0, joinedAt: 0);
+
   Map<String, dynamic> toJson() => {
     'name': name,
     if (rating != 0) 'rating': rating,
