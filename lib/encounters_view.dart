@@ -37,7 +37,7 @@ class _EncountersViewState extends State<EncountersView> {
         Text(
           "Pairings: ${pairings - open}/$pairings",
           style: Theme.of(context).textTheme.titleSmall!.copyWith(
-            color: Theme.of(context).colorScheme.tertiary,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         LinearProgressIndicator(value: 1.0 - open / pairings, minHeight: 5),
@@ -61,19 +61,58 @@ class _EncountersViewState extends State<EncountersView> {
                 updateParent: _update,
               ),
             ),
-        Text(
-          "Started at: ${DateFormat.yMMMd().format(round.startedAt)}, ${DateFormat.Hm().format(round.startedAt)}",
-          style: Theme.of(context).textTheme.titleSmall!.copyWith(
-            color: Theme.of(context).colorScheme.tertiary,
-          ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            SizedBox(
+              width: 80,
+              child: Text(
+                "Started at:",
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.primary.withAlpha(160),
+                ),
+              ),
+            ),
+            Text(
+              "${DateFormat.yMMMd().format(round.startedAt)}, ${DateFormat.Hm().format(round.startedAt)}",
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: Theme.of(context).colorScheme.primary.withAlpha(160),
+              ),
+            ),
+          ],
         ),
         if (round.finishedAt != null)
-          Text(
-            "Finished at: ${DateFormat.yMMMd().format(round.finishedAt!)}, ${DateFormat.Hm().format(round.startedAt)} (\u{2192} ${duration?.pretty(tersity: DurationTersity.minute)})",
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
+          Row(
+            children: [
+              SizedBox(
+                width: 80,
+                child: Text(
+                  "Finished at:",
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.primary.withAlpha(160),
+                  ),
+                ),
+              ),
+              Text(
+                "${DateFormat.yMMMd().format(round.finishedAt!)}, ${DateFormat.Hm().format(round.finishedAt!)} (",
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.primary.withAlpha(160),
+                ),
+              ),
+              Icon(
+                Icons.access_time,
+                size: 16,
+                color: Theme.of(context).colorScheme.primary.withAlpha(160),
+              ),
+              Text(
+                " ${duration?.pretty(tersity: DurationTersity.minute)})",
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.primary.withAlpha(160),
+                ),
+              ),
+            ],
           ),
+        const SizedBox(height: 10),
       ],
     );
   }

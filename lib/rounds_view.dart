@@ -96,21 +96,24 @@ class _RoundsViewState extends State<RoundsView> {
             );
           }).toList(),
         ),
-        ElevatedButton.icon(
-          icon: Icon(
-            Icons.play_arrow,
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-          label: Text(
-            'Start Round ${widget.tournament.rounds.length + 1}',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton.icon(
+            icon: Icon(
+              Icons.play_arrow,
               color: Theme.of(context).colorScheme.onPrimary,
             ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+            label: Text(
+              'Start Round ${widget.tournament.rounds.length + 1}',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
+            onPressed: _startNewRound,
           ),
-          onPressed: _startNewRound,
         ),
       ],
     );
