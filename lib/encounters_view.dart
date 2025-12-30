@@ -56,6 +56,7 @@ class _EncountersViewState extends State<EncountersView> {
             .where((e) => _filterOpen ? e.result == "" : true)
             .map(
               (encounter) => SingleEncounterView(
+                round: round,
                 encounter: encounter,
                 tournament: widget.tournament,
                 updateParent: _update,

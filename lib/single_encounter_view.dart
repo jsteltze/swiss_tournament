@@ -3,13 +3,17 @@ import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/player_tile.dart';
 
+import 'data/round.dart';
+
 class SingleEncounterView extends StatelessWidget {
+  final Round round;
   final Encounter encounter;
   final Tournament tournament;
   final VoidCallback updateParent;
 
   const SingleEncounterView({
     super.key,
+    required this.round,
     required this.encounter,
     required this.tournament,
     required this.updateParent,
@@ -17,6 +21,7 @@ class SingleEncounterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final index = round.encounters.indexOf(encounter);
     return Material(
       color: encounter.result.isNotEmpty
           ? Theme.of(context).colorScheme.primary.withAlpha(10)
@@ -25,6 +30,7 @@ class SingleEncounterView extends StatelessWidget {
         onTap: () => _showResultDialog(encounter, context),
         child: Row(
           children: <Widget>[
+            SizedBox(width: 20, child: Text('#${index + 1}')),
             Expanded(
               child: PlayerTile(
                 player: tournament.players[encounter.playerIdW],
