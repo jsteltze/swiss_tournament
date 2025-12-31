@@ -132,7 +132,12 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
     Widget bodyContent;
     switch (_selectedIndex) {
       case 1:
-        bodyContent = RoundsView(tournament: widget.tournament);
+        bodyContent = RoundsView(
+          tournament: widget.tournament,
+          onTournamentFinished: () => setState(() {
+            _selectedIndex = 2;
+          }),
+        );
         break;
       case 2:
         bodyContent = RankingView(tournament: widget.tournament);

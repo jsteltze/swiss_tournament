@@ -45,8 +45,13 @@ RoundsPanel generateItem(
 
 class RoundsView extends StatefulWidget {
   final Tournament tournament;
+  final VoidCallback? onTournamentFinished;
 
-  const RoundsView({super.key, required this.tournament});
+  const RoundsView({
+    super.key,
+    required this.tournament,
+    this.onTournamentFinished,
+  });
 
   @override
   State<RoundsView> createState() => _RoundsViewState();
@@ -92,25 +97,26 @@ class _RoundsViewState extends State<RoundsView> {
             );
           }).toList(),
         ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton.icon(
-            icon: Icon(
-              Icons.play_arrow,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-            label: Text(
-              'Start Round ${widget.tournament.rounds.length + 1}',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        if (_data.length < widget.tournament.rounds.length)
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton.icon(
+              icon: Icon(
+                Icons.play_arrow,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+              label: Text(
+                'Start Round ${widget.tournament.rounds.length + 1}',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+              onPressed: _startNewRound,
             ),
-            onPressed: _startNewRound,
           ),
-        ),
       ],
     );
   }
@@ -142,6 +148,29 @@ class _RoundsViewState extends State<RoundsView> {
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void notifyTournamentFinished() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Tournament finished'),
+          content: const Text(
+            'Congratulations!\nThe tournament is finished.\n\nYou can now view the ranking.',
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => {
+                Navigator.pop(context),
+                widget.onTournamentFinished?.call(),
+              },
+              child: const Text('Go to ranking'),
             ),
           ],
         );
@@ -184,5 +213,10 @@ class _RoundsViewState extends State<RoundsView> {
       widget.tournament.rounds.last.finishedAt = DateTime.now();
       widget.tournament.update();
     });
+    if (widget.tournament.rounds.length == widget.tournament.numberOfRounds) {
+      Future.delayed(const Duration(seconds: 1), () {
+        notifyTournamentFinished();
+      });
+    }
   }
 }
