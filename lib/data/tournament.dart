@@ -31,6 +31,10 @@ class Tournament {
     players.sort((a, b) => b.rating.compareTo(a.rating));
   }
 
+  bool isFinished() {
+    return rounds.length == numberOfRounds && rounds.last.finishedAt != null;
+  }
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,

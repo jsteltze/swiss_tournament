@@ -144,9 +144,9 @@ class _MyHomePageState extends State<MyHomePage> {
               itemCount: _tournaments.length,
               itemBuilder: (context, index) {
                 final tournament = _tournaments[index];
-                var state = 'new (0/${tournament.numberOfRounds})';
+                var state = 'not started';
                 if (tournament.rounds.isNotEmpty) {
-                  if (tournament.rounds.length == tournament.numberOfRounds) {
+                  if (tournament.isFinished()) {
                     state =
                         'finished (${tournament.rounds.length}/${tournament.numberOfRounds})';
                   } else {
