@@ -43,7 +43,13 @@ class PlayersView extends StatelessWidget {
             color: Theme.of(context).colorScheme.secondaryContainer,
             padding: const EdgeInsets.all(16.0),
             child: Row(
+              spacing: 15,
               children: [
+                Icon(
+                  Icons.people,
+                  size: 24,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
