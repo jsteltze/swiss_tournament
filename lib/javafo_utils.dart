@@ -21,7 +21,7 @@ Round callJavaFo(Tournament tournament) {
         .map((p) => tournament.players.indexOf(p) + 1)
         .map((id) => id.toString())
         .toList();
-    trfFileContent += "XXZ ${absentIds.join(',')}\n";
+    trfFileContent += "XXZ ${absentIds.join(' ')}\n";
   }
   print(trfFileContent);
   for (int i = 1; i <= tournament.players.length; i++) {
