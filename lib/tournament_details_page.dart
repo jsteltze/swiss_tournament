@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:swiss_tournament/ranking_view.dart';
 
 import 'data/tournament.dart';
 import 'players_view.dart';
@@ -115,7 +116,9 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                 widget.onDeleteTournament?.call();
                 Navigator.pop(context); // Go back to list
               },
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
               child: const Text('Delete'),
             ),
           ],
@@ -132,9 +135,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         bodyContent = RoundsView(tournament: widget.tournament);
         break;
       case 2:
-        bodyContent = const Center(
-          child: Text('Ranking will be displayed here'),
-        );
+        bodyContent = RankingView(tournament: widget.tournament);
         break;
       case 0:
       default:

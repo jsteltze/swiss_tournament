@@ -58,6 +58,75 @@ class Tournament {
     return points;
   }
 
+  double getBuchholz(int playerId) {
+    var enemies = [];
+    for (int r = 0; r < rounds.length; r++) {
+      for (int e = 0; e < rounds[r].encounters.length; e++) {
+        final encounter = rounds[r].encounters[e];
+        if (encounter.playerIdW == playerId && encounter.playerIdB != -1) {
+          enemies.add(encounter.playerIdB);
+        } else if (encounter.playerIdB == playerId &&
+            encounter.playerIdW != -1) {
+          enemies.add(encounter.playerIdW);
+        }
+      }
+    }
+    final buchholz = enemies
+        .map((e) => getPoints(e, 99))
+        .reduce((a, b) => a + b);
+    return buchholz;
+  }
+
+  int getWins(int playerId) {
+    int wins = 0;
+    for (int r = 0; r < rounds.length; r++) {
+      for (int e = 0; e < rounds[r].encounters.length; e++) {
+        final encounter = rounds[r].encounters[e];
+        if (encounter.playerIdW == playerId &&
+            (encounter.result == "1-0" || encounter.result == "+ -")) {
+          wins++;
+        } else if (encounter.playerIdB == playerId &&
+            (encounter.result == "0-1" || encounter.result == "- +")) {
+          wins++;
+        }
+      }
+    }
+    return wins;
+  }
+
+  int getLosses(int playerId) {
+    int losses = 0;
+    for (int r = 0; r < rounds.length; r++) {
+      for (int e = 0; e < rounds[r].encounters.length; e++) {
+        final encounter = rounds[r].encounters[e];
+        if (encounter.playerIdW == playerId &&
+            (encounter.result == "0-1" || encounter.result == "- +")) {
+          losses++;
+        } else if (encounter.playerIdB == playerId &&
+            (encounter.result == "1-0" || encounter.result == "+ -")) {
+          losses++;
+        }
+      }
+    }
+    return losses;
+  }
+
+  int getDraws(int playerId) {
+    int draws = 0;
+    for (int r = 0; r < rounds.length; r++) {
+      for (int e = 0; e < rounds[r].encounters.length; e++) {
+        final encounter = rounds[r].encounters[e];
+        if (encounter.playerIdW == playerId && encounter.result == "0.5-0.5") {
+          draws++;
+        } else if (encounter.playerIdB == playerId &&
+            encounter.result == "0.5-0.5") {
+          draws++;
+        }
+      }
+    }
+    return draws;
+  }
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,
