@@ -17,6 +17,10 @@ class RankingView extends StatelessWidget {
     if (compareBuchholz != 0) {
       return compareBuchholz;
     }
+    var compareSoBerg = b.soBerg!.compareTo(a.soBerg!);
+    if (compareSoBerg != 0) {
+      return compareSoBerg;
+    }
 
     a.sharedPlace = true;
     b.sharedPlace = true;
@@ -31,18 +35,12 @@ class RankingView extends StatelessWidget {
     );
     final ratings = tournament.players
         .map(
-          (p) => PlayerRatings(
-            player: p,
-            startIndex: tournament.players.indexOf(p),
-          ),
+          (p) =>
+              PlayerRatings(player: p, playerId: tournament.players.indexOf(p)),
         )
         .toList();
     for (int r = 0; r < ratings.length; r++) {
-      ratings[r].points = tournament.getPoints(ratings[r].startIndex, 99);
-      ratings[r].buchholz = tournament.getBuchholz(ratings[r].startIndex);
-      ratings[r].wins = tournament.getWins(ratings[r].startIndex);
-      ratings[r].losses = tournament.getLosses(ratings[r].startIndex);
-      ratings[r].draws = tournament.getDraws(ratings[r].startIndex);
+      ratings[r].calculateRatings(tournament.rounds);
     }
     ratings.sort(_comparePlayers);
     for (int r = 0; r < ratings.length; r++) {
@@ -103,37 +101,86 @@ class RankingView extends StatelessWidget {
             child: DataTable(
               columnSpacing: 8.0,
               horizontalMargin: 2,
+              headingRowHeight: 70,
               columns: [
                 DataColumn(
-                  label: Text('#'),
+                  label: Container(
+                    height: 70,
+                    alignment: Alignment.bottomRight,
+                    child: Text('#'),
+                  ),
                   headingRowAlignment: MainAxisAlignment.end,
                 ),
-                DataColumn(label: Text('Name')),
                 DataColumn(
-                  numeric: true,
-                  label: RotatedBox(quarterTurns: 3, child: Text('Startrank')),
+                  label: Container(
+                    height: 70,
+                    alignment: Alignment.bottomLeft,
+                    child: Text('Name'),
+                  ),
                 ),
                 DataColumn(
-                  label: RotatedBox(quarterTurns: 3, child: Text('Rating')),
+                  numeric: true,
+                  label: Container(
+                    height: 70,
+                    alignment: Alignment.bottomRight,
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Text(' Startrank'),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    height: 70,
+                    alignment: Alignment.bottomRight,
+                    child: RotatedBox(quarterTurns: 3, child: Text(' Rating')),
+                  ),
                   numeric: true,
                   headingRowAlignment: MainAxisAlignment.start,
                 ),
                 DataColumn(
-                  label: RotatedBox(quarterTurns: 3, child: Text('Games')),
+                  label: Container(
+                    height: 70,
+                    alignment: Alignment.bottomRight,
+                    child: RotatedBox(quarterTurns: 3, child: Text(' Games')),
+                  ),
                   numeric: true,
                   headingRowAlignment: MainAxisAlignment.start,
                 ),
                 DataColumn(
-                  label: Text('W/D/L'),
+                  label: Container(
+                    height: 70,
+                    alignment: Alignment.bottomCenter,
+                    child: Text('W/D/L'),
+                  ),
                   headingRowAlignment: MainAxisAlignment.start,
                 ),
                 DataColumn(
                   numeric: true,
-                  label: RotatedBox(quarterTurns: 3, child: Text('Points')),
+                  label: Container(
+                    height: 70,
+                    alignment: Alignment.bottomRight,
+                    child: RotatedBox(quarterTurns: 3, child: Text(' Points')),
+                  ),
                 ),
                 DataColumn(
                   numeric: true,
-                  label: RotatedBox(quarterTurns: 3, child: Text('Buchholz')),
+                  label: Container(
+                    height: 70,
+                    alignment: Alignment.bottomRight,
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Text(' Buchholz'),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  numeric: true,
+                  label: Container(
+                    height: 70,
+                    alignment: Alignment.bottomRight,
+                    child: RotatedBox(quarterTurns: 3, child: Text(' SoBerg')),
+                  ),
                 ),
               ],
               rows: ratings
@@ -160,7 +207,7 @@ class RankingView extends StatelessWidget {
                         ),
                         DataCell(Text(r.player.name)),
                         DataCell(
-                          Text('${r.startIndex + 1}', textAlign: TextAlign.end),
+                          Text('${r.playerId + 1}', textAlign: TextAlign.end),
                         ),
                         DataCell(
                           Text(
@@ -175,6 +222,7 @@ class RankingView extends StatelessWidget {
                         DataCell(Text('${r.wins}/${r.draws}/${r.losses}')),
                         DataCell(Text(r.points!.toStringAsFixed(1))),
                         DataCell(Text(r.buchholz!.toStringAsFixed(1))),
+                        DataCell(Text(r.soBerg!.toStringAsFixed(2))),
                       ],
                     ),
                   )
