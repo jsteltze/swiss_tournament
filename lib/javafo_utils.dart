@@ -15,6 +15,14 @@ Round callJavaFo(Tournament tournament) {
   trfFileContent += "102 Arbiter\n";
   trfFileContent += "XXR ${tournament.numberOfRounds}\n";
   trfFileContent += "XXC white1\n";
+  final absentPlayers = tournament.players.where((p) => p.leftAt != null);
+  if (absentPlayers.isNotEmpty) {
+    final absentIds = absentPlayers
+        .map((p) => tournament.players.indexOf(p) + 1)
+        .map((id) => id.toString())
+        .toList();
+    trfFileContent += "XXZ ${absentIds.join(',')}\n";
+  }
   print(trfFileContent);
   for (int i = 1; i <= tournament.players.length; i++) {
     final player = tournament.players[i - 1];
