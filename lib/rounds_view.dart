@@ -70,7 +70,12 @@ class _RoundsViewState extends State<RoundsView> {
     super.initState();
     for (var i = 0; i < widget.tournament.rounds.length; i++) {
       _data.add(
-        generateItem(widget.tournament, i, _finishLastRound, _deleteLastRound),
+        generateItem(
+          widget.tournament,
+          i,
+          _finishLastRound,
+          () => _deleteRound(i),
+        ),
       );
     }
   }
@@ -208,44 +213,55 @@ class _RoundsViewState extends State<RoundsView> {
           widget.tournament,
           widget.tournament.rounds.length - 1,
           _finishLastRound,
-          _deleteLastRound,
+          () => _deleteRound(widget.tournament.rounds.length - 1),
         ),
       );
     });
     widget.onRoundUpdate?.call();
   }
 
-  void _deleteLastRound() {
+  void _deleteRound(int roundIndex) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete last round'),
-          content: Text(
-            'Are you sure you want to delete round ${widget.tournament.rounds.length}?',
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                widget.tournament.rounds.removeLast();
-                widget.tournament.update();
-                setState(() {
-                  _data.removeLast();
-                });
-                Navigator.pop(context);
-                widget.onRoundUpdate?.call();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('Delete'),
-            ),
-          ],
-        );
+        return roundIndex == widget.tournament.rounds.length - 1
+            ? AlertDialog(
+                title: const Text('Delete round'),
+                content: Text(
+                  'Are you sure you want to delete round ${roundIndex + 1}?',
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      widget.tournament.rounds.removeLast();
+                      widget.tournament.update();
+                      setState(() {
+                        _data.removeLast();
+                      });
+                      Navigator.pop(context);
+                      widget.onRoundUpdate?.call();
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.error,
+                    ),
+                    child: const Text('Delete'),
+                  ),
+                ],
+              )
+            : AlertDialog(
+                title: const Text('Cannot delete round'),
+                content: Text('Only the last round can be deleted!'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Ok'),
+                  ),
+                ],
+              );
       },
     );
   }
