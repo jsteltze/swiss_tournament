@@ -9,12 +9,14 @@ class EncountersView extends StatefulWidget {
   final Tournament tournament;
   final int roundIndex;
   final VoidCallback? notifyRoundFinished;
+  final VoidCallback? deleteRound;
 
   const EncountersView({
     super.key,
     required this.tournament,
     required this.roundIndex,
     this.notifyRoundFinished,
+    this.deleteRound,
   });
 
   @override
@@ -110,6 +112,22 @@ class _EncountersViewState extends State<EncountersView> {
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
                   color: Theme.of(context).colorScheme.primary.withAlpha(160),
                 ),
+              ),
+            ],
+          ),
+        if (widget.roundIndex == widget.tournament.rounds.length - 1)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                ),
+                onPressed: widget.deleteRound,
               ),
             ],
           ),

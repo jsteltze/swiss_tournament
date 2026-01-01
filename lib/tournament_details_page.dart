@@ -9,11 +9,13 @@ import 'rounds_view.dart';
 class TournamentDetailsPage extends StatefulWidget {
   final Tournament tournament;
   final VoidCallback? onDeleteTournament;
+  final VoidCallback? onUpdate;
 
   const TournamentDetailsPage({
     super.key,
     required this.tournament,
     this.onDeleteTournament,
+    this.onUpdate,
   });
 
   @override
@@ -96,6 +98,10 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
     );
   }
 
+  void _onRoundUpdate() {
+    widget.onUpdate?.call();
+  }
+
   void _confirmDeleteTournament() {
     showDialog(
       context: context,
@@ -137,6 +143,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
           onTournamentFinished: () => setState(() {
             _selectedIndex = 2;
           }),
+          onRoundUpdate: _onRoundUpdate,
         );
         break;
       case 2:
