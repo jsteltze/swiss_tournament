@@ -170,6 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         state,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: Theme.of(context).colorScheme.tertiary,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
                     ],
