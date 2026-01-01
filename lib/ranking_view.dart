@@ -22,13 +22,15 @@ class RankingView extends StatelessWidget {
       return compareSoBerg;
     }
 
-    a.sharedPlace = true;
-    b.sharedPlace = true;
+    a.sharedPlace =
+        a.points!.toString() + a.buchholz!.toString() + a.soBerg!.toString();
+    b.sharedPlace = a.sharedPlace;
     return 0;
   }
 
   @override
   Widget build(BuildContext context) {
+    print('ranking view');
     final lastRoundNum = tournament.rounds.length;
     final lastRoundFinished = tournament.rounds.last.encounters.every(
       (e) => e.result.isNotEmpty,
@@ -47,9 +49,10 @@ class RankingView extends StatelessWidget {
       if (ratings[r].rank == null) {
         ratings[r].rank = r + 1;
       }
-      if (ratings[r].sharedPlace) {
+      if (ratings[r].sharedPlace.isNotEmpty) {
+        final sharedPlaceInfo = ratings[r].sharedPlace;
         for (int i = r + 1; i < ratings.length; i++) {
-          if (ratings[i].sharedPlace) {
+          if (ratings[i].sharedPlace == sharedPlaceInfo) {
             ratings[i].rank = ratings[r].rank;
           } else {
             break;

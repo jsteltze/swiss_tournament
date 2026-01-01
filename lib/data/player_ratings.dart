@@ -11,7 +11,7 @@ class PlayerRatings {
   double? points;
   double? buchholz;
   double? soBerg;
-  bool sharedPlace = false;
+  String sharedPlace = "";
 
   PlayerRatings({required this.player, required this.playerId});
 
