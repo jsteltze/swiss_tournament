@@ -82,6 +82,26 @@ class _RoundsViewState extends State<RoundsView> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.tournament.players.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.list,
+              size: 100,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            Text(
+              'First add some players to the tournament.',
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     return SingleChildScrollView(child: Container(child: _buildPanel()));
   }
 

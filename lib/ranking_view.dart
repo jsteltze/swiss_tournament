@@ -32,6 +32,27 @@ class RankingView extends StatelessWidget {
   Widget build(BuildContext context) {
     print('ranking view');
     final lastRoundNum = tournament.rounds.length;
+    if (lastRoundNum == 0) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.leaderboard,
+              size: 100,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            Text(
+              'Tournament has not started yet.',
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final lastRoundFinished = tournament.rounds.last.encounters.every(
       (e) => e.result.isNotEmpty,
     );

@@ -96,7 +96,25 @@ class PlayersView extends StatelessWidget {
           ),
         Expanded(
           child: tournament.players.isEmpty
-              ? const Center(child: Text('No players added yet.'))
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.people,
+                        size: 100,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      Text(
+                        'No players added yet.',
+                        style: Theme.of(context).textTheme.titleMedium!
+                            .copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                    ],
+                  ),
+                )
               : ListView.separated(
                   separatorBuilder: (context, index) =>
                       index == firstLateJoiner - 1
