@@ -30,7 +30,7 @@ class PlayerRatings {
   ) {
     // virtual player
     double points = baseFromRealPlayer; // start with same points as real player
-    points += 1.0; // grant one "win"
+    points += 0.0; // grant one "win"
     for (int r = 0; r < numFutureRounds; r++) {
       points += 0.5; // treat all other games as "draw"
     }
@@ -41,29 +41,32 @@ class PlayerRatings {
     List<Round> rounds,
     int playerId, [
     int roundIndex = 99,
+    bool treatForfeitAsDraw = false,
   ]) {
     double points = 0.0;
 
     // regular player
     for (int r = 0; r < rounds.length && r < roundIndex; r++) {
       for (int e = 0; e < rounds[r].encounters.length; e++) {
-        final encounter = rounds[r].encounters[e];
-        if (encounter.playerIdW == playerId &&
-            ["1-0", "+ -"].contains(encounter.result)) {
+        final game = rounds[r].encounters[e];
+        if (game.playerIdW == playerId &&
+            ["1-0", "+ -"].contains(game.result)) {
           // win (white)
-          points += 1;
-        } else if (encounter.playerIdW == playerId &&
-            encounter.result == "0.5-0.5") {
+          points += (game.playerIdB == -1 && treatForfeitAsDraw ? 0.5 : 1.0);
+          break;
+        } else if (game.playerIdW == playerId && game.result == "0.5-0.5") {
           // draw (white)
           points += 0.5;
-        } else if (encounter.playerIdB == playerId &&
-            encounter.result == "0.5-0.5") {
+          break;
+        } else if (game.playerIdB == playerId && game.result == "0.5-0.5") {
           // draw (black)
           points += 0.5;
-        } else if (encounter.playerIdB == playerId &&
-            ["0-1", "- +"].contains(encounter.result)) {
+          break;
+        } else if (game.playerIdB == playerId &&
+            ["0-1", "- +"].contains(game.result)) {
           // win (black)
-          points += 1;
+          points += (game.playerIdW == -1 && treatForfeitAsDraw ? 0.5 : 1.0);
+          break;
         }
       }
     }
@@ -73,27 +76,37 @@ class PlayerRatings {
   double _getBuchholz(List<Round> rounds) {
     double buchholz = 0.0;
     for (int r = 0; r < rounds.length; r++) {
-      for (int e = 0; e < rounds[r].encounters.length; e++) {
-        final encounter = rounds[r].encounters[e];
-        if (encounter.playerIdW == playerId) {
-          if (encounter.playerIdB == -1) {
+      bool playerOccurred = false;
+      for (var game in rounds[r].encounters) {
+        if (game.playerIdW == playerId) {
+          if (game.playerIdB == -1) {
             buchholz += getPointsVirtualPlayer(
               getPoints(rounds, playerId, r - 1),
               rounds.length - 1 - r,
             );
           } else {
-            buchholz += getPoints(rounds, encounter.playerIdB);
+            buchholz += getPoints(rounds, game.playerIdB, 99, true);
           }
-        } else if (encounter.playerIdB == playerId) {
-          if (encounter.playerIdW == -1) {
+          playerOccurred = true;
+          break;
+        } else if (game.playerIdB == playerId) {
+          if (game.playerIdW == -1) {
             buchholz += getPointsVirtualPlayer(
               getPoints(rounds, playerId, r - 1),
               rounds.length - 1 - r,
             );
           } else {
-            buchholz += getPoints(rounds, encounter.playerIdW);
+            buchholz += getPoints(rounds, game.playerIdW, 99, true);
           }
+          playerOccurred = true;
+          break;
         }
+      }
+      if (!playerOccurred) {
+        buchholz += getPointsVirtualPlayer(
+          getPoints(rounds, playerId, r - 1),
+          rounds.length - 1 - r,
+        );
       }
     }
     return buchholz;
