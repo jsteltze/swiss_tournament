@@ -191,7 +191,6 @@ class RankingView extends StatelessWidget {
                   numeric: true,
                   label: Container(
                     height: 70,
-                    alignment: Alignment.bottomRight,
                     child: RotatedBox(
                       quarterTurns: 3,
                       child: Text(' Buchholz'),
@@ -231,22 +230,51 @@ class RankingView extends StatelessWidget {
                         ),
                         DataCell(Text(r.player.name)),
                         DataCell(
-                          Text('${r.playerId + 1}', textAlign: TextAlign.end),
-                        ),
-                        DataCell(
-                          Text(
-                            r.player.rating == 0
-                                ? 'N/A'
-                                : r.player.rating.toString(),
+                          Container(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Text(
+                              '${r.playerId + 1}',
+                              textAlign: TextAlign.end,
+                            ),
                           ),
                         ),
                         DataCell(
-                          Text((r.wins! + r.losses! + r.draws!).toString()),
+                          Container(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Text(
+                              r.player.rating == 0
+                                  ? 'N/A'
+                                  : r.player.rating.toString(),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Text(
+                              (r.wins! + r.losses! + r.draws!).toString(),
+                            ),
+                          ),
                         ),
                         DataCell(Text('${r.wins}/${r.draws}/${r.losses}')),
-                        DataCell(Text(r.points!.toStringAsFixed(1))),
-                        DataCell(Text(r.buchholz!.toStringAsFixed(1))),
-                        DataCell(Text(r.soBerg!.toStringAsFixed(2))),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Text(r.points!.toStringAsFixed(1)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Text(r.buchholz!.toStringAsFixed(1)),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Text(r.soBerg!.toStringAsFixed(2)),
+                          ),
+                        ),
                       ],
                     ),
                   )
