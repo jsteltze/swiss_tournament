@@ -55,7 +55,7 @@ class PlayerTile extends StatelessWidget {
                 ),
                 if (detailed && player.leftAt != null)
                   Text(
-                    'left after round ${player.leftAt}',
+                    'withdraw after round ${player.leftAt}',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontStyle: FontStyle.italic,

@@ -173,7 +173,7 @@ class PlayersView extends StatelessWidget {
                           if (player.leftAt == null)
                             PopupMenuItem(
                               value: 'disable',
-                              child: const Text('Disable'),
+                              child: const Text('Withdraw'),
                             ),
                           if (player.leftAt != null)
                             PopupMenuItem(
@@ -240,9 +240,9 @@ class PlayersView extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Disable Player'),
+          title: const Text('Withdraw Player'),
           content: Text(
-            'Are you sure you want to disable "${player.name}"?\nDisabled players will not be paired in future rounds.',
+            'Are you sure you want to withdraw (disable) "${player.name}"?\nDisabled players will not be paired in future rounds.',
           ),
           actions: <Widget>[
             TextButton(
