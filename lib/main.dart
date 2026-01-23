@@ -117,10 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _update() {
-    setState(() {});
-  }
-
   void _deleteTournament(Tournament tournament) {
     setState(() {
       _tournaments.remove(tournament);
@@ -135,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (context) => TournamentDetailsPage(
           tournament: tournament,
           onDeleteTournament: () => _deleteTournament(tournament),
-          onUpdate: _update,
+          onUpdate: _loadTournaments,
         ),
       ),
     );
