@@ -29,6 +29,7 @@ class TournamentStorage {
           CREATE TABLE $_tableName(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
+            createdAt TEXT,
             numberOfRounds INTEGER,
             players TEXT,
             rounds TEXT
@@ -42,6 +43,7 @@ class TournamentStorage {
     var t = Tournament(
       id: json['id'],
       title: json['title'],
+      createdAt: DateTime.parse(json['createdAt']),
       numberOfRounds: json['numberOfRounds'],
       players: (jsonDecode(json['players']) as List)
           .map((e) => Player.fromJson(e))
@@ -72,6 +74,7 @@ class TournamentStorage {
       for (var t in tournaments) {
         await txn.insert(_tableName, {
           'title': t.title,
+          'createdAt': t.createdAt.toIso8601String(),
           'numberOfRounds': t.numberOfRounds,
           'players': jsonEncode(t.players.map((e) => e.toJson()).toList()),
           'rounds': jsonEncode(t.rounds.map((e) => e.toJson()).toList()),

@@ -7,6 +7,7 @@ class Tournament {
   int numberOfRounds;
   final List<Player> players;
   final List<Round> rounds;
+  DateTime createdAt;
   Function update;
 
   Tournament({
@@ -15,9 +16,11 @@ class Tournament {
     required this.numberOfRounds,
     List<Player>? players,
     List<Round>? rounds,
+    DateTime? createdAt,
     Function? update,
   }) : players = players ?? [],
        rounds = rounds ?? [],
+       createdAt = createdAt ?? DateTime.now(),
        update = update ?? (() {}) {
     sortPlayers();
   }
@@ -41,6 +44,7 @@ class Tournament {
     'numberOfRounds': numberOfRounds,
     'players': players.map((p) => p.toJson()).toList(),
     'rounds': rounds.map((r) => r.toJson()).toList(),
+    'createdAt': createdAt.toIso8601String(),
   };
 
   factory Tournament.fromJson(Map<String, dynamic> json) {
@@ -54,6 +58,9 @@ class Tournament {
       rounds: (json['rounds'] as List<dynamic>?)
           ?.map((e) => Round.fromJson(e))
           .toList(),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : null,
     );
   }
 }
