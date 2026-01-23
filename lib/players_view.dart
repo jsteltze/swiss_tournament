@@ -163,22 +163,46 @@ class PlayersView extends StatelessWidget {
                         return [
                           const PopupMenuItem(
                             value: 'edit',
-                            child: Text('Edit'),
+                            child: Row(
+                              children: [
+                                Icon(Icons.edit, size: 20),
+                                SizedBox(width: 8),
+                                Text('Edit'),
+                              ],
+                            ),
                           ),
                           PopupMenuItem(
                             value: 'delete',
                             enabled: tournament.rounds.isEmpty,
-                            child: const Text('Delete'),
+                            child: Row(
+                              children: [
+                                Icon(Icons.delete, size: 20),
+                                SizedBox(width: 8),
+                                Text('Delete'),
+                              ],
+                            ),
                           ),
                           if (player.leftAt == null)
                             PopupMenuItem(
                               value: 'disable',
-                              child: const Text('Withdraw'),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.person_off, size: 20),
+                                  SizedBox(width: 8),
+                                  Text('Withdraw'),
+                                ],
+                              ),
                             ),
                           if (player.leftAt != null)
                             PopupMenuItem(
                               value: 're-enable',
-                              child: const Text('Re-enable'),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.person, size: 20),
+                                  SizedBox(width: 8),
+                                  Text('Re-enable'),
+                                ],
+                              ),
                             ),
                         ];
                       },
