@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
@@ -151,6 +153,56 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<void> _importTournaments() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+      );
+
+      if (result != null && result.files.single.path != null) {
+        final file = File(result.files.single.path!);
+        final content = await file.readAsString();
+        final dynamic decoded = jsonDecode(content);
+
+        List<Tournament> importedTournaments = [];
+
+        if (decoded is List) {
+          // List of tournaments
+          importedTournaments = decoded
+              .map((json) => Tournament.fromJson(json))
+              .toList();
+        } else if (decoded is Map<String, dynamic>) {
+          // Single tournament
+          importedTournaments = [Tournament.fromJson(decoded)];
+        }
+
+        if (importedTournaments.isNotEmpty) {
+          for (var t in importedTournaments) {
+            t.id = null; // Ensure they are saved as new
+            await _storage.updateTournament(t);
+          }
+          await _loadTournaments();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Imported ${importedTournaments.length} tournament(s)',
+                ),
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error importing: $e')));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,10 +214,22 @@ class _MyHomePageState extends State<MyHomePage> {
             onSelected: (value) {
               if (value == 'export') {
                 _exportTournaments();
+              } else if (value == 'import') {
+                _importTournaments();
               }
             },
             itemBuilder: (BuildContext context) {
               return [
+                const PopupMenuItem<String>(
+                  value: 'import',
+                  child: Row(
+                    children: [
+                      Icon(Icons.file_upload),
+                      SizedBox(width: 8),
+                      Text('Import'),
+                    ],
+                  ),
+                ),
                 const PopupMenuItem<String>(
                   value: 'export',
                   child: Row(

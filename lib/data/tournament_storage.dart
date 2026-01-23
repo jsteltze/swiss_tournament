@@ -101,6 +101,7 @@ class TournamentStorage {
     final db = await database;
     final values = {
       'title': tournament.title,
+      'createdAt': tournament.createdAt.toIso8601String(),
       'numberOfRounds': tournament.numberOfRounds,
       'players': jsonEncode(tournament.players.map((e) => e.toJson()).toList()),
       'rounds': jsonEncode(tournament.rounds.map((e) => e.toJson()).toList()),
