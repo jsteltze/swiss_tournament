@@ -7,6 +7,7 @@ import 'package:jni/jni.dart';
 import 'package:swiss_tournament/ranking_view.dart';
 
 import 'data/tournament.dart';
+import 'data/tournament_storage.dart';
 import 'java.g.dart';
 import 'players_view.dart';
 import 'rounds_view.dart';
@@ -29,6 +30,7 @@ class TournamentDetailsPage extends StatefulWidget {
 
 class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
   int _selectedIndex = 0;
+  final TournamentStorage _storage = TournamentStorage();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -142,7 +144,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
     final TextEditingController filenameController = TextEditingController(
       text: 'tournament-${widget.tournament.id ?? 'new'}',
     );
-    String exportType = 'All (Players & Rounds)';
+    String exportType = 'Full Tournament';
 
     showDialog(
       context: context,
@@ -155,16 +157,18 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Export to Downloads folder.'),
+                  const Text(
+                    'Export to Downloads folder. The saved file can serve as a backup or can be shared and imported on other devices.',
+                  ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Content:',
+                    'Type:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   DropdownButton<String>(
                     value: exportType,
                     isExpanded: true,
-                    items: <String>['All (Players & Rounds)', 'Players only']
+                    items: <String>['Full Tournament', 'Players only']
                         .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -207,7 +211,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                     }
 
                     Map<String, dynamic> data;
-                    if (exportType == 'All (Players & Rounds)') {
+                    if (exportType == 'Full Tournament') {
                       data = widget.tournament.toJson();
                     } else {
                       data = {
@@ -236,6 +240,108 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                     );
                   },
                   child: const Text('Export'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _duplicateTournament() {
+    final TextEditingController titleController = TextEditingController(
+      text: '${widget.tournament.title} (Copy)',
+    );
+    String duplicateType = 'Full Tournament';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Duplicate Tournament'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Type:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  DropdownButton<String>(
+                    value: duplicateType,
+                    isExpanded: true,
+                    items: <String>['Full Tournament', 'Players only']
+                        .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        })
+                        .toList(),
+                    onChanged: (String? newValue) {
+                      setDialogState(() {
+                        duplicateType = newValue!;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'New Title:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter new tournament name',
+                    ),
+                    autofocus: true,
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    if (titleController.text.isNotEmpty) {
+                      Map<String, dynamic> json;
+                      if (duplicateType == 'Full Tournament') {
+                        json = widget.tournament.toJson();
+                      } else {
+                        json = {
+                          'title': titleController.text,
+                          'numberOfRounds': widget.tournament.numberOfRounds,
+                          'players': widget.tournament.players
+                              .map((p) => p.toJson())
+                              .toList(),
+                          'rounds': [],
+                        };
+                      }
+
+                      json.remove('id'); // Ensure it's treated as a new entry
+                      json['title'] = titleController.text;
+
+                      final newTournament = Tournament.fromJson(json);
+                      await _storage.updateTournament(newTournament);
+
+                      if (mounted) {
+                        Navigator.pop(context);
+                        widget.onUpdate?.call(); // Refresh the home page list
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('"${newTournament.title}" created'),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text('Duplicate'),
                 ),
               ],
             );
@@ -293,6 +399,8 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                 _confirmDeleteTournament();
               } else if (value == 'export') {
                 _exportTournament();
+              } else if (value == 'duplicate') {
+                _duplicateTournament();
               }
             },
             itemBuilder: (BuildContext context) {
@@ -304,6 +412,16 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                       Icon(Icons.edit, size: 20),
                       SizedBox(width: 8),
                       Text('Edit'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'duplicate',
+                  child: Row(
+                    children: [
+                      Icon(Icons.copy, size: 20),
+                      SizedBox(width: 8),
+                      Text('Duplicate'),
                     ],
                   ),
                 ),
