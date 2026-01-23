@@ -1,7 +1,7 @@
 package dev.dart;
 
 import android.app.Activity;
-
+import android.os.Environment;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +28,22 @@ public class Sample {
             return response;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static String exportToFile(Activity activity, String content, String fileName) {
+        try {
+            File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (!downloadsDir.exists()) {
+                downloadsDir.mkdirs();
+            }
+            File file = new File(downloadsDir, fileName);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(content);
+            writer.close();
+            return file.getAbsolutePath();
+        } catch (IOException e) {
+            return "Error: " + e.getMessage();
         }
     }
 }

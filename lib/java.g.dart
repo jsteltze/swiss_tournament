@@ -2742,6 +2742,56 @@ class Sample extends jni$_.JObject {
       _$trfFileContent.pointer,
     ).object<jni$_.JString?>(const jni$_.$JString$NullableType$());
   }
+
+  static final _id_exportToFile = _class.staticMethodId(
+    r'exportToFile',
+    r'(Landroid/app/Activity;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;',
+  );
+
+  static final _exportToFile =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+                jni$_.VarArgs<
+                  (
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Pointer<jni$_.Void>,
+                  )
+                >,
+              )
+            >
+          >('globalEnv_CallStaticObjectMethod')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.Pointer<jni$_.Void>,
+            )
+          >();
+
+  /// from: `static public java.lang.String exportToFile(android.app.Activity activity, java.lang.String content, java.lang.String fileName)`
+  /// The returned object must be released after use, by calling the [release] method.
+  static jni$_.JString? exportToFile(
+    jni$_.JObject? activity,
+    jni$_.JString? content,
+    jni$_.JString? fileName,
+  ) {
+    final _$activity = activity?.reference ?? jni$_.jNullReference;
+    final _$content = content?.reference ?? jni$_.jNullReference;
+    final _$fileName = fileName?.reference ?? jni$_.jNullReference;
+    return _exportToFile(
+      _class.reference.pointer,
+      _id_exportToFile as jni$_.JMethodIDPtr,
+      _$activity.pointer,
+      _$content.pointer,
+      _$fileName.pointer,
+    ).object<jni$_.JString?>(const jni$_.$JString$NullableType$());
+  }
 }
 
 final class $Sample$NullableType$ extends jni$_.JType<Sample?> {

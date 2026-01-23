@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jni/jni.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
+import 'java.g.dart';
 import 'tournament_details_page.dart';
 
 void main() {
@@ -136,12 +141,49 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _exportTournaments() {
+    final String json = jsonEncode(
+      _tournaments.map((t) => t.toJson()).toList(),
+    );
+    Sample.exportToFile(
+      Jni.androidActivity(PlatformDispatcher.instance.engineId!),
+      JString.fromString(json),
+      JString.fromString("tournaments.json"),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('"tournaments.json" exported to Downloads')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'export') {
+                _exportTournaments();
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem<String>(
+                  value: 'export',
+                  child: Row(
+                    children: [
+                      Icon(Icons.save_alt),
+                      SizedBox(width: 8),
+                      Text('Export'),
+                    ],
+                  ),
+                ),
+              ];
+            },
+          ),
+        ],
       ),
       body: _tournaments.isEmpty
           ? const Center(child: Text('No tournaments yet.'))
