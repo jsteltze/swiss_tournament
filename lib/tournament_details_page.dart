@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jni/jni.dart';
 import 'package:swiss_tournament/ranking_view.dart';
 
 import 'data/tournament.dart';
+import 'java.g.dart';
 import 'players_view.dart';
 import 'rounds_view.dart';
 
@@ -133,6 +138,113 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
     );
   }
 
+  void _exportTournament() {
+    final TextEditingController filenameController = TextEditingController(
+      text: 'tournament-${widget.tournament.id ?? 'new'}',
+    );
+    String exportType = 'All (Players & Rounds)';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Export Tournament'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Export to Downloads folder.'),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Content:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  DropdownButton<String>(
+                    value: exportType,
+                    isExpanded: true,
+                    items: <String>['All (Players & Rounds)', 'Players only']
+                        .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        })
+                        .toList(),
+                    onChanged: (String? newValue) {
+                      setDialogState(() {
+                        exportType = newValue!;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Filename:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextField(
+                    controller: filenameController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter filename',
+                      suffixText: '.json',
+                    ),
+                    autofocus: true,
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    String filename = filenameController.text;
+                    if (filename.isEmpty) return;
+                    if (!filename.toLowerCase().endsWith('.json')) {
+                      filename += '.json';
+                    }
+
+                    Map<String, dynamic> data;
+                    if (exportType == 'All (Players & Rounds)') {
+                      data = widget.tournament.toJson();
+                    } else {
+                      data = {
+                        'title': widget.tournament.title,
+                        'numberOfRounds': widget.tournament.numberOfRounds,
+                        'players': widget.tournament.players
+                            .map((p) => p.toJson())
+                            .toList(),
+                      };
+                    }
+
+                    final String jsonContent = jsonEncode(data);
+                    Sample.exportToFile(
+                      Jni.androidActivity(
+                        PlatformDispatcher.instance.engineId!,
+                      ),
+                      JString.fromString(jsonContent),
+                      JString.fromString(filename),
+                    );
+
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('"$filename" exported to Downloads'),
+                      ),
+                    );
+                  },
+                  child: const Text('Export'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget bodyContent;
@@ -179,6 +291,8 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                 _editTournament();
               } else if (value == 'delete') {
                 _confirmDeleteTournament();
+              } else if (value == 'export') {
+                _exportTournament();
               }
             },
             itemBuilder: (BuildContext context) {
@@ -190,6 +304,16 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                       Icon(Icons.edit, size: 20),
                       SizedBox(width: 8),
                       Text('Edit'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'export',
+                  child: Row(
+                    children: [
+                      Icon(Icons.save_alt, size: 20),
+                      SizedBox(width: 8),
+                      Text('Export'),
                     ],
                   ),
                 ),
