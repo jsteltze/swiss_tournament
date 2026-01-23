@@ -216,6 +216,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                     } else {
                       data = {
                         'title': widget.tournament.title,
+                        'createdAt': widget.tournament.createdAt,
                         'numberOfRounds': widget.tournament.numberOfRounds,
                         'players': widget.tournament.players
                             .map((p) => p.toJson())
@@ -312,9 +313,11 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                       Map<String, dynamic> json;
                       if (duplicateType == 'Full Tournament') {
                         json = widget.tournament.toJson();
+                        json.update('createdAt', (value) => DateTime.now());
                       } else {
                         json = {
                           'title': titleController.text,
+                          'createdAt': DateTime.now(),
                           'numberOfRounds': widget.tournament.numberOfRounds,
                           'players': widget.tournament.players
                               .map((p) => p.toJson())
