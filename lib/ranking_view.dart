@@ -32,6 +32,7 @@ class RankingView extends StatelessWidget {
   Widget build(BuildContext context) {
     print('ranking view');
     final lastRoundNum = tournament.rounds.length;
+    final headerHeight = 75.0;
     if (lastRoundNum == 0) {
       return Center(
         child: Column(
@@ -125,11 +126,11 @@ class RankingView extends StatelessWidget {
             child: DataTable(
               columnSpacing: 8.0,
               horizontalMargin: 2,
-              headingRowHeight: 70,
+              headingRowHeight: headerHeight,
               columns: [
                 DataColumn(
                   label: Container(
-                    height: 70,
+                    height: headerHeight,
                     alignment: Alignment.bottomRight,
                     child: Text('#'),
                   ),
@@ -137,7 +138,7 @@ class RankingView extends StatelessWidget {
                 ),
                 DataColumn(
                   label: Container(
-                    height: 70,
+                    height: 75,
                     alignment: Alignment.bottomLeft,
                     child: Text('Name'),
                   ),
@@ -145,7 +146,7 @@ class RankingView extends StatelessWidget {
                 DataColumn(
                   numeric: true,
                   label: Container(
-                    height: 70,
+                    height: headerHeight,
                     alignment: Alignment.bottomRight,
                     child: RotatedBox(
                       quarterTurns: 3,
@@ -155,7 +156,7 @@ class RankingView extends StatelessWidget {
                 ),
                 DataColumn(
                   label: Container(
-                    height: 70,
+                    height: headerHeight,
                     alignment: Alignment.bottomRight,
                     child: RotatedBox(quarterTurns: 3, child: Text(' Rating')),
                   ),
@@ -164,7 +165,7 @@ class RankingView extends StatelessWidget {
                 ),
                 DataColumn(
                   label: Container(
-                    height: 70,
+                    height: headerHeight,
                     alignment: Alignment.bottomRight,
                     child: RotatedBox(quarterTurns: 3, child: Text(' Games')),
                   ),
@@ -173,7 +174,7 @@ class RankingView extends StatelessWidget {
                 ),
                 DataColumn(
                   label: Container(
-                    height: 70,
+                    height: headerHeight,
                     alignment: Alignment.bottomCenter,
                     child: Text('W/D/L'),
                   ),
@@ -182,7 +183,7 @@ class RankingView extends StatelessWidget {
                 DataColumn(
                   numeric: true,
                   label: Container(
-                    height: 70,
+                    height: headerHeight,
                     alignment: Alignment.bottomRight,
                     child: RotatedBox(quarterTurns: 3, child: Text(' Points')),
                   ),
@@ -190,19 +191,32 @@ class RankingView extends StatelessWidget {
                 DataColumn(
                   numeric: true,
                   label: Container(
-                    height: 70,
+                    height: headerHeight,
                     child: RotatedBox(
                       quarterTurns: 3,
-                      child: Text(' Buchholz'),
+                      child: Text(
+                        ' Tiebreak 1\n Buchholz',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 DataColumn(
                   numeric: true,
                   label: Container(
-                    height: 70,
+                    height: headerHeight,
                     alignment: Alignment.bottomRight,
-                    child: RotatedBox(quarterTurns: 3, child: Text(' SoBerg')),
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Text(
+                        ' Tiebreak 2\n SoBerg',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -223,18 +237,27 @@ class RankingView extends StatelessWidget {
                                 child: Text(
                                   r.rank.toString(),
                                   textAlign: TextAlign.end,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        DataCell(Text(r.player.name)),
+                        DataCell(
+                          Text(
+                            r.player.name,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         DataCell(
                           Container(
                             padding: const EdgeInsets.only(right: 5),
                             child: Text(
                               '${r.playerId + 1}',
                               textAlign: TextAlign.end,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
                           ),
                         ),
@@ -245,6 +268,9 @@ class RankingView extends StatelessWidget {
                               r.player.rating == 0
                                   ? 'N/A'
                                   : r.player.rating.toString(),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
                           ),
                         ),
@@ -253,26 +279,49 @@ class RankingView extends StatelessWidget {
                             padding: const EdgeInsets.only(right: 5),
                             child: Text(
                               (r.wins! + r.losses! + r.draws!).toString(),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
                           ),
                         ),
-                        DataCell(Text('${r.wins}/${r.draws}/${r.losses}')),
                         DataCell(
-                          Container(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: Text(r.points!.toStringAsFixed(1)),
+                          Text(
+                            '${r.wins}/${r.draws}/${r.losses}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
                           ),
                         ),
                         DataCell(
                           Container(
                             padding: const EdgeInsets.only(right: 5),
-                            child: Text(r.buchholz!.toStringAsFixed(1)),
+                            child: Text(
+                              r.points!.toStringAsFixed(1),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                         DataCell(
                           Container(
                             padding: const EdgeInsets.only(right: 5),
-                            child: Text(r.soBerg!.toStringAsFixed(2)),
+                            child: Text(
+                              r.buchholz!.toStringAsFixed(1),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Text(
+                              r.soBerg!.toStringAsFixed(2),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
                           ),
                         ),
                       ],
