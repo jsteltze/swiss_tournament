@@ -145,9 +145,8 @@ class RankingView extends StatelessWidget {
                 ),
                 DataColumn(
                   numeric: true,
-                  label: Container(
+                  label: SizedBox(
                     height: headerHeight,
-                    alignment: Alignment.bottomRight,
                     child: RotatedBox(
                       quarterTurns: 3,
                       child: Text(' Startrank'),
@@ -155,18 +154,16 @@ class RankingView extends StatelessWidget {
                   ),
                 ),
                 DataColumn(
-                  label: Container(
+                  label: SizedBox(
                     height: headerHeight,
-                    alignment: Alignment.bottomRight,
                     child: RotatedBox(quarterTurns: 3, child: Text(' Rating')),
                   ),
                   numeric: true,
                   headingRowAlignment: MainAxisAlignment.start,
                 ),
                 DataColumn(
-                  label: Container(
+                  label: SizedBox(
                     height: headerHeight,
-                    alignment: Alignment.bottomRight,
                     child: RotatedBox(quarterTurns: 3, child: Text(' Games')),
                   ),
                   numeric: true,
@@ -182,15 +179,14 @@ class RankingView extends StatelessWidget {
                 ),
                 DataColumn(
                   numeric: true,
-                  label: Container(
+                  label: SizedBox(
                     height: headerHeight,
-                    alignment: Alignment.bottomRight,
                     child: RotatedBox(quarterTurns: 3, child: Text(' Points')),
                   ),
                 ),
                 DataColumn(
                   numeric: true,
-                  label: Container(
+                  label: SizedBox(
                     height: headerHeight,
                     child: RotatedBox(
                       quarterTurns: 3,
@@ -205,9 +201,8 @@ class RankingView extends StatelessWidget {
                 ),
                 DataColumn(
                   numeric: true,
-                  label: Container(
+                  label: SizedBox(
                     height: headerHeight,
-                    alignment: Alignment.bottomRight,
                     child: RotatedBox(
                       quarterTurns: 3,
                       child: Text(
