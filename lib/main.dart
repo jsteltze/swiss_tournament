@@ -165,33 +165,20 @@ class _MyHomePageState extends State<MyHomePage> {
         final content = await file.readAsString();
         final dynamic decoded = jsonDecode(content);
 
-        List<Tournament> importedTournaments = [];
+        List<Tournament> parsedTournaments = [];
 
         if (decoded is List) {
           // List of tournaments
-          importedTournaments = decoded
+          parsedTournaments = decoded
               .map((json) => Tournament.fromJson(json))
               .toList();
         } else if (decoded is Map<String, dynamic>) {
           // Single tournament
-          importedTournaments = [Tournament.fromJson(decoded)];
+          parsedTournaments = [Tournament.fromJson(decoded)];
         }
 
-        if (importedTournaments.isNotEmpty) {
-          for (var t in importedTournaments) {
-            t.id = null; // Ensure they are saved as new
-            await _storage.updateTournament(t);
-          }
-          await _loadTournaments();
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Imported ${importedTournaments.length} tournament(s)',
-                ),
-              ),
-            );
-          }
+        if (parsedTournaments.isNotEmpty && mounted) {
+          _showImportConfirmationDialog(parsedTournaments);
         }
       }
     } catch (e) {
@@ -201,6 +188,74 @@ class _MyHomePageState extends State<MyHomePage> {
         ).showSnackBar(SnackBar(content: Text('Error importing: $e')));
       }
     }
+  }
+
+  void _showImportConfirmationDialog(List<Tournament> tournaments) {
+    List<bool> selected = List.generate(tournaments.length, (index) => true);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Confirm Import'),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: tournaments.length,
+                  itemBuilder: (context, index) {
+                    final t = tournaments[index];
+                    return CheckboxListTile(
+                      title: Text(t.title),
+                      subtitle: Text(
+                        '${t.players.length} players, ${t.numberOfRounds} rounds',
+                      ),
+                      value: selected[index],
+                      onChanged: (val) {
+                        setDialogState(() {
+                          selected[index] = val!;
+                        });
+                      },
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    int count = 0;
+                    for (int i = 0; i < tournaments.length; i++) {
+                      if (selected[i]) {
+                        final t = tournaments[i];
+                        t.id = null; // Save as new
+                        await _storage.updateTournament(t);
+                        count++;
+                      }
+                    }
+                    Navigator.pop(context);
+                    _loadTournaments();
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Imported $count tournament(s)'),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Import Selected'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
