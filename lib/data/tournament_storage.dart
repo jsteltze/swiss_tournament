@@ -32,7 +32,8 @@ class TournamentStorage {
             createdAt TEXT,
             numberOfRounds INTEGER,
             players TEXT,
-            rounds TEXT
+            rounds TEXT,
+            settings TEXT
           )
         ''');
       },
@@ -53,6 +54,9 @@ class TournamentStorage {
                 .map((e) => Round.fromJson(e))
                 .toList()
           : [],
+      settings: json['settings'] != null
+          ? (TournamentSettings.fromJson(json['settings']))
+          : TournamentSettings(),
     );
     t.update = () => updateTournament(t);
     return t;
@@ -78,6 +82,7 @@ class TournamentStorage {
           'numberOfRounds': t.numberOfRounds,
           'players': jsonEncode(t.players.map((e) => e.toJson()).toList()),
           'rounds': jsonEncode(t.rounds.map((e) => e.toJson()).toList()),
+          'settinqs': t.settings.toJson(),
         });
       }
     });
@@ -105,6 +110,7 @@ class TournamentStorage {
       'numberOfRounds': tournament.numberOfRounds,
       'players': jsonEncode(tournament.players.map((e) => e.toJson()).toList()),
       'rounds': jsonEncode(tournament.rounds.map((e) => e.toJson()).toList()),
+      'settings': tournament.settings.toJson(),
     };
 
     if (tournament.id != null) {

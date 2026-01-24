@@ -354,6 +354,14 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
     );
   }
 
+  void _applyNewSettings(TournamentSettings settings) {
+    widget.tournament.settings = settings;
+    widget.tournament.update();
+    setState(() {
+      _selectedIndex = 2;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget bodyContent;
@@ -368,7 +376,10 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         );
         break;
       case 2:
-        bodyContent = RankingView(tournament: widget.tournament);
+        bodyContent = RankingView(
+          tournament: widget.tournament,
+          onSettingsUpdate: _applyNewSettings,
+        );
         break;
       case 0:
       default:
