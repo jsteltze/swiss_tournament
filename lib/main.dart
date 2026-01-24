@@ -178,7 +178,10 @@ class _MyHomePageState extends State<MyHomePage> {
         }
 
         if (parsedTournaments.isNotEmpty && mounted) {
-          _showImportConfirmationDialog(parsedTournaments);
+          _showImportConfirmationDialog(
+            file.path.split('/').last,
+            parsedTournaments,
+          );
         }
       }
     } catch (e) {
@@ -190,37 +193,86 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _showImportConfirmationDialog(List<Tournament> tournaments) {
-    List<bool> selected = List.generate(tournaments.length, (index) => true);
+  void _showImportConfirmationDialog(
+    String filename,
+    List<Tournament> tournaments,
+  ) {
+    //List<bool> selected = List.generate(tournaments.length, (index) => true);
+    String importType = 'Full Tournament';
 
     showDialog(
       context: context,
       builder: (context) {
+        List<bool> selected = List.generate(
+          tournaments.length,
+          (index) => true,
+        );
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
               title: const Text('Confirm Import'),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: tournaments.length,
-                  itemBuilder: (context, index) {
-                    final t = tournaments[index];
-                    return CheckboxListTile(
-                      title: Text(t.title),
-                      subtitle: Text(
-                        '${t.players.length} players, ${t.numberOfRounds} rounds',
-                      ),
-                      value: selected[index],
-                      onChanged: (val) {
-                        setDialogState(() {
-                          selected[index] = val!;
-                        });
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '$filename: contains ${tournaments.length} tournament(s) that can be imported.',
+                  ),
+                  SizedBox(height: 20),
+                  const Text(
+                    'Import type:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  DropdownButton<String>(
+                    value: importType,
+                    isExpanded: true,
+                    items: <String>['Full Tournament', 'Players only']
+                        .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        })
+                        .toList(),
+                    onChanged: (String? newValue) {
+                      setDialogState(() {
+                        importType = newValue!;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Select tournament(s) to import:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 300,
+                    width: double.maxFinite,
+                    child: ListView.builder(
+                      itemCount: tournaments.length,
+                      itemBuilder: (context, index) {
+                        final t = tournaments[index];
+                        return CheckboxListTile(
+                          title: Text(t.title),
+                          subtitle: Text(
+                            '${t.players.length} players${importType == 'Full Tournament' ? ', ${t.numberOfRounds} rounds' : ''}',
+                          ),
+                          value: selected[index],
+                          onChanged: (val) {
+                            setDialogState(() {
+                              selected[index] = val!;
+                            });
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                  Text(
+                    'Selected: ${selected.where((s) => s).length} / ${tournaments.length}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
               actions: [
                 TextButton(
@@ -234,6 +286,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (selected[i]) {
                         final t = tournaments[i];
                         t.id = null; // Save as new
+                        if (importType == 'Players only') {
+                          t.rounds.removeRange(0, t.rounds.length);
+                        }
                         await _storage.updateTournament(t);
                         count++;
                       }
@@ -248,7 +303,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     }
                   },
-                  child: const Text('Import Selected'),
+                  child: Text(
+                    'Import Selected (${selected.where((s) => s).length})',
+                  ),
                 ),
               ],
             );
