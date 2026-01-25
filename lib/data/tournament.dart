@@ -19,8 +19,12 @@ class TournamentSettings {
 
   factory TournamentSettings.fromJson(Map<String, dynamic> json) {
     return TournamentSettings(
-      tb1: json['tb1'] ?? DEFAULT_TB1,
-      tb2: json['tb2'] ?? DEFAULT_TB2,
+      tb1: json['tb1'] != null
+          ? Tiebreak.values.firstWhere((t) => t.name == json['tb1'])
+          : DEFAULT_TB1,
+      tb2: json['tb2'] != null
+          ? Tiebreak.values.firstWhere((t) => t.name == json['tb2'])
+          : DEFAULT_TB2,
     );
   }
 }

@@ -55,7 +55,7 @@ class TournamentStorage {
                 .toList()
           : [],
       settings: json['settings'] != null
-          ? (TournamentSettings.fromJson(json['settings']))
+          ? (TournamentSettings.fromJson(jsonDecode(json['settings'])))
           : TournamentSettings(),
     );
     t.update = () => updateTournament(t);
@@ -82,7 +82,7 @@ class TournamentStorage {
           'numberOfRounds': t.numberOfRounds,
           'players': jsonEncode(t.players.map((e) => e.toJson()).toList()),
           'rounds': jsonEncode(t.rounds.map((e) => e.toJson()).toList()),
-          'settinqs': t.settings.toJson(),
+          'settinqs': jsonEncode(t.settings.toJson()),
         });
       }
     });
@@ -110,7 +110,7 @@ class TournamentStorage {
       'numberOfRounds': tournament.numberOfRounds,
       'players': jsonEncode(tournament.players.map((e) => e.toJson()).toList()),
       'rounds': jsonEncode(tournament.rounds.map((e) => e.toJson()).toList()),
-      'settings': tournament.settings.toJson(),
+      'settings': jsonEncode(tournament.settings.toJson()),
     };
 
     if (tournament.id != null) {
