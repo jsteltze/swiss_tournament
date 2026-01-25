@@ -1,33 +1,26 @@
+import 'package:swiss_tournament/data/tiebreak.dart';
+
 import 'player.dart';
 import 'round.dart';
 
 class TournamentSettings {
-  String tiebreak1;
-  String tiebreak2;
+  static const DEFAULT_TB1 = Tiebreak.buchholz09;
+  static const DEFAULT_TB2 = Tiebreak.soberg09;
 
-  static const tiebreakListTech = [
-    'buchholz09',
-    'buchholz24',
-    'soberg09',
-    'soberg24',
-    'direct',
-    'no',
-  ];
+  Tiebreak tb1;
+  Tiebreak tb2;
 
-  TournamentSettings({
-    this.tiebreak1 = 'buchholz09',
-    this.tiebreak2 = 'soberg09',
-  });
+  TournamentSettings({this.tb1 = DEFAULT_TB1, this.tb2 = DEFAULT_TB2});
 
   Map<String, dynamic> toJson() => {
-    'tiebreak1': tiebreak1,
-    'tiebreak2': tiebreak2,
+    if (tb1 != DEFAULT_TB1) 'tb1': tb1.name,
+    if (tb2 != DEFAULT_TB2) 'tb2': tb2.name,
   };
 
   factory TournamentSettings.fromJson(Map<String, dynamic> json) {
     return TournamentSettings(
-      tiebreak1: json['tiebreak1'] ?? 'buchholz09',
-      tiebreak2: json['tiebreak2'] ?? 'soberg09',
+      tb1: json['tb1'] ?? DEFAULT_TB1,
+      tb2: json['tb2'] ?? DEFAULT_TB2,
     );
   }
 }

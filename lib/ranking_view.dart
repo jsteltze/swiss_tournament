@@ -1,28 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
+import 'package:swiss_tournament/data/tiebreak.dart';
 
 import 'data/tournament.dart';
 
 class RankingView extends StatelessWidget {
   final Tournament tournament;
   final Function onSettingsUpdate;
-
-  static const tiebreakList = [
-    'Buchholz (FIDE 2009)',
-    'Buchholz (FIDE 2024)',
-    'Sonneborn-Berger (FIDE 2009)',
-    'Sonneborn-Berger (FIDE 2024)',
-    'Direct Encounter',
-    'No Tiebreak',
-  ];
-  static const tiebreakListShort = [
-    'Buchholz',
-    'Buchholz',
-    'SoBerg',
-    'SoBerg',
-    'Direct',
-    'No Tiebreak',
-  ];
 
   const RankingView({
     super.key,
@@ -50,31 +34,14 @@ class RankingView extends StatelessWidget {
     return 0;
   }
 
-  void applyTiebreak(int tiebreak1, int tiebreak2) {
-    TournamentSettings s = TournamentSettings(
-      tiebreak1: TournamentSettings.tiebreakListTech[tiebreak1],
-      tiebreak2: TournamentSettings.tiebreakListTech[tiebreak2],
-    );
+  void applyTiebreak(Tiebreak tb1, Tiebreak tb2) {
+    TournamentSettings s = TournamentSettings(tb1: tb1, tb2: tb2);
     onSettingsUpdate(s);
   }
 
   void _showSettingsDialog(BuildContext context) {
-    var tiebreakExplanationList = [
-      'Buchholz tiebreak: this is the sum of all opponent scores (independent from the result). FIDE 2009 rule: if an opponent has unplayed rounds the forfeit win only counts 0.5 points. If the player self has unplayed round, a virtual opponent is introduced, which has an equal score.',
-      'Buchholz tiebreak: this is the sum of all opponent scores (independent from the result). FIDE 2024 rule: if an opponent has unplayed rounds the forfeit win counts as 1 regular point. If the player self has unplayed round, for each of them the own score is used.',
-      'Sonneborn-Berger tiebreak: calculated the same way as Buchholz, but the opponents score is weighted with the result (factor 1.0 if won, factor 0.5 if draw, factor 0 if lost).',
-      'Sonneborn-Berger tiebreak: calculated the same way as Buchholz, but the opponents score is weighted with the result (factor 1.0 if won, factor 0.5 if draw, factor 0 if lost).',
-      'Direct Encounter tiebreak: for players sharing the same rank, this is the result of their direct encounter (if possible). If multiple players share the same rank the direct encounter score can be >1. If the players did not have a direct encounter the value remains 0.',
-      'No Tiebreak: no tiebreak is used. Shared ranks are possible.',
-    ];
-    int selectedTiebreak1 = TournamentSettings.tiebreakListTech.indexOf(
-      tournament.settings.tiebreak1,
-    );
-    ;
-    int selectedTiebreak2 = TournamentSettings.tiebreakListTech.indexOf(
-      tournament.settings.tiebreak2,
-    );
-    ;
+    var selectedTiebreak1 = tournament.settings.tb1;
+    var selectedTiebreak2 = tournament.settings.tb2;
 
     showDialog(
       context: context,
@@ -91,53 +58,53 @@ class RankingView extends StatelessWidget {
                     'Tiebreak 1:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  DropdownButton<String>(
-                    value: tiebreakList[selectedTiebreak1],
+                  DropdownButton<Tiebreak>(
+                    value: selectedTiebreak1,
                     isExpanded: true,
-                    items: tiebreakList.map<DropdownMenuItem<String>>((
-                      String value,
+                    items: Tiebreak.values.map<DropdownMenuItem<Tiebreak>>((
+                      Tiebreak value,
                     ) {
-                      return DropdownMenuItem<String>(
+                      return DropdownMenuItem<Tiebreak>(
                         value: value,
-                        child: Text(value),
+                        child: Text(value.longName),
                       );
                     }).toList(),
-                    onChanged: (String? newValue) {
+                    onChanged: (Tiebreak? newValue) {
                       setDialogState(() {
-                        selectedTiebreak1 = tiebreakList.indexOf(newValue!);
-                        if (selectedTiebreak1 == tiebreakList.length - 1) {
-                          selectedTiebreak2 = tiebreakList.length - 1;
+                        selectedTiebreak1 = newValue!;
+                        if (selectedTiebreak1 == Tiebreak.no) {
+                          selectedTiebreak2 = Tiebreak.no;
                         }
                       });
                     },
                   ),
-                  Text(tiebreakExplanationList[selectedTiebreak1]),
+                  Text(selectedTiebreak1.description),
                   const SizedBox(height: 20),
-                  if (selectedTiebreak1 != tiebreakList.length - 1)
+                  if (selectedTiebreak1 != Tiebreak.no)
                     const Text(
                       'Tiebreak 2:',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  if (selectedTiebreak1 != tiebreakList.length - 1)
-                    DropdownButton<String>(
-                      value: tiebreakList[selectedTiebreak2],
+                  if (selectedTiebreak1 != Tiebreak.no)
+                    DropdownButton<Tiebreak>(
+                      value: selectedTiebreak2,
                       isExpanded: true,
-                      items: tiebreakList.map<DropdownMenuItem<String>>((
-                        String value,
+                      items: Tiebreak.values.map<DropdownMenuItem<Tiebreak>>((
+                        Tiebreak value,
                       ) {
-                        return DropdownMenuItem<String>(
+                        return DropdownMenuItem<Tiebreak>(
                           value: value,
-                          child: Text(value),
+                          child: Text(value.longName),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
+                      onChanged: (Tiebreak? newValue) {
                         setDialogState(() {
-                          selectedTiebreak2 = tiebreakList.indexOf(newValue!);
+                          selectedTiebreak2 = newValue!;
                         });
                       },
                     ),
-                  if (selectedTiebreak1 != tiebreakList.length - 1)
-                    Text(tiebreakExplanationList[selectedTiebreak2]),
+                  if (selectedTiebreak1 != Tiebreak.no)
+                    Text(selectedTiebreak2.description),
                 ],
               ),
               actions: [
@@ -164,12 +131,8 @@ class RankingView extends StatelessWidget {
   Widget build(BuildContext context) {
     print('ranking view');
     final lastRoundNum = tournament.rounds.length;
-    final selectedTiebreak1 = TournamentSettings.tiebreakListTech.indexOf(
-      tournament.settings.tiebreak1,
-    );
-    final selectedTiebreak2 = TournamentSettings.tiebreakListTech.indexOf(
-      tournament.settings.tiebreak2,
-    );
+    final selectedTiebreak1 = tournament.settings.tb1;
+    final selectedTiebreak2 = tournament.settings.tb2;
     final headerHeight = 75.0;
     if (lastRoundNum == 0) {
       return Center(
@@ -327,7 +290,7 @@ class RankingView extends StatelessWidget {
                     child: RotatedBox(quarterTurns: 3, child: Text(' Score')),
                   ),
                 ),
-                if (selectedTiebreak1 != tiebreakList.length - 1)
+                if (selectedTiebreak1 != Tiebreak.no)
                   DataColumn(
                     numeric: true,
                     label: SizedBox(
@@ -335,7 +298,7 @@ class RankingView extends StatelessWidget {
                       child: RotatedBox(
                         quarterTurns: 3,
                         child: Text(
-                          ' Tiebreak 1\n ${tiebreakListShort[selectedTiebreak1]}',
+                          ' Tiebreak 1\n ${selectedTiebreak1.shortName}',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
@@ -343,7 +306,7 @@ class RankingView extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (selectedTiebreak2 != tiebreakList.length - 1)
+                if (selectedTiebreak2 != Tiebreak.no)
                   DataColumn(
                     numeric: true,
                     label: SizedBox(
@@ -351,7 +314,7 @@ class RankingView extends StatelessWidget {
                       child: RotatedBox(
                         quarterTurns: 3,
                         child: Text(
-                          ' Tiebreak 2\n ${tiebreakListShort[selectedTiebreak2]}',
+                          ' Tiebreak 2\n ${selectedTiebreak2.shortName}',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
@@ -442,7 +405,7 @@ class RankingView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (selectedTiebreak1 != tiebreakList.length - 1)
+                        if (selectedTiebreak1 != Tiebreak.no)
                           DataCell(
                             Container(
                               padding: const EdgeInsets.only(right: 5),
@@ -456,7 +419,7 @@ class RankingView extends StatelessWidget {
                               ),
                             ),
                           ),
-                        if (selectedTiebreak2 != tiebreakList.length - 1)
+                        if (selectedTiebreak2 != Tiebreak.no)
                           DataCell(
                             Container(
                               padding: const EdgeInsets.only(right: 5),
