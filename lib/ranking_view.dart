@@ -14,22 +14,24 @@ class RankingView extends StatelessWidget {
     required this.onSettingsUpdate,
   });
 
-  int _comparePlayers(PlayerRatings a, PlayerRatings b) {
+  int _comparePlayersAndSetSharedPlace(PlayerRatings a, PlayerRatings b) {
     var comparePoints = b.points!.compareTo(a.points!);
     if (comparePoints != 0) {
       return comparePoints;
     }
-    var compareBuchholz = b.buchholz!.compareTo(a.buchholz!);
-    if (compareBuchholz != 0) {
-      return compareBuchholz;
+    var compareTb1 = b.tiebreak1!.compareTo(a.tiebreak1!);
+    if (compareTb1 != 0) {
+      return compareTb1;
     }
-    var compareSoBerg = b.soBerg!.compareTo(a.soBerg!);
-    if (compareSoBerg != 0) {
-      return compareSoBerg;
+    var compareTb2 = b.tiebreak2!.compareTo(a.tiebreak2!);
+    if (compareTb2 != 0) {
+      return compareTb2;
     }
 
     a.sharedPlace =
-        a.points!.toString() + a.buchholz!.toString() + a.soBerg!.toString();
+        a.points!.toString() +
+        a.tiebreak1!.toString() +
+        a.tiebreak2!.toString();
     b.sharedPlace = a.sharedPlace;
     return 0;
   }
@@ -117,7 +119,7 @@ class RankingView extends StatelessWidget {
                     applyTiebreak(selectedTiebreak1, selectedTiebreak2);
                     Navigator.pop(context);
                   },
-                  child: const Text('Apply'),
+                  child: const Text('Save'),
                 ),
               ],
             );
@@ -158,16 +160,83 @@ class RankingView extends StatelessWidget {
     final lastRoundFinished = tournament.rounds.last.encounters.every(
       (e) => e.result.isNotEmpty,
     );
+
+    // map to PlayerRatings class
     final ratings = tournament.players
         .map(
           (p) =>
               PlayerRatings(player: p, playerId: tournament.players.indexOf(p)),
         )
         .toList();
+
+    // calculate the tiebreaks (other than 'direct')
     for (int r = 0; r < ratings.length; r++) {
-      ratings[r].calculateRatings(tournament.rounds);
+      ratings[r].calculateRatings(
+        tournament.rounds,
+        tournament.settings.tb1,
+        tournament.settings.tb2,
+      );
     }
-    ratings.sort(_comparePlayers);
+
+    // sort by tiebreaks (other than 'direct')
+    ratings.sort(_comparePlayersAndSetSharedPlace);
+
+    // post-calculate 'direct' tiebreak
+    if (tournament.settings.tb1 == Tiebreak.direct ||
+        tournament.settings.tb2 == Tiebreak.direct) {
+      for (int r = 0; r < ratings.length; r++) {
+        if (ratings[r].sharedPlace.isNotEmpty) {
+          final sharedPlaceInfo = ratings[r].sharedPlace;
+          final playerId = ratings[r].playerId;
+          var opponents = ratings
+              .where((e) => e.sharedPlace == sharedPlaceInfo)
+              .where((e) => e.playerId != playerId)
+              .map((e) => e.playerId)
+              .toList();
+          var direct = 0.0;
+          for (int i = 0; i < opponents.length; i++) {
+            for (var round in tournament.rounds) {
+              for (var encounter in round.encounters) {
+                if (encounter.playerIdW == playerId &&
+                    encounter.playerIdB == opponents[i]) {
+                  if (["1-0", "+ -"].contains(encounter.result)) {
+                    direct += 1.0;
+                  } else if (encounter.result == "0.5-0.5") {
+                    direct += 0.5;
+                  }
+                }
+                if (encounter.playerIdB == playerId &&
+                    encounter.playerIdW == opponents[i]) {
+                  if (["0-1", "- +"].contains(encounter.result)) {
+                    direct += 1.0;
+                  } else if (encounter.result == "0.5-0.5") {
+                    direct += 0.5;
+                  }
+                }
+              }
+            }
+          }
+          if (tournament.settings.tb1 == Tiebreak.direct) {
+            ratings[r].tiebreak1 = direct;
+          }
+          if (tournament.settings.tb2 == Tiebreak.direct) {
+            ratings[r].tiebreak2 = direct;
+          }
+        } else {
+          if (tournament.settings.tb1 == Tiebreak.direct) {
+            ratings[r].tiebreak1 = 0.0;
+          }
+          if (tournament.settings.tb2 == Tiebreak.direct) {
+            ratings[r].tiebreak2 = 0.0;
+          }
+        }
+      }
+
+      // sort again, this time 'direct' tiebreaks are set
+      ratings.sort(_comparePlayersAndSetSharedPlace);
+    }
+
+    // update rank according to the current order
     for (int r = 0; r < ratings.length; r++) {
       if (ratings[r].rank == null) {
         ratings[r].rank = r + 1;
@@ -410,7 +479,9 @@ class RankingView extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.only(right: 5),
                               child: Text(
-                                r.buchholz!.toStringAsFixed(1),
+                                tournament.settings.tb1.formatScore(
+                                  r.tiebreak1!,
+                                ),
                                 style: TextStyle(
                                   color: Theme.of(
                                     context,
@@ -424,7 +495,9 @@ class RankingView extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.only(right: 5),
                               child: Text(
-                                r.soBerg!.toStringAsFixed(2),
+                                tournament.settings.tb2.formatScore(
+                                  r.tiebreak2!,
+                                ),
                                 style: TextStyle(
                                   color: Theme.of(
                                     context,

@@ -1,5 +1,6 @@
 import 'package:swiss_tournament/data/player.dart';
 import 'package:swiss_tournament/data/round.dart';
+import 'package:swiss_tournament/data/tiebreak.dart';
 
 class PlayerRatings {
   final Player player;
@@ -9,16 +10,42 @@ class PlayerRatings {
   int? losses;
   int? draws;
   double? points;
-  double? buchholz;
-  double? soBerg;
+  double? tiebreak1;
+  double? tiebreak2;
   String sharedPlace = "";
 
   PlayerRatings({required this.player, required this.playerId});
 
-  void calculateRatings(List<Round> rounds) {
+  void calculateRatings(List<Round> rounds, Tiebreak tb1, Tiebreak tb2) {
     points = getPoints(rounds, playerId);
-    buchholz = _getBuchholz(rounds);
-    soBerg = _getSoBerg(rounds);
+    switch (tb1) {
+      case Tiebreak.buchholz09:
+      case Tiebreak.buchholz24:
+        tiebreak1 = _getBuchholz(rounds);
+        break;
+      case Tiebreak.soberg09:
+      case Tiebreak.soberg24:
+        tiebreak1 = _getSoBerg(rounds);
+        break;
+      case Tiebreak.direct:
+      case Tiebreak.no:
+        tiebreak1 = 0.0;
+        break;
+    }
+    switch (tb2) {
+      case Tiebreak.buchholz09:
+      case Tiebreak.buchholz24:
+        tiebreak2 = _getBuchholz(rounds);
+        break;
+      case Tiebreak.soberg09:
+      case Tiebreak.soberg24:
+        tiebreak2 = _getSoBerg(rounds);
+        break;
+      case Tiebreak.direct:
+      case Tiebreak.no:
+        tiebreak2 = 0.0;
+        break;
+    }
     wins = _getWins(rounds);
     losses = _getLosses(rounds);
     draws = _getDraws(rounds);

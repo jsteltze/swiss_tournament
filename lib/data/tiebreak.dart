@@ -3,13 +3,13 @@ enum Tiebreak {
     longName: 'Buchholz (FIDE 2009)',
     shortName: 'Buchholz',
     description:
-        'Buchholz tiebreak: this is the sum of all opponent scores (independent from the result). FIDE 2009 rule: if an opponent has unplayed rounds the forfeit win only counts 0.5 points. If the player self has unplayed round, a virtual opponent is introduced, which has an equal score.',
+        'Buchholz tiebreak: this is the sum of all opponent scores (independent from the result). FIDE 2009 rule: if an opponent has unplayed rounds the forfeit win only count 0.5 points. If the player self has unplayed rounds, a virtual opponent is introduced, which has an equal score.',
   ),
   buchholz24(
     longName: 'Buchholz (FIDE 2024)',
     shortName: 'Buchholz',
     description:
-        'Buchholz tiebreak: this is the sum of all opponent scores (independent from the result). FIDE 2024 rule: if an opponent has unplayed rounds the forfeit win counts as 1 regular point. If the player self has unplayed round, for each of them the own score is used.',
+        'Buchholz tiebreak: this is the sum of all opponent scores (independent from the result). FIDE 2024 rule: if an opponent has unplayed rounds the forfeit win counts as 1 regular point. If the player self has unplayed rounds, for each of them the own final score is used.',
   ),
   soberg09(
     longName: 'Sonneborn-Berger (FIDE 2009)',
@@ -27,7 +27,7 @@ enum Tiebreak {
     longName: 'Direct Encounter',
     shortName: 'Direct',
     description:
-        'Direct Encounter tiebreak: for players sharing the same rank, this is the result of their direct encounter (if possible). If multiple players share the same rank the direct encounter score can be >1. If the players did not have a direct encounter the value remains 0.',
+        'Direct Encounter tiebreak: for players sharing the same rank, this is the result of their direct encounter (if possible). If multiple players share the same rank, all their encounters will be considered and the direct encounter score can be >1. If the players did not have a direct encounter the value remains 0.',
   ),
   no(
     longName: 'No Tiebreak',
@@ -44,4 +44,11 @@ enum Tiebreak {
   final String longName;
   final String shortName;
   final String description;
+
+  String formatScore(double score) {
+    int decimalPlaces = this == Tiebreak.soberg09 || this == Tiebreak.soberg09
+        ? 2
+        : 1;
+    return score.toStringAsFixed(decimalPlaces);
+  }
 }
