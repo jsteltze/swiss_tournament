@@ -47,27 +47,39 @@ class PlayerRatings {
 
     // regular player
     for (int r = 0; r < rounds.length && r < roundIndex; r++) {
+      bool playerOccurred = false;
       for (int e = 0; e < rounds[r].encounters.length; e++) {
         final game = rounds[r].encounters[e];
         if (game.playerIdW == playerId &&
             ["1-0", "+ -"].contains(game.result)) {
           // win (white)
           points += (game.playerIdB == -1 && treatForfeitAsDraw ? 0.5 : 1.0);
+          playerOccurred = true;
           break;
         } else if (game.playerIdW == playerId && game.result == "0.5-0.5") {
           // draw (white)
           points += 0.5;
+          playerOccurred = true;
           break;
         } else if (game.playerIdB == playerId && game.result == "0.5-0.5") {
           // draw (black)
           points += 0.5;
+          playerOccurred = true;
           break;
         } else if (game.playerIdB == playerId &&
             ["0-1", "- +"].contains(game.result)) {
           // win (black)
           points += (game.playerIdW == -1 && treatForfeitAsDraw ? 0.5 : 1.0);
+          playerOccurred = true;
+          break;
+        } else if (game.playerIdB == playerId || game.playerIdW == playerId) {
+          playerOccurred = true;
           break;
         }
+      }
+
+      if (!playerOccurred && treatForfeitAsDraw) {
+        points += 0.5;
       }
     }
     return points;
@@ -81,8 +93,8 @@ class PlayerRatings {
         if (game.playerIdW == playerId) {
           if (game.playerIdB == -1) {
             buchholz += getPointsVirtualPlayer(
-              getPoints(rounds, playerId, r - 1),
-              rounds.length - 1 - r,
+              getPoints(rounds, playerId, r),
+              rounds.length - r - 1,
             );
           } else {
             buchholz += getPoints(rounds, game.playerIdB, 99, true);
@@ -92,8 +104,8 @@ class PlayerRatings {
         } else if (game.playerIdB == playerId) {
           if (game.playerIdW == -1) {
             buchholz += getPointsVirtualPlayer(
-              getPoints(rounds, playerId, r - 1),
-              rounds.length - 1 - r,
+              getPoints(rounds, playerId, r),
+              rounds.length - r - 1,
             );
           } else {
             buchholz += getPoints(rounds, game.playerIdW, 99, true);
@@ -104,7 +116,7 @@ class PlayerRatings {
       }
       if (!playerOccurred) {
         buchholz += getPointsVirtualPlayer(
-          getPoints(rounds, playerId, r - 1),
+          getPoints(rounds, playerId, r),
           rounds.length - 1 - r,
         );
       }
@@ -121,44 +133,44 @@ class PlayerRatings {
           if (["1-0", "+ -"].contains(encounter.result)) {
             if (encounter.playerIdB == -1) {
               soBerg += getPointsVirtualPlayer(
-                getPoints(rounds, playerId, r - 1),
+                getPoints(rounds, playerId, r),
                 rounds.length - 1 - r,
               );
             } else {
-              soBerg += getPoints(rounds, encounter.playerIdB);
+              soBerg += getPoints(rounds, encounter.playerIdB, 99, true);
             }
           } else if (encounter.result == "0.5-0.5") {
             if (encounter.playerIdB == -1) {
               soBerg +=
                   getPointsVirtualPlayer(
-                    getPoints(rounds, playerId, r - 1),
+                    getPoints(rounds, playerId, r),
                     rounds.length - 1 - r,
                   ) /
                   2;
             } else {
-              soBerg += getPoints(rounds, encounter.playerIdB) / 2;
+              soBerg += getPoints(rounds, encounter.playerIdB, 99, true) / 2;
             }
           }
         } else if (encounter.playerIdB == playerId) {
           if (["0-1", "- +"].contains(encounter.result)) {
             if (encounter.playerIdW == -1) {
               soBerg += getPointsVirtualPlayer(
-                getPoints(rounds, playerId, r - 1),
+                getPoints(rounds, playerId, r),
                 rounds.length - 1 - r,
               );
             } else {
-              soBerg += getPoints(rounds, encounter.playerIdW);
+              soBerg += getPoints(rounds, encounter.playerIdW, 99, true);
             }
           } else if (encounter.result == "0.5-0.5") {
             if (encounter.playerIdW == -1) {
               soBerg +=
                   getPointsVirtualPlayer(
-                    getPoints(rounds, playerId, r - 1),
+                    getPoints(rounds, playerId, r),
                     rounds.length - 1 - r,
                   ) /
                   2;
             } else {
-              soBerg += getPoints(rounds, encounter.playerIdW) / 2;
+              soBerg += getPoints(rounds, encounter.playerIdW, 99, true) / 2;
             }
           }
         }
@@ -173,10 +185,10 @@ class PlayerRatings {
       for (int e = 0; e < rounds[r].encounters.length; e++) {
         final encounter = rounds[r].encounters[e];
         if (encounter.playerIdW == playerId &&
-            ["1-0", "+ -"].contains(encounter.result)) {
+            ["1-0"].contains(encounter.result)) {
           wins++;
         } else if (encounter.playerIdB == playerId &&
-            ["0-1", "- +"].contains(encounter.result)) {
+            ["0-1"].contains(encounter.result)) {
           wins++;
         }
       }
@@ -190,10 +202,10 @@ class PlayerRatings {
       for (int e = 0; e < rounds[r].encounters.length; e++) {
         final encounter = rounds[r].encounters[e];
         if (encounter.playerIdW == playerId &&
-            ["0-1", "- +"].contains(encounter.result)) {
+            ["0-1"].contains(encounter.result)) {
           losses++;
         } else if (encounter.playerIdB == playerId &&
-            ["1-0", "+ -"].contains(encounter.result)) {
+            ["1-0"].contains(encounter.result)) {
           losses++;
         }
       }
