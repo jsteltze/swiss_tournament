@@ -1,3 +1,4 @@
+import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/player.dart';
 import 'package:swiss_tournament/data/round.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
@@ -21,11 +22,11 @@ class PlayerRatings {
     switch (tb1) {
       case Tiebreak.buchholz09:
       case Tiebreak.buchholz24:
-        tiebreak1 = _getBuchholz(rounds);
+        tiebreak1 = _getBuchholz(rounds, tb1);
         break;
       case Tiebreak.soberg09:
       case Tiebreak.soberg24:
-        tiebreak1 = _getSoBerg(rounds);
+        tiebreak1 = _getSoBerg(rounds, tb1);
         break;
       case Tiebreak.direct:
       case Tiebreak.no:
@@ -35,11 +36,11 @@ class PlayerRatings {
     switch (tb2) {
       case Tiebreak.buchholz09:
       case Tiebreak.buchholz24:
-        tiebreak2 = _getBuchholz(rounds);
+        tiebreak2 = _getBuchholz(rounds, tb2);
         break;
       case Tiebreak.soberg09:
       case Tiebreak.soberg24:
-        tiebreak2 = _getSoBerg(rounds);
+        tiebreak2 = _getSoBerg(rounds, tb2);
         break;
       case Tiebreak.direct:
       case Tiebreak.no:
@@ -112,93 +113,76 @@ class PlayerRatings {
     return points;
   }
 
-  double _getBuchholz(List<Round> rounds) {
+  bool isBye(Encounter g) => ["+ -", "- +"].contains(g.result);
+
+  double _getBuchholz(List<Round> rounds, Tiebreak tb) {
+    var unplayedRoundEval = tb == Tiebreak.buchholz09
+        ? (rounds, playerId, roundIndex) => getPointsVirtualPlayer(
+            getPoints(rounds, playerId, roundIndex),
+            rounds.length - roundIndex - 1,
+          )
+        : (rounds, playerId, roundIndex) => getPoints(rounds, playerId);
+    var normalEval = tb == Tiebreak.buchholz09
+        ? (rounds, playerId) => getPoints(rounds, playerId, 99, true)
+        : (rounds, playerId) => getPoints(rounds, playerId);
+    double eval(playerId, opponentsId, isUnplayedRound, rounds, roundIndex) =>
+        opponentsId == -1 || isUnplayedRound
+        ? unplayedRoundEval(rounds, playerId, roundIndex)
+        : normalEval(rounds, opponentsId);
+
     double buchholz = 0.0;
     for (int r = 0; r < rounds.length; r++) {
       bool playerOccurred = false;
       for (var game in rounds[r].encounters) {
         if (game.playerIdW == playerId) {
-          if (game.playerIdB == -1) {
-            buchholz += getPointsVirtualPlayer(
-              getPoints(rounds, playerId, r),
-              rounds.length - r - 1,
-            );
-          } else {
-            buchholz += getPoints(rounds, game.playerIdB, 99, true);
-          }
+          buchholz += eval(playerId, game.playerIdB, isBye(game), rounds, r);
           playerOccurred = true;
           break;
         } else if (game.playerIdB == playerId) {
-          if (game.playerIdW == -1) {
-            buchholz += getPointsVirtualPlayer(
-              getPoints(rounds, playerId, r),
-              rounds.length - r - 1,
-            );
-          } else {
-            buchholz += getPoints(rounds, game.playerIdW, 99, true);
-          }
+          buchholz += eval(playerId, game.playerIdW, isBye(game), rounds, r);
           playerOccurred = true;
           break;
         }
       }
       if (!playerOccurred) {
-        buchholz += getPointsVirtualPlayer(
-          getPoints(rounds, playerId, r),
-          rounds.length - 1 - r,
-        );
+        buchholz += unplayedRoundEval(rounds, playerId, r);
       }
     }
     return buchholz;
   }
 
-  double _getSoBerg(List<Round> rounds) {
+  double _getSoBerg(List<Round> rounds, Tiebreak tb) {
+    var unplayedRoundEval = tb == Tiebreak.soberg09
+        ? (rounds, playerId, roundIndex) => getPointsVirtualPlayer(
+            getPoints(rounds, playerId, roundIndex),
+            rounds.length - roundIndex - 1,
+          )
+        : (rounds, playerId, roundIndex) => getPoints(rounds, playerId);
+    var normalEval = tb == Tiebreak.soberg09
+        ? (rounds, playerId) => getPoints(rounds, playerId, 99, true)
+        : (rounds, playerId) => getPoints(rounds, playerId);
+    double eval(playerId, opponentsId, isUnplayedRound, rounds, roundIndex) =>
+        opponentsId == -1 || isUnplayedRound
+        ? unplayedRoundEval(rounds, playerId, roundIndex)
+        : normalEval(rounds, opponentsId);
+
     double soBerg = 0.0;
     for (int r = 0; r < rounds.length; r++) {
       for (int e = 0; e < rounds[r].encounters.length; e++) {
-        final encounter = rounds[r].encounters[e];
-        if (encounter.playerIdW == playerId) {
-          if (["1-0", "+ -"].contains(encounter.result)) {
-            if (encounter.playerIdB == -1) {
-              soBerg += getPointsVirtualPlayer(
-                getPoints(rounds, playerId, r),
-                rounds.length - 1 - r,
-              );
-            } else {
-              soBerg += getPoints(rounds, encounter.playerIdB, 99, true);
-            }
-          } else if (encounter.result == "0.5-0.5") {
-            if (encounter.playerIdB == -1) {
-              soBerg +=
-                  getPointsVirtualPlayer(
-                    getPoints(rounds, playerId, r),
-                    rounds.length - 1 - r,
-                  ) /
-                  2;
-            } else {
-              soBerg += getPoints(rounds, encounter.playerIdB, 99, true) / 2;
-            }
+        final game = rounds[r].encounters[e];
+        if (game.playerIdW == playerId) {
+          if (["1-0", "+ -"].contains(game.result)) {
+            soBerg += eval(playerId, game.playerIdB, isBye(game), rounds, r);
+          } else if (game.result == "0.5-0.5") {
+            soBerg +=
+                eval(playerId, game.playerIdB, isBye(game), rounds, r) / 2.0;
           }
-        } else if (encounter.playerIdB == playerId) {
-          if (["0-1", "- +"].contains(encounter.result)) {
-            if (encounter.playerIdW == -1) {
-              soBerg += getPointsVirtualPlayer(
-                getPoints(rounds, playerId, r),
-                rounds.length - 1 - r,
-              );
-            } else {
-              soBerg += getPoints(rounds, encounter.playerIdW, 99, true);
-            }
-          } else if (encounter.result == "0.5-0.5") {
-            if (encounter.playerIdW == -1) {
-              soBerg +=
-                  getPointsVirtualPlayer(
-                    getPoints(rounds, playerId, r),
-                    rounds.length - 1 - r,
-                  ) /
-                  2;
-            } else {
-              soBerg += getPoints(rounds, encounter.playerIdW, 99, true) / 2;
-            }
+        } else if (game.playerIdB == playerId) {
+          if (["0-1", "- +"].contains(game.result)) {
+            soBerg += eval(playerId, game.playerIdW, isBye(game), rounds, r);
+          } else if (game.result == "0.5-0.5") {
+            soBerg +=
+                eval(playerId, game.playerIdW, isBye(game), rounds, r) / 2.0;
           }
         }
       }
