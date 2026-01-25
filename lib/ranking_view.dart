@@ -135,7 +135,7 @@ class RankingView extends StatelessWidget {
     final lastRoundNum = tournament.rounds.length;
     final selectedTiebreak1 = tournament.settings.tb1;
     final selectedTiebreak2 = tournament.settings.tb2;
-    final headerHeight = 75.0;
+    final headerHeight = 90.0;
     if (lastRoundNum == 0) {
       return Center(
         child: Column(
@@ -171,11 +171,7 @@ class RankingView extends StatelessWidget {
 
     // calculate the tiebreaks (other than 'direct')
     for (int r = 0; r < ratings.length; r++) {
-      ratings[r].calculateRatings(
-        tournament.rounds,
-        tournament.settings.tb1,
-        tournament.settings.tb2,
-      );
+      ratings[r].calculateRatings(tournament);
     }
 
     // sort by tiebreaks (other than 'direct')
@@ -253,6 +249,33 @@ class RankingView extends StatelessWidget {
       }
     }
 
+    DataColumn rotatedNumericHeader(title, {String? headline}) => DataColumn(
+      numeric: true,
+      label: SizedBox(
+        height: headerHeight,
+        child: Padding(
+          padding: EdgeInsetsGeometry.only(bottom: 3),
+          child: RotatedBox(
+            quarterTurns: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (headline != null)
+                  Text(
+                    headline,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                Text(title),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
@@ -313,37 +336,15 @@ class RankingView extends StatelessWidget {
                 ),
                 DataColumn(
                   label: Container(
-                    height: 75,
+                    height: headerHeight,
                     alignment: Alignment.bottomLeft,
                     child: Text('Name'),
                   ),
                 ),
-                DataColumn(
-                  numeric: true,
-                  label: SizedBox(
-                    height: headerHeight,
-                    child: RotatedBox(
-                      quarterTurns: 3,
-                      child: Text(' Startrank'),
-                    ),
-                  ),
-                ),
-                DataColumn(
-                  label: SizedBox(
-                    height: headerHeight,
-                    child: RotatedBox(quarterTurns: 3, child: Text(' Rating')),
-                  ),
-                  numeric: true,
-                  headingRowAlignment: MainAxisAlignment.start,
-                ),
-                DataColumn(
-                  label: SizedBox(
-                    height: headerHeight,
-                    child: RotatedBox(quarterTurns: 3, child: Text(' Games')),
-                  ),
-                  numeric: true,
-                  headingRowAlignment: MainAxisAlignment.start,
-                ),
+                rotatedNumericHeader('Startrank'),
+                rotatedNumericHeader('Rating'),
+                rotatedNumericHeader('Performance'),
+                rotatedNumericHeader('Games'),
                 DataColumn(
                   label: Container(
                     height: headerHeight,
@@ -352,44 +353,16 @@ class RankingView extends StatelessWidget {
                   ),
                   headingRowAlignment: MainAxisAlignment.start,
                 ),
-                DataColumn(
-                  numeric: true,
-                  label: SizedBox(
-                    height: headerHeight,
-                    child: RotatedBox(quarterTurns: 3, child: Text(' Score')),
-                  ),
-                ),
+                rotatedNumericHeader('Score'),
                 if (selectedTiebreak1 != Tiebreak.no)
-                  DataColumn(
-                    numeric: true,
-                    label: SizedBox(
-                      height: headerHeight,
-                      child: RotatedBox(
-                        quarterTurns: 3,
-                        child: Text(
-                          ' Tiebreak 1\n ${selectedTiebreak1.shortName}',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                      ),
-                    ),
+                  rotatedNumericHeader(
+                    selectedTiebreak1.shortName,
+                    headline: 'Tiebreak 1:',
                   ),
                 if (selectedTiebreak2 != Tiebreak.no)
-                  DataColumn(
-                    numeric: true,
-                    label: SizedBox(
-                      height: headerHeight,
-                      child: RotatedBox(
-                        quarterTurns: 3,
-                        child: Text(
-                          ' Tiebreak 2\n ${selectedTiebreak2.shortName}',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                      ),
-                    ),
+                  rotatedNumericHeader(
+                    selectedTiebreak2.shortName,
+                    headline: 'Tiebreak 2:',
                   ),
               ],
               rows: ratings
@@ -440,6 +413,17 @@ class RankingView extends StatelessWidget {
                               r.player.rating == 0
                                   ? 'N/A'
                                   : r.player.rating.toString(),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Text(
+                              r.performance.toString(),
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.secondary,
                               ),

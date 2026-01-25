@@ -4,6 +4,7 @@ import 'package:swiss_tournament/data/player.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/data/round.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
+import 'package:swiss_tournament/data/tournament.dart';
 
 void main() {
   group('PlayerRatings Tests', () {
@@ -79,13 +80,18 @@ void main() {
         [2.5, 1, 1, 2, 10.0, 3.5],
       ];
 
+      Tournament t = Tournament(
+        players: players,
+        rounds: rounds,
+        title: 'Test',
+        numberOfRounds: 5,
+      );
+      t.settings.tb1 = Tiebreak.buchholz09;
+      t.settings.tb2 = Tiebreak.soberg09;
+
       for (int p = 0; p < players.length; p++) {
         final ratings = PlayerRatings(player: players[p], playerId: p);
-        ratings.calculateRatings(
-          rounds,
-          Tiebreak.buchholz09,
-          Tiebreak.soberg09,
-        );
+        ratings.calculateRatings(t);
         expect(ratings.points, expected[p][0]);
         expect(ratings.wins, expected[p][1]);
         expect(ratings.losses, expected[p][3]);

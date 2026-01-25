@@ -2,6 +2,7 @@ import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/player.dart';
 import 'package:swiss_tournament/data/round.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
+import 'package:swiss_tournament/data/tournament.dart';
 
 class PlayerRatings {
   final Player player;
@@ -10,6 +11,7 @@ class PlayerRatings {
   int? wins;
   int? losses;
   int? draws;
+  int? performance;
   double? points;
   double? tiebreak1;
   double? tiebreak2;
@@ -17,39 +19,40 @@ class PlayerRatings {
 
   PlayerRatings({required this.player, required this.playerId});
 
-  void calculateRatings(List<Round> rounds, Tiebreak tb1, Tiebreak tb2) {
-    points = getPoints(rounds, playerId);
-    switch (tb1) {
+  void calculateRatings(Tournament t) {
+    points = getPoints(t.rounds, playerId);
+    switch (t.settings.tb1) {
       case Tiebreak.buchholz09:
       case Tiebreak.buchholz24:
-        tiebreak1 = _getBuchholz(rounds, tb1);
+        tiebreak1 = _getBuchholz(t.rounds, t.settings.tb1);
         break;
       case Tiebreak.soberg09:
       case Tiebreak.soberg24:
-        tiebreak1 = _getSoBerg(rounds, tb1);
+        tiebreak1 = _getSoBerg(t.rounds, t.settings.tb1);
         break;
       case Tiebreak.direct:
       case Tiebreak.no:
         tiebreak1 = 0.0;
         break;
     }
-    switch (tb2) {
+    switch (t.settings.tb2) {
       case Tiebreak.buchholz09:
       case Tiebreak.buchholz24:
-        tiebreak2 = _getBuchholz(rounds, tb2);
+        tiebreak2 = _getBuchholz(t.rounds, t.settings.tb2);
         break;
       case Tiebreak.soberg09:
       case Tiebreak.soberg24:
-        tiebreak2 = _getSoBerg(rounds, tb2);
+        tiebreak2 = _getSoBerg(t.rounds, t.settings.tb2);
         break;
       case Tiebreak.direct:
       case Tiebreak.no:
         tiebreak2 = 0.0;
         break;
     }
-    wins = _getWins(rounds);
-    losses = _getLosses(rounds);
-    draws = _getDraws(rounds);
+    wins = _getWins(t.rounds);
+    losses = _getLosses(t.rounds);
+    draws = _getDraws(t.rounds);
+    performance = _getPerformance(t.rounds, t.players);
   }
 
   static double getPointsVirtualPlayer(
@@ -238,5 +241,49 @@ class PlayerRatings {
       }
     }
     return draws;
+  }
+
+  int _getPerformance(List<Round> rounds, List<Player> players) {
+    List<Player> opponentsWithRatings = [];
+    int ratedWins = 0;
+    int ratedLosses = 0;
+    int ratedGames = 0;
+    for (int r = 0; r < rounds.length; r++) {
+      for (int e = 0; e < rounds[r].encounters.length; e++) {
+        final encounter = rounds[r].encounters[e];
+        if (encounter.playerIdW == playerId) {
+          if (encounter.playerIdB == -1) {
+            continue;
+          }
+          if (players[encounter.playerIdB].rating > 0) {
+            opponentsWithRatings.add(players[encounter.playerIdB]);
+            if (encounter.result == "1-0") {
+              ratedWins++;
+            } else if (encounter.result == "0-1") {
+              ratedLosses++;
+            }
+            ratedGames++;
+            continue;
+          }
+        } else if (encounter.playerIdB == playerId) {
+          if (encounter.playerIdW == -1) {
+            continue;
+          }
+          if (players[encounter.playerIdW].rating > 0) {
+            opponentsWithRatings.add(players[encounter.playerIdW]);
+            if (encounter.result == "0-1") {
+              ratedWins++;
+            } else if (encounter.result == "1-0") {
+              ratedLosses++;
+            }
+            ratedGames++;
+            continue;
+          }
+        }
+      }
+    }
+    int sumOfRatings = opponentsWithRatings.fold(0, (x, p) => x + p.rating);
+    return ((sumOfRatings + 400 * (ratedWins - ratedLosses)) / ratedGames)
+        .round();
   }
 }
