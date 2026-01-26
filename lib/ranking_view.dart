@@ -422,11 +422,31 @@ class RankingView extends StatelessWidget {
                         DataCell(
                           Container(
                             padding: const EdgeInsets.only(right: 5),
-                            child: Text(
-                              r.performance.toString(),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
+                            child: Row(
+                              children: [
+                                if (r.player.rating > 0 && r.performance! > 0)
+                                  Transform.rotate(
+                                    angle:
+                                        (r.player.rating - r.performance!)
+                                            .sign *
+                                        0.8,
+                                    child: Icon(
+                                      size: 12,
+                                      Icons.arrow_forward,
+                                      color: r.performance! > r.player.rating
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                Text(
+                                  r.performance.toString(),
+                                  style: TextStyle(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
