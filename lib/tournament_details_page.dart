@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
+import 'package:swiss_tournament/components/description.dart';
+import 'package:swiss_tournament/components/input_title.dart';
 import 'package:swiss_tournament/ranking_view.dart';
 
 import 'data/tournament.dart';
@@ -62,7 +64,9 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
           title: const Text('Edit Tournament'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              InputTitle(text: 'Name:'),
               TextField(
                 controller: titleController,
                 decoration: const InputDecoration(
@@ -70,6 +74,8 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                 ),
                 autofocus: true,
               ),
+              SizedBox(height: 16),
+              InputTitle(text: 'Rounds:'),
               TextField(
                 controller: roundsController,
                 decoration: const InputDecoration(hintText: 'Number of rounds'),
@@ -157,14 +163,12 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Export to Downloads folder. The saved file can serve as a backup or can be shared and imported on other devices.',
+                  const Description(
+                    text:
+                        'Export to Downloads folder. The saved file can serve as a backup or can be shared and imported on other devices.',
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Type:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  InputTitle(text: 'Type:'),
                   DropdownButton<String>(
                     value: exportType,
                     isExpanded: true,
@@ -183,10 +187,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Filename:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  InputTitle(text: 'Filename:'),
                   TextField(
                     controller: filenameController,
                     decoration: const InputDecoration(
@@ -267,10 +268,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Type:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  InputTitle(text: 'Type:'),
                   DropdownButton<String>(
                     value: duplicateType,
                     isExpanded: true,
@@ -289,10 +287,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'New Title:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  InputTitle(text: 'New Title:'),
                   TextField(
                     controller: titleController,
                     decoration: const InputDecoration(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:swiss_tournament/components/description.dart';
+import 'package:swiss_tournament/components/input_title.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
 
@@ -56,10 +58,7 @@ class RankingView extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Tiebreak 1:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  InputTitle(text: 'Tiebreak 1:'),
                   DropdownButton<Tiebreak>(
                     value: selectedTiebreak1,
                     isExpanded: true,
@@ -80,14 +79,10 @@ class RankingView extends StatelessWidget {
                       });
                     },
                   ),
-                  Text(selectedTiebreak1.description),
+                  Description(text: selectedTiebreak1.description),
                   const SizedBox(height: 20),
-                  if (selectedTiebreak1 != Tiebreak.no)
-                    const Text(
-                      'Tiebreak 2:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  if (selectedTiebreak1 != Tiebreak.no)
+                  if (selectedTiebreak1 != Tiebreak.no) ...[
+                    InputTitle(text: 'Tiebreak 2:'),
                     DropdownButton<Tiebreak>(
                       value: selectedTiebreak2,
                       isExpanded: true,
@@ -105,8 +100,8 @@ class RankingView extends StatelessWidget {
                         });
                       },
                     ),
-                  if (selectedTiebreak1 != Tiebreak.no)
-                    Text(selectedTiebreak2.description),
+                    Description(text: selectedTiebreak2.description),
+                  ],
                 ],
               ),
               actions: [

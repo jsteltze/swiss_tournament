@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/tournament.dart';
-import 'package:swiss_tournament/player_tile.dart';
 
 import 'data/player.dart';
 import 'data/player_ratings.dart';

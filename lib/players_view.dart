@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:swiss_tournament/player_tile.dart';
+import 'package:swiss_tournament/components/player_tile.dart';
 
+import 'components/input_title.dart';
 import 'data/player.dart';
 import 'data/tournament.dart';
 
@@ -343,12 +344,16 @@ class PlayersView extends StatelessWidget {
           title: const Text('Edit Player'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              InputTitle(text: 'Name:'),
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(hintText: 'Player Name'),
                 autofocus: true,
               ),
+              SizedBox(height: 16),
+              InputTitle(text: 'Rating:'),
               TextField(
                 controller: ratingController,
                 decoration: const InputDecoration(hintText: 'Rating'),

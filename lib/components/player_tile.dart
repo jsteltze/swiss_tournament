@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'data/player.dart';
+import '../data/player.dart';
 
 class PlayerTile extends StatelessWidget {
   final Player player;
