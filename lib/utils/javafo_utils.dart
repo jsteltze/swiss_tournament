@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:jni/jni.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
-import 'data/encounter.dart';
-import 'data/round.dart';
-import 'java.g.dart';
+import '../data/encounter.dart';
+import '../data/round.dart';
+import '../java.g.dart';
 
 Round callJavaFo(Tournament tournament) {
   var trfFileContent = "";

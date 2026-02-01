@@ -46,7 +46,7 @@ enum Tiebreak {
   final String description;
 
   String formatScore(double score) {
-    int decimalPlaces = this == Tiebreak.soberg09 || this == Tiebreak.soberg09
+    int decimalPlaces = this == Tiebreak.soberg09 || this == Tiebreak.soberg24
         ? 2
         : 1;
     return score.toStringAsFixed(decimalPlaces);

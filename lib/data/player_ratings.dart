@@ -1,8 +1,12 @@
+import 'dart:math' as Math;
+
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/player.dart';
 import 'package:swiss_tournament/data/round.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
 import 'package:swiss_tournament/data/tournament.dart';
+
+import '../utils/fide_utils.dart';
 
 class PlayerRatings {
   final Player player;
@@ -52,7 +56,8 @@ class PlayerRatings {
     wins = _getWins(t.rounds);
     losses = _getLosses(t.rounds);
     draws = _getDraws(t.rounds);
-    performance = _getPerformance(t.rounds, t.players);
+    //performance = _getPerformance2(t.rounds, t.players);
+    performance = calcPerformance(t.rounds, t.players, playerId);
   }
 
   static double getPointsVirtualPlayer(
@@ -252,38 +257,102 @@ class PlayerRatings {
       for (int e = 0; e < rounds[r].encounters.length; e++) {
         final encounter = rounds[r].encounters[e];
         if (encounter.playerIdW == playerId) {
-          if (encounter.playerIdB == -1) {
+          if (encounter.playerIdB == -1 ||
+              players[encounter.playerIdB].rating == 0) {
             continue;
           }
-          if (players[encounter.playerIdB].rating > 0) {
-            opponentsWithRatings.add(players[encounter.playerIdB]);
-            if (encounter.result == "1-0") {
-              ratedWins++;
-            } else if (encounter.result == "0-1") {
-              ratedLosses++;
-            }
-            ratedGames++;
-            continue;
+          opponentsWithRatings.add(players[encounter.playerIdB]);
+          if (encounter.result == "1-0") {
+            ratedWins++;
+          } else if (encounter.result == "0-1") {
+            ratedLosses++;
           }
+          ratedGames++;
+          continue;
         } else if (encounter.playerIdB == playerId) {
-          if (encounter.playerIdW == -1) {
+          if (encounter.playerIdW == -1 ||
+              players[encounter.playerIdW].rating == 0) {
             continue;
           }
-          if (players[encounter.playerIdW].rating > 0) {
-            opponentsWithRatings.add(players[encounter.playerIdW]);
-            if (encounter.result == "0-1") {
-              ratedWins++;
-            } else if (encounter.result == "1-0") {
-              ratedLosses++;
-            }
-            ratedGames++;
-            continue;
+          opponentsWithRatings.add(players[encounter.playerIdW]);
+          if (encounter.result == "0-1") {
+            ratedWins++;
+          } else if (encounter.result == "1-0") {
+            ratedLosses++;
           }
+          ratedGames++;
+          continue;
         }
       }
     }
     int sumOfRatings = opponentsWithRatings.fold(0, (x, p) => x + p.rating);
-    return ((sumOfRatings + 400 * (ratedWins - ratedLosses)) / ratedGames)
+    int perf = ((sumOfRatings + 400 * (ratedWins - ratedLosses)) / ratedGames)
         .round();
+    if (ratedWins == 0) {
+      perf -= 400;
+    } else if (ratedLosses == 0) {
+      perf += 400;
+    }
+    return perf;
+  }
+
+  int _getPerformance2(List<Round> rounds, List<Player> players) {
+    List<int> opponentsWithRatings = [];
+    var ratedScore = 0.0;
+    for (int r = 0; r < rounds.length; r++) {
+      for (int e = 0; e < rounds[r].encounters.length; e++) {
+        final encounter = rounds[r].encounters[e];
+        if (encounter.playerIdW == playerId) {
+          if (encounter.playerIdB == -1 ||
+              players[encounter.playerIdB].rating == 0) {
+            continue;
+          }
+          opponentsWithRatings.add(players[encounter.playerIdB].rating);
+          if (encounter.result == "1-0") {
+            ratedScore += 1.0;
+          } else if (encounter.result == "0.5-0.5") {
+            ratedScore += 0.5;
+          }
+          continue;
+        } else if (encounter.playerIdB == playerId) {
+          if (encounter.playerIdW == -1 ||
+              players[encounter.playerIdW].rating == 0) {
+            continue;
+          }
+          opponentsWithRatings.add(players[encounter.playerIdW].rating);
+          if (encounter.result == "0-1") {
+            ratedScore += 1.0;
+          } else if (encounter.result == "0.5-0.5") {
+            ratedScore += 0.5;
+          }
+          continue;
+        }
+      }
+    }
+
+    expectedScore(opponentRatings, ownRating) => opponentRatings.fold(
+      0.0,
+      (x, y) =>
+          x +
+          1.0 /
+              (1.0 +
+                  Math.pow(
+                    10.0,
+                    (y.toDouble() - ownRating.toDouble()) / 400.0,
+                  )),
+    );
+
+    var lo = 0.0;
+    var hi = 4000.0;
+    var mid = 0.0;
+    while (hi - lo > 0.001) {
+      mid = (lo + hi) / 2.0;
+      if (expectedScore(opponentsWithRatings, mid) < ratedScore) {
+        lo = mid;
+      } else {
+        hi = mid;
+      }
+    }
+    return mid.round();
   }
 }

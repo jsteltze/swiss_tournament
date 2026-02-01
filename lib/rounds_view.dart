@@ -4,7 +4,7 @@ import 'package:swiss_tournament/encounters_view.dart';
 import 'data/encounter.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
-import 'javafo_utils.dart';
+import 'utils/javafo_utils.dart';
 
 // stores ExpansionPanel state information
 class RoundsPanel {
