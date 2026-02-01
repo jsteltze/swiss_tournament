@@ -1,8 +1,12 @@
+import 'dart:ui';
+
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jni/jni.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
+import 'java.g.dart';
 import 'single_encounter_view.dart';
 
 class EncountersView extends StatefulWidget {
@@ -25,6 +29,23 @@ class EncountersView extends StatefulWidget {
 
 class _EncountersViewState extends State<EncountersView> {
   bool _filterOpen = false;
+
+  void _exportRound(BuildContext ctx) {
+    final round = widget.tournament.rounds[widget.roundIndex];
+    final String htmlContent = round.toHtml(widget.tournament, ctx);
+    final String filename =
+        '${widget.tournament.title.replaceAll(' ', '_')}_round_${widget.roundIndex + 1}.html';
+
+    Sample.exportToFile(
+      Jni.androidActivity(PlatformDispatcher.instance.engineId!),
+      JString.fromString(htmlContent),
+      JString.fromString(filename),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('"$filename" exported to Downloads')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,22 +136,54 @@ class _EncountersViewState extends State<EncountersView> {
               ),
             ],
           ),
-        if (widget.roundIndex == widget.tournament.rounds.length - 1)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.delete_outline,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.errorContainer,
-                ),
-                onPressed: widget.deleteRound,
-              ),
-            ],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == 'delete') {
+                  widget.deleteRound?.call();
+                } else if (value == 'export') {
+                  _exportRound(context);
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  const PopupMenuItem<String>(
+                    value: 'export',
+                    child: Row(
+                      children: [
+                        Icon(Icons.save_alt, size: 20),
+                        SizedBox(width: 8),
+                        Text('Export Round'),
+                      ],
+                    ),
+                  ),
+                  if (widget.roundIndex == widget.tournament.rounds.length - 1)
+                    PopupMenuItem<String>(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.delete_outline,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Delete Round',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ];
+              },
+            ),
+          ],
+        ),
         const SizedBox(height: 10),
       ],
     );
