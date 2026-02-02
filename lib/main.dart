@@ -320,6 +320,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        leading: Image.asset('assets/rook_new.png'),
         title: Text(widget.title),
         actions: [
           PopupMenuButton<String>(
