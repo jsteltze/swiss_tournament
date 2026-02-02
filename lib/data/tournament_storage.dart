@@ -82,7 +82,7 @@ class TournamentStorage {
           'numberOfRounds': t.numberOfRounds,
           'players': jsonEncode(t.players.map((e) => e.toJson()).toList()),
           'rounds': jsonEncode(t.rounds.map((e) => e.toJson()).toList()),
-          'settinqs': jsonEncode(t.settings.toJson()),
+          'settings': jsonEncode(t.settings.toJson()),
         });
       }
     });
