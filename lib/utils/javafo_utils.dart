@@ -84,7 +84,7 @@ Round callJavaFo(Tournament tournament) {
     print(line);
   }
 
-  var response = Sample.initTournament(
+  var response = SwissChessAndroid.initTournament(
     Jni.androidActivity(PlatformDispatcher.instance.engineId!),
     JString.fromString(trfFileContent),
   );

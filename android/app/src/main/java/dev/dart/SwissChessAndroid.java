@@ -12,10 +12,7 @@ import java.util.Locale;
 
 import javafo.api.JaVaFoApi;
 
-public class Sample {
-    public static int sum(int a, int b) {
-        return a + b;
-    }
+public class SwissChessAndroid {
 
     public static String initTournament(Activity activity, String trfFileContent) {
         try {

@@ -2626,24 +2626,25 @@ final class $HashMap$Type$<$K extends jni$_.JObject?, $V extends jni$_.JObject?>
   }
 }
 
-/// from: `dev.dart.Sample`
-class Sample extends jni$_.JObject {
+/// from: `dev.dart.SwissChessAndroid`
+class SwissChessAndroid extends jni$_.JObject {
   @jni$_.internal
   @core$_.override
-  final jni$_.JType<Sample> $type;
+  final jni$_.JType<SwissChessAndroid> $type;
 
   @jni$_.internal
-  Sample.fromReference(jni$_.JReference reference)
+  SwissChessAndroid.fromReference(jni$_.JReference reference)
     : $type = type,
       super.fromReference(reference);
 
-  static final _class = jni$_.JClass.forName(r'dev/dart/Sample');
+  static final _class = jni$_.JClass.forName(r'dev/dart/SwissChessAndroid');
 
   /// The type which includes information such as the signature of this class.
-  static const jni$_.JType<Sample?> nullableType = $Sample$NullableType$();
+  static const jni$_.JType<SwissChessAndroid?> nullableType =
+      $SwissChessAndroid$NullableType$();
 
   /// The type which includes information such as the signature of this class.
-  static const jni$_.JType<Sample> type = $Sample$Type$();
+  static const jni$_.JType<SwissChessAndroid> type = $SwissChessAndroid$Type$();
   static final _id_new$ = _class.constructorId(r'()V');
 
   static final _new$ =
@@ -2664,41 +2665,10 @@ class Sample extends jni$_.JObject {
 
   /// from: `public void <init>()`
   /// The returned object must be released after use, by calling the [release] method.
-  factory Sample() {
-    return Sample.fromReference(
+  factory SwissChessAndroid() {
+    return SwissChessAndroid.fromReference(
       _new$(_class.reference.pointer, _id_new$ as jni$_.JMethodIDPtr).reference,
     );
-  }
-
-  static final _id_sum = _class.staticMethodId(r'sum', r'(II)I');
-
-  static final _sum =
-      jni$_.ProtectedJniExtensions.lookup<
-            jni$_.NativeFunction<
-              jni$_.JniResult Function(
-                jni$_.Pointer<jni$_.Void>,
-                jni$_.JMethodIDPtr,
-                jni$_.VarArgs<(jni$_.Int32, jni$_.Int32)>,
-              )
-            >
-          >('globalEnv_CallStaticIntMethod')
-          .asFunction<
-            jni$_.JniResult Function(
-              jni$_.Pointer<jni$_.Void>,
-              jni$_.JMethodIDPtr,
-              int,
-              int,
-            )
-          >();
-
-  /// from: `static public int sum(int a, int b)`
-  static int sum(int a, int b) {
-    return _sum(
-      _class.reference.pointer,
-      _id_sum as jni$_.JMethodIDPtr,
-      a,
-      b,
-    ).integer;
   }
 
   static final _id_initTournament = _class.staticMethodId(
@@ -2794,69 +2764,72 @@ class Sample extends jni$_.JObject {
   }
 }
 
-final class $Sample$NullableType$ extends jni$_.JType<Sample?> {
+final class $SwissChessAndroid$NullableType$
+    extends jni$_.JType<SwissChessAndroid?> {
   @jni$_.internal
-  const $Sample$NullableType$();
+  const $SwissChessAndroid$NullableType$();
 
   @jni$_.internal
   @core$_.override
-  String get signature => r'Ldev/dart/Sample;';
+  String get signature => r'Ldev/dart/SwissChessAndroid;';
 
   @jni$_.internal
   @core$_.override
-  Sample? fromReference(jni$_.JReference reference) =>
-      reference.isNull ? null : Sample.fromReference(reference);
+  SwissChessAndroid? fromReference(jni$_.JReference reference) =>
+      reference.isNull ? null : SwissChessAndroid.fromReference(reference);
   @jni$_.internal
   @core$_.override
   jni$_.JType get superType => const jni$_.$JObject$NullableType$();
 
   @jni$_.internal
   @core$_.override
-  jni$_.JType<Sample?> get nullableType => this;
+  jni$_.JType<SwissChessAndroid?> get nullableType => this;
 
   @jni$_.internal
   @core$_.override
   final superCount = 1;
 
   @core$_.override
-  int get hashCode => ($Sample$NullableType$).hashCode;
+  int get hashCode => ($SwissChessAndroid$NullableType$).hashCode;
 
   @core$_.override
   bool operator ==(Object other) {
-    return other.runtimeType == ($Sample$NullableType$) &&
-        other is $Sample$NullableType$;
+    return other.runtimeType == ($SwissChessAndroid$NullableType$) &&
+        other is $SwissChessAndroid$NullableType$;
   }
 }
 
-final class $Sample$Type$ extends jni$_.JType<Sample> {
+final class $SwissChessAndroid$Type$ extends jni$_.JType<SwissChessAndroid> {
   @jni$_.internal
-  const $Sample$Type$();
+  const $SwissChessAndroid$Type$();
 
   @jni$_.internal
   @core$_.override
-  String get signature => r'Ldev/dart/Sample;';
+  String get signature => r'Ldev/dart/SwissChessAndroid;';
 
   @jni$_.internal
   @core$_.override
-  Sample fromReference(jni$_.JReference reference) =>
-      Sample.fromReference(reference);
+  SwissChessAndroid fromReference(jni$_.JReference reference) =>
+      SwissChessAndroid.fromReference(reference);
   @jni$_.internal
   @core$_.override
   jni$_.JType get superType => const jni$_.$JObject$NullableType$();
 
   @jni$_.internal
   @core$_.override
-  jni$_.JType<Sample?> get nullableType => const $Sample$NullableType$();
+  jni$_.JType<SwissChessAndroid?> get nullableType =>
+      const $SwissChessAndroid$NullableType$();
 
   @jni$_.internal
   @core$_.override
   final superCount = 1;
 
   @core$_.override
-  int get hashCode => ($Sample$Type$).hashCode;
+  int get hashCode => ($SwissChessAndroid$Type$).hashCode;
 
   @core$_.override
   bool operator ==(Object other) {
-    return other.runtimeType == ($Sample$Type$) && other is $Sample$Type$;
+    return other.runtimeType == ($SwissChessAndroid$Type$) &&
+        other is $SwissChessAndroid$Type$;
   }
 }

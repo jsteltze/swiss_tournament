@@ -36,7 +36,7 @@ class _EncountersViewState extends State<EncountersView> {
     final String filename =
         '${widget.tournament.title.replaceAll(' ', '_')}_round_${widget.roundIndex + 1}.html';
 
-    Sample.exportToFile(
+    SwissChessAndroid.exportToFile(
       Jni.androidActivity(PlatformDispatcher.instance.engineId!),
       JString.fromString(htmlContent),
       JString.fromString(filename),
@@ -155,7 +155,7 @@ class _EncountersViewState extends State<EncountersView> {
                       children: [
                         Icon(Icons.save_alt, size: 20),
                         SizedBox(width: 8),
-                        Text('Export Round'),
+                        Text('Export Round (HTML)'),
                       ],
                     ),
                   ),

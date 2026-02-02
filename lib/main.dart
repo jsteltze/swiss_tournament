@@ -23,12 +23,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Swiss Tournament',
+      title: 'Chess Swiss Tournament',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: "Swiss Tournament Home Page"),
+      home: const MyHomePage(title: "Chess Swiss Tournament"),
     );
   }
 }
@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final String json = jsonEncode(
       _tournaments.map((t) => t.toJson()).toList(),
     );
-    Sample.exportToFile(
+    SwissChessAndroid.exportToFile(
       Jni.androidActivity(PlatformDispatcher.instance.engineId!),
       JString.fromString(json),
       JString.fromString("tournaments.json"),

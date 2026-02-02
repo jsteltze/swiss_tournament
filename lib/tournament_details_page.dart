@@ -226,7 +226,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                     }
 
                     final String jsonContent = jsonEncode(data);
-                    Sample.exportToFile(
+                    SwissChessAndroid.exportToFile(
                       Jni.androidActivity(
                         PlatformDispatcher.instance.engineId!,
                       ),
