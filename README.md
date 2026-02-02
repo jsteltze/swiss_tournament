@@ -1,16 +1,15 @@
-# swiss_tournament
+# Chess Swiss Tournament App
 
-A new Flutter project.
+A tournament management app for Android for Swiss tournaments in chess.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a Flutter application written in Dart.
 
-A few resources to get you started if this is your first Flutter project:
+- Run `flutter run` to run the app.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- To regenerate bindings after changing Java code, run
+  `dart run tool/jnigen.dart`. This requires at least one APK build to have
+  been run before, so that  JNIgen can obtain classpaths of Android Gradle
+  libraries. Therefore, run `flutter build apk` once before generating bindings
+  for the first time, or after a `flutter clean`.
