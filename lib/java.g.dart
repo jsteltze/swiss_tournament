@@ -36,6 +36,832 @@ import 'dart:core' show Object, String, bool, double, int;
 import 'package:jni/_internal.dart' as jni$_;
 import 'package:jni/jni.dart' as jni$_;
 
+/// from: `de.jsteltze.chesstournamentapp.R$color`
+class R$color extends jni$_.JObject {
+  @jni$_.internal
+  @core$_.override
+  final jni$_.JType<R$color> $type;
+
+  @jni$_.internal
+  R$color.fromReference(jni$_.JReference reference)
+    : $type = type,
+      super.fromReference(reference);
+
+  static final _class = jni$_.JClass.forName(
+    r'de/jsteltze/chesstournamentapp/R$color',
+  );
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$color?> nullableType = $R$color$NullableType$();
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$color> type = $R$color$Type$();
+  static final _id_ic_launcher_chess_background = _class.staticFieldId(
+    r'ic_launcher_chess_background',
+    r'I',
+  );
+
+  /// from: `static public int ic_launcher_chess_background`
+  static int get ic_launcher_chess_background =>
+      _id_ic_launcher_chess_background.get(_class, const jni$_.jintType());
+
+  /// from: `static public int ic_launcher_chess_background`
+  static set ic_launcher_chess_background(int value) =>
+      _id_ic_launcher_chess_background.set(
+        _class,
+        const jni$_.jintType(),
+        value,
+      );
+}
+
+final class $R$color$NullableType$ extends jni$_.JType<R$color?> {
+  @jni$_.internal
+  const $R$color$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R$color;';
+
+  @jni$_.internal
+  @core$_.override
+  R$color? fromReference(jni$_.JReference reference) =>
+      reference.isNull ? null : R$color.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$color?> get nullableType => this;
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$color$NullableType$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$color$NullableType$) &&
+        other is $R$color$NullableType$;
+  }
+}
+
+final class $R$color$Type$ extends jni$_.JType<R$color> {
+  @jni$_.internal
+  const $R$color$Type$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R$color;';
+
+  @jni$_.internal
+  @core$_.override
+  R$color fromReference(jni$_.JReference reference) =>
+      R$color.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$color?> get nullableType => const $R$color$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$color$Type$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$color$Type$) && other is $R$color$Type$;
+  }
+}
+
+/// from: `de.jsteltze.chesstournamentapp.R$drawable`
+class R$drawable extends jni$_.JObject {
+  @jni$_.internal
+  @core$_.override
+  final jni$_.JType<R$drawable> $type;
+
+  @jni$_.internal
+  R$drawable.fromReference(jni$_.JReference reference)
+    : $type = type,
+      super.fromReference(reference);
+
+  static final _class = jni$_.JClass.forName(
+    r'de/jsteltze/chesstournamentapp/R$drawable',
+  );
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$drawable?> nullableType =
+      $R$drawable$NullableType$();
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$drawable> type = $R$drawable$Type$();
+  static final _id_launch_background = _class.staticFieldId(
+    r'launch_background',
+    r'I',
+  );
+
+  /// from: `static public int launch_background`
+  static int get launch_background =>
+      _id_launch_background.get(_class, const jni$_.jintType());
+
+  /// from: `static public int launch_background`
+  static set launch_background(int value) =>
+      _id_launch_background.set(_class, const jni$_.jintType(), value);
+}
+
+final class $R$drawable$NullableType$ extends jni$_.JType<R$drawable?> {
+  @jni$_.internal
+  const $R$drawable$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R$drawable;';
+
+  @jni$_.internal
+  @core$_.override
+  R$drawable? fromReference(jni$_.JReference reference) =>
+      reference.isNull ? null : R$drawable.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$drawable?> get nullableType => this;
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$drawable$NullableType$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$drawable$NullableType$) &&
+        other is $R$drawable$NullableType$;
+  }
+}
+
+final class $R$drawable$Type$ extends jni$_.JType<R$drawable> {
+  @jni$_.internal
+  const $R$drawable$Type$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R$drawable;';
+
+  @jni$_.internal
+  @core$_.override
+  R$drawable fromReference(jni$_.JReference reference) =>
+      R$drawable.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$drawable?> get nullableType =>
+      const $R$drawable$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$drawable$Type$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$drawable$Type$) &&
+        other is $R$drawable$Type$;
+  }
+}
+
+/// from: `de.jsteltze.chesstournamentapp.R$mipmap`
+class R$mipmap extends jni$_.JObject {
+  @jni$_.internal
+  @core$_.override
+  final jni$_.JType<R$mipmap> $type;
+
+  @jni$_.internal
+  R$mipmap.fromReference(jni$_.JReference reference)
+    : $type = type,
+      super.fromReference(reference);
+
+  static final _class = jni$_.JClass.forName(
+    r'de/jsteltze/chesstournamentapp/R$mipmap',
+  );
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$mipmap?> nullableType = $R$mipmap$NullableType$();
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$mipmap> type = $R$mipmap$Type$();
+  static final _id_ic_launcher = _class.staticFieldId(r'ic_launcher', r'I');
+
+  /// from: `static public int ic_launcher`
+  static int get ic_launcher =>
+      _id_ic_launcher.get(_class, const jni$_.jintType());
+
+  /// from: `static public int ic_launcher`
+  static set ic_launcher(int value) =>
+      _id_ic_launcher.set(_class, const jni$_.jintType(), value);
+
+  static final _id_ic_launcher_chess = _class.staticFieldId(
+    r'ic_launcher_chess',
+    r'I',
+  );
+
+  /// from: `static public int ic_launcher_chess`
+  static int get ic_launcher_chess =>
+      _id_ic_launcher_chess.get(_class, const jni$_.jintType());
+
+  /// from: `static public int ic_launcher_chess`
+  static set ic_launcher_chess(int value) =>
+      _id_ic_launcher_chess.set(_class, const jni$_.jintType(), value);
+
+  static final _id_ic_launcher_chess_foreground = _class.staticFieldId(
+    r'ic_launcher_chess_foreground',
+    r'I',
+  );
+
+  /// from: `static public int ic_launcher_chess_foreground`
+  static int get ic_launcher_chess_foreground =>
+      _id_ic_launcher_chess_foreground.get(_class, const jni$_.jintType());
+
+  /// from: `static public int ic_launcher_chess_foreground`
+  static set ic_launcher_chess_foreground(int value) =>
+      _id_ic_launcher_chess_foreground.set(
+        _class,
+        const jni$_.jintType(),
+        value,
+      );
+
+  static final _id_ic_launcher_chess_round = _class.staticFieldId(
+    r'ic_launcher_chess_round',
+    r'I',
+  );
+
+  /// from: `static public int ic_launcher_chess_round`
+  static int get ic_launcher_chess_round =>
+      _id_ic_launcher_chess_round.get(_class, const jni$_.jintType());
+
+  /// from: `static public int ic_launcher_chess_round`
+  static set ic_launcher_chess_round(int value) =>
+      _id_ic_launcher_chess_round.set(_class, const jni$_.jintType(), value);
+}
+
+final class $R$mipmap$NullableType$ extends jni$_.JType<R$mipmap?> {
+  @jni$_.internal
+  const $R$mipmap$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R$mipmap;';
+
+  @jni$_.internal
+  @core$_.override
+  R$mipmap? fromReference(jni$_.JReference reference) =>
+      reference.isNull ? null : R$mipmap.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$mipmap?> get nullableType => this;
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$mipmap$NullableType$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$mipmap$NullableType$) &&
+        other is $R$mipmap$NullableType$;
+  }
+}
+
+final class $R$mipmap$Type$ extends jni$_.JType<R$mipmap> {
+  @jni$_.internal
+  const $R$mipmap$Type$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R$mipmap;';
+
+  @jni$_.internal
+  @core$_.override
+  R$mipmap fromReference(jni$_.JReference reference) =>
+      R$mipmap.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$mipmap?> get nullableType => const $R$mipmap$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$mipmap$Type$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$mipmap$Type$) && other is $R$mipmap$Type$;
+  }
+}
+
+/// from: `de.jsteltze.chesstournamentapp.R$style`
+class R$style extends jni$_.JObject {
+  @jni$_.internal
+  @core$_.override
+  final jni$_.JType<R$style> $type;
+
+  @jni$_.internal
+  R$style.fromReference(jni$_.JReference reference)
+    : $type = type,
+      super.fromReference(reference);
+
+  static final _class = jni$_.JClass.forName(
+    r'de/jsteltze/chesstournamentapp/R$style',
+  );
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$style?> nullableType = $R$style$NullableType$();
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$style> type = $R$style$Type$();
+  static final _id_LaunchTheme = _class.staticFieldId(r'LaunchTheme', r'I');
+
+  /// from: `static public int LaunchTheme`
+  static int get LaunchTheme =>
+      _id_LaunchTheme.get(_class, const jni$_.jintType());
+
+  /// from: `static public int LaunchTheme`
+  static set LaunchTheme(int value) =>
+      _id_LaunchTheme.set(_class, const jni$_.jintType(), value);
+
+  static final _id_NormalTheme = _class.staticFieldId(r'NormalTheme', r'I');
+
+  /// from: `static public int NormalTheme`
+  static int get NormalTheme =>
+      _id_NormalTheme.get(_class, const jni$_.jintType());
+
+  /// from: `static public int NormalTheme`
+  static set NormalTheme(int value) =>
+      _id_NormalTheme.set(_class, const jni$_.jintType(), value);
+}
+
+final class $R$style$NullableType$ extends jni$_.JType<R$style?> {
+  @jni$_.internal
+  const $R$style$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R$style;';
+
+  @jni$_.internal
+  @core$_.override
+  R$style? fromReference(jni$_.JReference reference) =>
+      reference.isNull ? null : R$style.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$style?> get nullableType => this;
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$style$NullableType$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$style$NullableType$) &&
+        other is $R$style$NullableType$;
+  }
+}
+
+final class $R$style$Type$ extends jni$_.JType<R$style> {
+  @jni$_.internal
+  const $R$style$Type$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R$style;';
+
+  @jni$_.internal
+  @core$_.override
+  R$style fromReference(jni$_.JReference reference) =>
+      R$style.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$style?> get nullableType => const $R$style$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$style$Type$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$style$Type$) && other is $R$style$Type$;
+  }
+}
+
+/// from: `de.jsteltze.chesstournamentapp.R`
+class R extends jni$_.JObject {
+  @jni$_.internal
+  @core$_.override
+  final jni$_.JType<R> $type;
+
+  @jni$_.internal
+  R.fromReference(jni$_.JReference reference)
+    : $type = type,
+      super.fromReference(reference);
+
+  static final _class = jni$_.JClass.forName(
+    r'de/jsteltze/chesstournamentapp/R',
+  );
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R?> nullableType = $R$NullableType$();
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R> type = $R$Type$();
+}
+
+final class $R$NullableType$ extends jni$_.JType<R?> {
+  @jni$_.internal
+  const $R$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R;';
+
+  @jni$_.internal
+  @core$_.override
+  R? fromReference(jni$_.JReference reference) =>
+      reference.isNull ? null : R.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R?> get nullableType => this;
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$NullableType$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$NullableType$) && other is $R$NullableType$;
+  }
+}
+
+final class $R$Type$ extends jni$_.JType<R> {
+  @jni$_.internal
+  const $R$Type$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lde/jsteltze/chesstournamentapp/R;';
+
+  @jni$_.internal
+  @core$_.override
+  R fromReference(jni$_.JReference reference) => R.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R?> get nullableType => const $R$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$Type$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$Type$) && other is $R$Type$;
+  }
+}
+
+/// from: `io.flutter.plugins.flutter_plugin_android_lifecycle.R`
+class R$1 extends jni$_.JObject {
+  @jni$_.internal
+  @core$_.override
+  final jni$_.JType<R$1> $type;
+
+  @jni$_.internal
+  R$1.fromReference(jni$_.JReference reference)
+    : $type = type,
+      super.fromReference(reference);
+
+  static final _class = jni$_.JClass.forName(
+    r'io/flutter/plugins/flutter_plugin_android_lifecycle/R',
+  );
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$1?> nullableType = $R$1$NullableType$();
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<R$1> type = $R$1$Type$();
+}
+
+final class $R$1$NullableType$ extends jni$_.JType<R$1?> {
+  @jni$_.internal
+  const $R$1$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature =>
+      r'Lio/flutter/plugins/flutter_plugin_android_lifecycle/R;';
+
+  @jni$_.internal
+  @core$_.override
+  R$1? fromReference(jni$_.JReference reference) =>
+      reference.isNull ? null : R$1.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$1?> get nullableType => this;
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$1$NullableType$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$1$NullableType$) &&
+        other is $R$1$NullableType$;
+  }
+}
+
+final class $R$1$Type$ extends jni$_.JType<R$1> {
+  @jni$_.internal
+  const $R$1$Type$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature =>
+      r'Lio/flutter/plugins/flutter_plugin_android_lifecycle/R;';
+
+  @jni$_.internal
+  @core$_.override
+  R$1 fromReference(jni$_.JReference reference) => R$1.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<R$1?> get nullableType => const $R$1$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($R$1$Type$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($R$1$Type$) && other is $R$1$Type$;
+  }
+}
+
+/// from: `io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin`
+class FlutterAndroidLifecyclePlugin extends jni$_.JObject {
+  @jni$_.internal
+  @core$_.override
+  final jni$_.JType<FlutterAndroidLifecyclePlugin> $type;
+
+  @jni$_.internal
+  FlutterAndroidLifecyclePlugin.fromReference(jni$_.JReference reference)
+    : $type = type,
+      super.fromReference(reference);
+
+  static final _class = jni$_.JClass.forName(
+    r'io/flutter/plugins/flutter_plugin_android_lifecycle/FlutterAndroidLifecyclePlugin',
+  );
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<FlutterAndroidLifecyclePlugin?> nullableType =
+      $FlutterAndroidLifecyclePlugin$NullableType$();
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<FlutterAndroidLifecyclePlugin> type =
+      $FlutterAndroidLifecyclePlugin$Type$();
+  static final _id_new$ = _class.constructorId(r'()V');
+
+  static final _new$ =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_NewObject')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public void <init>()`
+  /// The returned object must be released after use, by calling the [release] method.
+  factory FlutterAndroidLifecyclePlugin() {
+    return FlutterAndroidLifecyclePlugin.fromReference(
+      _new$(_class.reference.pointer, _id_new$ as jni$_.JMethodIDPtr).reference,
+    );
+  }
+
+  static final _id_onAttachedToEngine = _class.instanceMethodId(
+    r'onAttachedToEngine',
+    r'(Lio/flutter/embedding/engine/plugins/FlutterPlugin$FlutterPluginBinding;)V',
+  );
+
+  static final _onAttachedToEngine =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JThrowablePtr Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+                jni$_.VarArgs<(jni$_.Pointer<jni$_.Void>,)>,
+              )
+            >
+          >('globalEnv_CallVoidMethod')
+          .asFunction<
+            jni$_.JThrowablePtr Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+              jni$_.Pointer<jni$_.Void>,
+            )
+          >();
+
+  /// from: `public void onAttachedToEngine(io.flutter.embedding.engine.plugins.FlutterPlugin$FlutterPluginBinding flutterPluginBinding)`
+  void onAttachedToEngine(jni$_.JObject flutterPluginBinding) {
+    final _$flutterPluginBinding = flutterPluginBinding.reference;
+    _onAttachedToEngine(
+      reference.pointer,
+      _id_onAttachedToEngine as jni$_.JMethodIDPtr,
+      _$flutterPluginBinding.pointer,
+    ).check();
+  }
+
+  static final _id_onDetachedFromEngine = _class.instanceMethodId(
+    r'onDetachedFromEngine',
+    r'(Lio/flutter/embedding/engine/plugins/FlutterPlugin$FlutterPluginBinding;)V',
+  );
+
+  static final _onDetachedFromEngine =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JThrowablePtr Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+                jni$_.VarArgs<(jni$_.Pointer<jni$_.Void>,)>,
+              )
+            >
+          >('globalEnv_CallVoidMethod')
+          .asFunction<
+            jni$_.JThrowablePtr Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+              jni$_.Pointer<jni$_.Void>,
+            )
+          >();
+
+  /// from: `public void onDetachedFromEngine(io.flutter.embedding.engine.plugins.FlutterPlugin$FlutterPluginBinding flutterPluginBinding)`
+  void onDetachedFromEngine(jni$_.JObject flutterPluginBinding) {
+    final _$flutterPluginBinding = flutterPluginBinding.reference;
+    _onDetachedFromEngine(
+      reference.pointer,
+      _id_onDetachedFromEngine as jni$_.JMethodIDPtr,
+      _$flutterPluginBinding.pointer,
+    ).check();
+  }
+}
+
+final class $FlutterAndroidLifecyclePlugin$NullableType$
+    extends jni$_.JType<FlutterAndroidLifecyclePlugin?> {
+  @jni$_.internal
+  const $FlutterAndroidLifecyclePlugin$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature =>
+      r'Lio/flutter/plugins/flutter_plugin_android_lifecycle/FlutterAndroidLifecyclePlugin;';
+
+  @jni$_.internal
+  @core$_.override
+  FlutterAndroidLifecyclePlugin? fromReference(jni$_.JReference reference) =>
+      reference.isNull
+      ? null
+      : FlutterAndroidLifecyclePlugin.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<FlutterAndroidLifecyclePlugin?> get nullableType => this;
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($FlutterAndroidLifecyclePlugin$NullableType$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType ==
+            ($FlutterAndroidLifecyclePlugin$NullableType$) &&
+        other is $FlutterAndroidLifecyclePlugin$NullableType$;
+  }
+}
+
+final class $FlutterAndroidLifecyclePlugin$Type$
+    extends jni$_.JType<FlutterAndroidLifecyclePlugin> {
+  @jni$_.internal
+  const $FlutterAndroidLifecyclePlugin$Type$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature =>
+      r'Lio/flutter/plugins/flutter_plugin_android_lifecycle/FlutterAndroidLifecyclePlugin;';
+
+  @jni$_.internal
+  @core$_.override
+  FlutterAndroidLifecyclePlugin fromReference(jni$_.JReference reference) =>
+      FlutterAndroidLifecyclePlugin.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<FlutterAndroidLifecyclePlugin?> get nullableType =>
+      const $FlutterAndroidLifecyclePlugin$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($FlutterAndroidLifecyclePlugin$Type$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($FlutterAndroidLifecyclePlugin$Type$) &&
+        other is $FlutterAndroidLifecyclePlugin$Type$;
+  }
+}
+
 /// from: `android.os.Build$Partition`
 class Build$Partition extends jni$_.JObject {
   @jni$_.internal
@@ -2626,7 +3452,7 @@ final class $HashMap$Type$<$K extends jni$_.JObject?, $V extends jni$_.JObject?>
   }
 }
 
-/// from: `dev.dart.SwissChessAndroid`
+/// from: `de.jsteltze.chesstournamentapp.SwissChessAndroid`
 class SwissChessAndroid extends jni$_.JObject {
   @jni$_.internal
   @core$_.override
@@ -2637,7 +3463,9 @@ class SwissChessAndroid extends jni$_.JObject {
     : $type = type,
       super.fromReference(reference);
 
-  static final _class = jni$_.JClass.forName(r'dev/dart/SwissChessAndroid');
+  static final _class = jni$_.JClass.forName(
+    r'de/jsteltze/chesstournamentapp/SwissChessAndroid',
+  );
 
   /// The type which includes information such as the signature of this class.
   static const jni$_.JType<SwissChessAndroid?> nullableType =
@@ -2771,7 +3599,7 @@ final class $SwissChessAndroid$NullableType$
 
   @jni$_.internal
   @core$_.override
-  String get signature => r'Ldev/dart/SwissChessAndroid;';
+  String get signature => r'Lde/jsteltze/chesstournamentapp/SwissChessAndroid;';
 
   @jni$_.internal
   @core$_.override
@@ -2805,7 +3633,7 @@ final class $SwissChessAndroid$Type$ extends jni$_.JType<SwissChessAndroid> {
 
   @jni$_.internal
   @core$_.override
-  String get signature => r'Ldev/dart/SwissChessAndroid;';
+  String get signature => r'Lde/jsteltze/chesstournamentapp/SwissChessAndroid;';
 
   @jni$_.internal
   @core$_.override
@@ -2831,5 +3659,164 @@ final class $SwissChessAndroid$Type$ extends jni$_.JType<SwissChessAndroid> {
   bool operator ==(Object other) {
     return other.runtimeType == ($SwissChessAndroid$Type$) &&
         other is $SwissChessAndroid$Type$;
+  }
+}
+
+/// from: `io.flutter.plugins.GeneratedPluginRegistrant`
+///
+/// Generated file. Do not edit.
+/// This file is generated by the Flutter tool based on the
+/// plugins that support the Android platform.
+class GeneratedPluginRegistrant extends jni$_.JObject {
+  @jni$_.internal
+  @core$_.override
+  final jni$_.JType<GeneratedPluginRegistrant> $type;
+
+  @jni$_.internal
+  GeneratedPluginRegistrant.fromReference(jni$_.JReference reference)
+    : $type = type,
+      super.fromReference(reference);
+
+  static final _class = jni$_.JClass.forName(
+    r'io/flutter/plugins/GeneratedPluginRegistrant',
+  );
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<GeneratedPluginRegistrant?> nullableType =
+      $GeneratedPluginRegistrant$NullableType$();
+
+  /// The type which includes information such as the signature of this class.
+  static const jni$_.JType<GeneratedPluginRegistrant> type =
+      $GeneratedPluginRegistrant$Type$();
+  static final _id_new$ = _class.constructorId(r'()V');
+
+  static final _new$ =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JniResult Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+              )
+            >
+          >('globalEnv_NewObject')
+          .asFunction<
+            jni$_.JniResult Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+            )
+          >();
+
+  /// from: `public void <init>()`
+  /// The returned object must be released after use, by calling the [release] method.
+  factory GeneratedPluginRegistrant() {
+    return GeneratedPluginRegistrant.fromReference(
+      _new$(_class.reference.pointer, _id_new$ as jni$_.JMethodIDPtr).reference,
+    );
+  }
+
+  static final _id_registerWith = _class.staticMethodId(
+    r'registerWith',
+    r'(Lio/flutter/embedding/engine/FlutterEngine;)V',
+  );
+
+  static final _registerWith =
+      jni$_.ProtectedJniExtensions.lookup<
+            jni$_.NativeFunction<
+              jni$_.JThrowablePtr Function(
+                jni$_.Pointer<jni$_.Void>,
+                jni$_.JMethodIDPtr,
+                jni$_.VarArgs<(jni$_.Pointer<jni$_.Void>,)>,
+              )
+            >
+          >('globalEnv_CallStaticVoidMethod')
+          .asFunction<
+            jni$_.JThrowablePtr Function(
+              jni$_.Pointer<jni$_.Void>,
+              jni$_.JMethodIDPtr,
+              jni$_.Pointer<jni$_.Void>,
+            )
+          >();
+
+  /// from: `static public void registerWith(io.flutter.embedding.engine.FlutterEngine flutterEngine)`
+  static void registerWith(jni$_.JObject flutterEngine) {
+    final _$flutterEngine = flutterEngine.reference;
+    _registerWith(
+      _class.reference.pointer,
+      _id_registerWith as jni$_.JMethodIDPtr,
+      _$flutterEngine.pointer,
+    ).check();
+  }
+}
+
+final class $GeneratedPluginRegistrant$NullableType$
+    extends jni$_.JType<GeneratedPluginRegistrant?> {
+  @jni$_.internal
+  const $GeneratedPluginRegistrant$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lio/flutter/plugins/GeneratedPluginRegistrant;';
+
+  @jni$_.internal
+  @core$_.override
+  GeneratedPluginRegistrant? fromReference(jni$_.JReference reference) =>
+      reference.isNull
+      ? null
+      : GeneratedPluginRegistrant.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<GeneratedPluginRegistrant?> get nullableType => this;
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($GeneratedPluginRegistrant$NullableType$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($GeneratedPluginRegistrant$NullableType$) &&
+        other is $GeneratedPluginRegistrant$NullableType$;
+  }
+}
+
+final class $GeneratedPluginRegistrant$Type$
+    extends jni$_.JType<GeneratedPluginRegistrant> {
+  @jni$_.internal
+  const $GeneratedPluginRegistrant$Type$();
+
+  @jni$_.internal
+  @core$_.override
+  String get signature => r'Lio/flutter/plugins/GeneratedPluginRegistrant;';
+
+  @jni$_.internal
+  @core$_.override
+  GeneratedPluginRegistrant fromReference(jni$_.JReference reference) =>
+      GeneratedPluginRegistrant.fromReference(reference);
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType get superType => const jni$_.$JObject$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  jni$_.JType<GeneratedPluginRegistrant?> get nullableType =>
+      const $GeneratedPluginRegistrant$NullableType$();
+
+  @jni$_.internal
+  @core$_.override
+  final superCount = 1;
+
+  @core$_.override
+  int get hashCode => ($GeneratedPluginRegistrant$Type$).hashCode;
+
+  @core$_.override
+  bool operator ==(Object other) {
+    return other.runtimeType == ($GeneratedPluginRegistrant$Type$) &&
+        other is $GeneratedPluginRegistrant$Type$;
   }
 }

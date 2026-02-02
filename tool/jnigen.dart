@@ -15,7 +15,9 @@ void main(List<String> args) {
       androidSdkConfig: AndroidSdkConfig(addGradleDeps: true),
       sourcePath: [packageRoot.resolve('android/app/src/main/java')],
       classes: [
-        'dev.dart',
+        'de.jsteltze.chesstournamentapp',
+        // From gradle's compile classpath
+        'io.flutter.plugins',
         // From gradle's compile classpath
         'android.os.Build',
         // from gradle's compile classpath
