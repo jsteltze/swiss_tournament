@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.swiss_tournament"
+    namespace = "de.jsteltze.chesstournamentapp"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.swiss_tournament"
+        applicationId = "de.jsteltze.chesstournamentapp"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation(files("/libs/main.jar"))
+    implementation(files("libs/main.jar"))
 }
 
 flutter {
