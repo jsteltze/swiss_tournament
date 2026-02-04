@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
 
+import 'components/input_title.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
 import 'java.g.dart';
@@ -44,6 +45,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Tournament> _tournaments = [];
+  bool _isLoading = true;
   final TournamentStorage _storage = TournamentStorage();
 
   @override
@@ -53,9 +55,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _loadTournaments() async {
+    setState(() {
+      _isLoading = true;
+    });
     final tournaments = await _storage.loadTournaments();
     setState(() {
       _tournaments = tournaments;
+      _isLoading = false;
     });
   }
 
@@ -74,7 +80,9 @@ class _MyHomePageState extends State<MyHomePage> {
           title: const Text('Add Tournament'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              InputTitle(text: 'Tournament Name:'),
               TextField(
                 controller: titleController,
                 decoration: const InputDecoration(
@@ -82,6 +90,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 autofocus: true,
               ),
+              SizedBox(height: 16),
+              InputTitle(text: 'Number of Rounds:'),
               TextField(
                 controller: roundsController,
                 decoration: const InputDecoration(hintText: 'Number of rounds'),
@@ -358,8 +368,27 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: _tournaments.isEmpty
-          ? const Center(child: Text('No tournaments yet.'))
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _tournaments.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.emoji_events_outlined,
+                    size: 100,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  Text(
+                    'No tournaments added yet.',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            )
           : ListView.builder(
               itemCount: _tournaments.length,
               itemBuilder: (context, index) {
