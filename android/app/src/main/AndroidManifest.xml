@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="swiss_tournament"
+        android:label="Chess Tournament App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher_chess">
         <activity
