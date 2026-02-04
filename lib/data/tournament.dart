@@ -1,20 +1,28 @@
 import 'package:swiss_tournament/data/tiebreak.dart';
 
+import 'first_round_pairing.dart';
 import 'player.dart';
 import 'round.dart';
 
 class TournamentSettings {
   static const DEFAULT_TB1 = Tiebreak.buchholz09;
   static const DEFAULT_TB2 = Tiebreak.soberg09;
+  static const DEFAULT_FRP = FirstRoundPairing.random;
 
   Tiebreak tb1;
   Tiebreak tb2;
+  FirstRoundPairing firstRoundPairing;
 
-  TournamentSettings({this.tb1 = DEFAULT_TB1, this.tb2 = DEFAULT_TB2});
+  TournamentSettings({
+    this.tb1 = DEFAULT_TB1,
+    this.tb2 = DEFAULT_TB2,
+    this.firstRoundPairing = DEFAULT_FRP,
+  });
 
   Map<String, dynamic> toJson() => {
     if (tb1 != DEFAULT_TB1) 'tb1': tb1.name,
     if (tb2 != DEFAULT_TB2) 'tb2': tb2.name,
+    if (firstRoundPairing != DEFAULT_FRP) 'frp': firstRoundPairing.name,
   };
 
   factory TournamentSettings.fromJson(Map<String, dynamic> json) {
@@ -25,6 +33,9 @@ class TournamentSettings {
       tb2: json['tb2'] != null
           ? Tiebreak.values.firstWhere((t) => t.name == json['tb2'])
           : DEFAULT_TB2,
+      firstRoundPairing: json['frp'] != null
+          ? FirstRoundPairing.values.firstWhere((e) => e.name == json['frp'])
+          : DEFAULT_FRP,
     );
   }
 }

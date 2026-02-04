@@ -14,7 +14,7 @@ Round callJavaFo(Tournament tournament) {
   trfFileContent += "032 GER\n";
   trfFileContent += "102 Arbiter\n";
   trfFileContent += "XXR ${tournament.numberOfRounds}\n";
-  trfFileContent += "XXC white1\n";
+  trfFileContent += "${tournament.settings.firstRoundPairing.javaFoCode}\n";
   final absentPlayers = tournament.players.where((p) => p.leftAt != null);
   if (absentPlayers.isNotEmpty) {
     final absentIds = absentPlayers

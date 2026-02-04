@@ -8,6 +8,7 @@ import 'package:swiss_tournament/components/description.dart';
 import 'package:swiss_tournament/components/input_title.dart';
 import 'package:swiss_tournament/ranking_view.dart';
 
+import 'data/first_round_pairing.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
 import 'java.g.dart';
@@ -357,6 +358,81 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
     });
   }
 
+  void _showAdvancedSettings() {
+    FirstRoundPairing currentPairing =
+        widget.tournament.settings.firstRoundPairing;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Advanced Settings'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InputTitle(text: 'First Round Pairing (Top Player):'),
+                  DropdownButton<FirstRoundPairing>(
+                    value: currentPairing,
+                    isExpanded: true,
+                    items: FirstRoundPairing.values.map((val) {
+                      return DropdownMenuItem(
+                        value: val,
+                        child: Text(
+                          val == FirstRoundPairing.white1
+                              ? 'White'
+                              : val == FirstRoundPairing.black1
+                              ? 'Black'
+                              : 'Random',
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: widget.tournament.rounds.isNotEmpty
+                        ? null
+                        : (newValue) {
+                            setDialogState(() => currentPairing = newValue!);
+                          },
+                  ),
+                  Description(text: currentPairing.description),
+                  if (widget.tournament.rounds.isNotEmpty) ...[
+                    SizedBox(height: 16.0),
+                    Text(
+                      "This property cannot be changed after the tournament start!",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: widget.tournament.rounds.isNotEmpty
+                      ? null
+                      : () {
+                          setState(() {
+                            widget.tournament.settings.firstRoundPairing =
+                                currentPairing;
+                          });
+                          widget.tournament.update();
+                          Navigator.pop(context);
+                        },
+                  child: const Text('Save'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget bodyContent;
@@ -410,6 +486,8 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                 _exportTournament();
               } else if (value == 'duplicate') {
                 _duplicateTournament();
+              } else if (value == 'advanced_settings') {
+                _showAdvancedSettings();
               }
             },
             itemBuilder: (BuildContext context) {
@@ -421,6 +499,16 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                       Icon(Icons.edit, size: 20),
                       SizedBox(width: 8),
                       Text('Edit'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'advanced_settings',
+                  child: Row(
+                    children: [
+                      Icon(Icons.settings, size: 20),
+                      SizedBox(width: 8),
+                      Text('Settings'),
                     ],
                   ),
                 ),
