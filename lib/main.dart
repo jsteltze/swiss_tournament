@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
 
-import 'components/input_title.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
 import 'java.g.dart';
@@ -29,6 +28,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.system,
       home: const MyHomePage(title: "Chess Swiss Tournament"),
     );
   }
@@ -80,18 +87,12 @@ class _MyHomePageState extends State<MyHomePage> {
           title: const Text('Add Tournament'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InputTitle(text: 'Tournament Name:'),
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter tournament name',
-                ),
+                decoration: const InputDecoration(hintText: 'Tournament name'),
                 autofocus: true,
               ),
-              SizedBox(height: 16),
-              InputTitle(text: 'Number of Rounds:'),
               TextField(
                 controller: roundsController,
                 decoration: const InputDecoration(hintText: 'Number of rounds'),
@@ -330,7 +331,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        leading: Image.asset('assets/rook_new.png'),
+        leading: Container(
+          padding: EdgeInsets.all(8),
+          child: Image.asset('assets/rook_new.png'),
+        ),
         title: Text(widget.title),
         actions: [
           PopupMenuButton<String>(
