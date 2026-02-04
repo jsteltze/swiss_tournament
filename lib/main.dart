@@ -20,19 +20,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    var colorScheme = ColorScheme.fromSeed(seedColor: Colors.deepPurple);
     return MaterialApp(
       title: 'Chess Swiss Tournament',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: ThemeData(colorScheme: colorScheme, useMaterial3: true),
       darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
+        colorScheme: colorScheme.copyWith(brightness: Brightness.dark),
         useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
