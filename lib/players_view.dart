@@ -19,13 +19,11 @@ class PlayersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int playerCount = tournament.players.length;
-    final int playersWithRating = tournament.players
-        .where((p) => p.rating > 0)
-        .length;
+    final int playersWithRating =
+        tournament.players.where((p) => p.rating > 0).length;
     double averageRating = 0;
     if (playerCount > 0) {
-      averageRating =
-          tournament.players
+      averageRating = tournament.players
               .where((p) => p.rating > 0)
               .map((p) => p.rating)
               .fold(0, (a, b) => a + b) /
@@ -58,8 +56,8 @@ class PlayersView extends StatelessWidget {
                       Text(
                         'Players: $playerCount',
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                       ),
                       Text(
                         '(active: ${tournament.players.where((p) => p.leftAt == null).length})',
@@ -81,14 +79,14 @@ class PlayersView extends StatelessWidget {
                     Text(
                       ' / ',
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.tertiary,
-                      ),
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
                     ),
                     Text(
                       '     ${averageRating.toStringAsFixed(0)}',
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.tertiary,
-                      ),
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
                     ),
                   ],
                 ),
@@ -108,23 +106,24 @@ class PlayersView extends StatelessWidget {
                       ),
                       Text(
                         'No players added yet.',
-                        style: Theme.of(context).textTheme.titleMedium!
-                            .copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                       ),
                     ],
                   ),
                 )
               : ListView.separated(
+                  padding: const EdgeInsets.only(bottom: 80),
                   separatorBuilder: (context, index) =>
                       index == firstLateJoiner - 1
-                      ? Divider(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.primary.withAlpha(100),
-                        )
-                      : Divider(color: Colors.transparent),
+                          ? Divider(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primary.withAlpha(100),
+                            )
+                          : const Divider(color: Colors.transparent),
                   itemCount: tournament.players.length,
                   itemBuilder: (context, index) {
                     final player = tournament.players[index];
@@ -352,7 +351,7 @@ class PlayersView extends StatelessWidget {
                 decoration: const InputDecoration(hintText: 'Player Name'),
                 autofocus: true,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               InputTitle(text: 'Rating:'),
               TextField(
                 controller: ratingController,
@@ -407,7 +406,7 @@ void showAddPlayerDialog(
           mainAxisSize: MainAxisSize.min,
           children: [
             if (isLateJoin)
-              Text(
+              const Text(
                 'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
               ),
             TextField(
