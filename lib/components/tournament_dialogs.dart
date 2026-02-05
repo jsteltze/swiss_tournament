@@ -1,0 +1,380 @@
+import 'dart:convert';
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:jni/jni.dart';
+
+import '../data/first_round_pairing.dart';
+import '../data/tournament.dart';
+import '../data/tournament_storage.dart';
+import '../java.g.dart';
+import 'description.dart';
+import 'input_title.dart';
+
+void showEditTournamentDialog(
+  BuildContext context,
+  Tournament tournament,
+  VoidCallback onSave,
+) {
+  final TextEditingController titleController = TextEditingController(
+    text: tournament.title,
+  );
+  final TextEditingController roundsController = TextEditingController(
+    text: tournament.numberOfRounds.toString(),
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Edit Tournament'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const InputTitle(text: 'Name:'),
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(
+                hintText: 'Enter tournament name',
+              ),
+              autofocus: true,
+            ),
+            const SizedBox(height: 16),
+            const InputTitle(text: 'Rounds:'),
+            TextField(
+              controller: roundsController,
+              decoration: const InputDecoration(hintText: 'Number of rounds'),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (titleController.text.isNotEmpty &&
+                  roundsController.text.isNotEmpty) {
+                tournament.title = titleController.text;
+                tournament.numberOfRounds = int.parse(roundsController.text);
+                tournament.update();
+                onSave();
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void confirmDeleteTournament(
+  BuildContext context,
+  Tournament tournament,
+  VoidCallback onDelete,
+) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Delete Tournament'),
+        content: Text('Are you sure you want to delete "${tournament.title}"?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              onDelete();
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showExportTournamentDialog(BuildContext context, Tournament tournament) {
+  final TextEditingController filenameController = TextEditingController(
+    text: 'tournament-${tournament.id ?? 'new'}',
+  );
+  String exportType = 'Full Tournament';
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('Export Tournament'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Description(
+                  text:
+                      'Export to Downloads folder. The saved file can serve as a backup or can be shared and imported on other devices.',
+                ),
+                const SizedBox(height: 16),
+                const InputTitle(text: 'Type:'),
+                DropdownButton<String>(
+                  value: exportType,
+                  isExpanded: true,
+                  items: <String>['Full Tournament', 'Players only']
+                      .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      })
+                      .toList(),
+                  onChanged: (String? newValue) {
+                    setDialogState(() {
+                      exportType = newValue!;
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+                const InputTitle(text: 'Filename:'),
+                TextField(
+                  controller: filenameController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter filename',
+                    suffixText: '.json',
+                  ),
+                  autofocus: true,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  String filename = filenameController.text;
+                  if (filename.isEmpty) return;
+                  if (!filename.toLowerCase().endsWith('.json')) {
+                    filename += '.json';
+                  }
+
+                  Map<String, dynamic> data;
+                  if (exportType == 'Full Tournament') {
+                    data = tournament.toJson();
+                  } else {
+                    data = {
+                      'title': tournament.title,
+                      'createdAt': tournament.createdAt.toIso8601String(),
+                      'numberOfRounds': tournament.numberOfRounds,
+                      'players': tournament.players
+                          .map((p) => p.toJson())
+                          .toList(),
+                    };
+                  }
+
+                  final String jsonContent = jsonEncode(data);
+                  SwissChessAndroid.exportToFile(
+                    Jni.androidActivity(PlatformDispatcher.instance.engineId!),
+                    JString.fromString(jsonContent),
+                    JString.fromString(filename),
+                  );
+
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('"$filename" exported to Downloads'),
+                    ),
+                  );
+                },
+                child: const Text('Export'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+void showDuplicateTournamentDialog(
+  BuildContext context,
+  Tournament tournament,
+  TournamentStorage storage,
+  VoidCallback onDuplicate,
+) {
+  final TextEditingController titleController = TextEditingController(
+    text: '${tournament.title} (Copy)',
+  );
+  String duplicateType = 'Full Tournament';
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('Duplicate Tournament'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const InputTitle(text: 'Type:'),
+                DropdownButton<String>(
+                  value: duplicateType,
+                  isExpanded: true,
+                  items: <String>['Full Tournament', 'Players only']
+                      .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      })
+                      .toList(),
+                  onChanged: (String? newValue) {
+                    setDialogState(() {
+                      duplicateType = newValue!;
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+                const InputTitle(text: 'New Title:'),
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter new tournament name',
+                  ),
+                  autofocus: true,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  if (titleController.text.isNotEmpty) {
+                    Map<String, dynamic> json;
+                    if (duplicateType == 'Full Tournament') {
+                      json = tournament.toJson();
+                      json['createdAt'] = DateTime.now().toIso8601String();
+                    } else {
+                      json = {
+                        'title': titleController.text,
+                        'createdAt': DateTime.now().toIso8601String(),
+                        'numberOfRounds': tournament.numberOfRounds,
+                        'players': tournament.players
+                            .map((p) => p.toJson())
+                            .toList(),
+                        'rounds': [],
+                        'settings': tournament.settings.toJson(),
+                      };
+                    }
+
+                    json.remove('id'); // Ensure it's treated as a new entry
+                    json['title'] = titleController.text;
+
+                    final newTournament = Tournament.fromJson(json);
+                    await storage.updateTournament(newTournament);
+
+                    if (context.mounted) {
+                      Navigator.pop(context); // Close dialog
+                      onDuplicate();
+                    }
+                  }
+                },
+                child: const Text('Duplicate'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
+  FirstRoundPairing currentPairing = tournament.settings.firstRoundPairing;
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('Advanced Settings'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const InputTitle(text: 'First Round Pairing (Top Player):'),
+                DropdownButton<FirstRoundPairing>(
+                  value: currentPairing,
+                  isExpanded: true,
+                  items: FirstRoundPairing.values.map((val) {
+                    return DropdownMenuItem(
+                      value: val,
+                      child: Text(
+                        val == FirstRoundPairing.white1
+                            ? 'White'
+                            : val == FirstRoundPairing.black1
+                            ? 'Black'
+                            : 'Random',
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: tournament.rounds.isNotEmpty
+                      ? null
+                      : (newValue) {
+                          setDialogState(() => currentPairing = newValue!);
+                        },
+                ),
+                Description(text: currentPairing.description),
+                if (tournament.rounds.isNotEmpty) ...[
+                  const SizedBox(height: 16.0),
+                  Text(
+                    "This property cannot be changed after the tournament start!",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: tournament.rounds.isNotEmpty
+                    ? null
+                    : () {
+                        tournament.settings.firstRoundPairing = currentPairing;
+                        tournament.update();
+                        Navigator.pop(context);
+                      },
+                child: const Text('Save'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
