@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 
 import 'components/input_title.dart';
+import 'components/no_data_tile.dart';
 import 'data/player.dart';
 import 'data/tournament.dart';
 
@@ -19,11 +20,13 @@ class PlayersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int playerCount = tournament.players.length;
-    final int playersWithRating =
-        tournament.players.where((p) => p.rating > 0).length;
+    final int playersWithRating = tournament.players
+        .where((p) => p.rating > 0)
+        .length;
     double averageRating = 0;
     if (playerCount > 0) {
-      averageRating = tournament.players
+      averageRating =
+          tournament.players
               .where((p) => p.rating > 0)
               .map((p) => p.rating)
               .fold(0, (a, b) => a + b) /
@@ -56,8 +59,8 @@ class PlayersView extends StatelessWidget {
                       Text(
                         'Players: $playerCount',
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                       Text(
                         '(active: ${tournament.players.where((p) => p.leftAt == null).length})',
@@ -79,14 +82,14 @@ class PlayersView extends StatelessWidget {
                     Text(
                       ' / ',
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
                     ),
                     Text(
                       '     ${averageRating.toStringAsFixed(0)}',
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
                     ),
                   ],
                 ),
@@ -95,35 +98,17 @@ class PlayersView extends StatelessWidget {
           ),
         Expanded(
           child: tournament.players.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.people,
-                        size: 100,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      Text(
-                        'No players added yet.',
-                        style:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                      ),
-                    ],
-                  ),
-                )
+              ? NoDataTile(text: 'No players added yet.', icon: Icons.people)
               : ListView.separated(
                   padding: const EdgeInsets.only(bottom: 80),
                   separatorBuilder: (context, index) =>
                       index == firstLateJoiner - 1
-                          ? Divider(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary.withAlpha(100),
-                            )
-                          : const Divider(color: Colors.transparent),
+                      ? Divider(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withAlpha(100),
+                        )
+                      : const Divider(color: Colors.transparent),
                   itemCount: tournament.players.length,
                   itemBuilder: (context, index) {
                     final player = tournament.players[index];

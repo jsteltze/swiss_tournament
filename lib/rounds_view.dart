@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swiss_tournament/encounters_view.dart';
 
+import 'components/no_data_tile.dart';
 import 'data/encounter.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
@@ -82,27 +83,12 @@ class _RoundsViewState extends State<RoundsView> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.tournament.players.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.list,
-              size: 100,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            Text(
-              'First add some players to the tournament.',
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    return SingleChildScrollView(child: Container(child: _buildPanel()));
+    return widget.tournament.players.isEmpty
+        ? NoDataTile(
+            text: 'First add some players to the tournament.',
+            icon: Icons.list,
+          )
+        : SingleChildScrollView(child: Container(child: _buildPanel()));
   }
 
   Widget _buildPanel() {

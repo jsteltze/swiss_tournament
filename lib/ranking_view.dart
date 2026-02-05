@@ -4,6 +4,7 @@ import 'package:swiss_tournament/components/input_title.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
 
+import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
 
 class RankingView extends StatelessWidget {
@@ -132,23 +133,9 @@ class RankingView extends StatelessWidget {
     final selectedTiebreak2 = tournament.settings.tb2;
     final headerHeight = 90.0;
     if (lastRoundNum == 0) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.leaderboard,
-              size: 100,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            Text(
-              'Tournament has not started yet.',
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ],
-        ),
+      return NoDataTile(
+        text: 'Tournament has not started yet.',
+        icon: Icons.leaderboard,
       );
     }
 

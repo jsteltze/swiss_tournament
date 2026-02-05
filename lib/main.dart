@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
+import 'package:swiss_tournament/components/no_data_tile.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
@@ -23,12 +24,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    var colorScheme = ColorScheme.fromSeed(seedColor: Colors.deepPurple);
     return MaterialApp(
       title: 'Chess Swiss Tournament',
-      theme: ThemeData(colorScheme: colorScheme, useMaterial3: true),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
       darkTheme: ThemeData(
-        colorScheme: colorScheme.copyWith(brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
@@ -371,23 +377,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _tournaments.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.emoji_events_outlined,
-                    size: 100,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  Text(
-                    'No tournaments added yet.',
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ],
-              ),
+          ? NoDataTile(
+              text: 'No tournaments added yet.',
+              icon: Icons.emoji_events_outlined,
             )
           : ListView.builder(
               itemCount: _tournaments.length,
