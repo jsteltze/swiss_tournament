@@ -24,13 +24,12 @@ void showEditTournamentDialog(
     text: tournament?.numberOfRounds.toString(),
   );
   final formKey = GlobalKey<FormState>();
-  tournament ??= Tournament(title: '', numberOfRounds: 0);
 
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Edit Tournament'),
+        title: Text('${tournament == null ? 'New' : 'Edit'} Tournament'),
         content: Form(
           key: formKey,
           child: Column(
@@ -62,8 +61,8 @@ void showEditTournamentDialog(
                     return 'Please enter a valid number';
                   }
                   if (tournament != null &&
-                      (int.parse(value) < tournament.rounds.length)) {
-                    return 'Must not be smaller than ${tournament.rounds.length}';
+                      (int.parse(value) < tournament!.rounds.length)) {
+                    return 'Must not be smaller than ${tournament!.rounds.length}';
                   }
                   return null;
                 },
@@ -74,10 +73,10 @@ void showEditTournamentDialog(
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
-              if (tournament != null && tournament.rounds.isNotEmpty) ...[
+              if (tournament != null && tournament!.rounds.isNotEmpty) ...[
                 const SizedBox(height: 20.0),
                 Text(
-                  "The tournament has started and is currently on round ${tournament.rounds.length}. Thus the number of rounds cannot be changed to a value smaller than ${tournament.rounds.length}!",
+                  "The tournament has started and is currently on round ${tournament!.rounds.length}. Thus the number of rounds cannot be changed to a value smaller than ${tournament!.rounds.length}!",
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ],
@@ -92,11 +91,12 @@ void showEditTournamentDialog(
           TextButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
+                tournament ??= Tournament();
                 tournament!.title = titleController.text;
-                tournament.numberOfRounds = int.parse(roundsController.text);
-                tournament.update();
+                tournament!.numberOfRounds = int.parse(roundsController.text);
+                tournament!.update();
                 Navigator.pop(context);
-                onSave(tournament);
+                onSave(tournament!);
               }
             },
             child: const Text('Save'),

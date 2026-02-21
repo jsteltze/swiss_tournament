@@ -84,6 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _tournaments.add(tournament);
       });
+      tournament.update = () => _storage.updateTournament(tournament);
+      tournament.update();
       _navigateToTournamentDetails(tournament);
     });
   }
