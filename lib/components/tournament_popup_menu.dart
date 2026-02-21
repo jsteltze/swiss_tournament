@@ -10,7 +10,7 @@ class TournamentPopupMenu extends StatelessWidget {
   final TournamentStorage storage;
   final VoidCallback onDelete;
   final VoidCallback onUpdate;
-  final VoidCallback onEdit;
+  final Function(Tournament) onEdit;
   final Widget? child;
 
   const TournamentPopupMenu({

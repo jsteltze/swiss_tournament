@@ -14,42 +14,75 @@ import 'input_title.dart';
 
 void showEditTournamentDialog(
   BuildContext context,
-  Tournament tournament,
-  VoidCallback onSave,
+  Tournament? tournament,
+  Function(Tournament) onSave,
 ) {
   final TextEditingController titleController = TextEditingController(
-    text: tournament.title,
+    text: tournament?.title,
   );
   final TextEditingController roundsController = TextEditingController(
-    text: tournament.numberOfRounds.toString(),
+    text: tournament?.numberOfRounds.toString(),
   );
+  final formKey = GlobalKey<FormState>();
+  tournament ??= Tournament(title: '', numberOfRounds: 0);
 
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Edit Tournament'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const InputTitle(text: 'Name:'),
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(
-                hintText: 'Enter tournament name',
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: titleController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a tournament title';
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Tournament title',
+                  border: OutlineInputBorder(),
+                ),
+                autofocus: true,
               ),
-              autofocus: true,
-            ),
-            const SizedBox(height: 16),
-            const InputTitle(text: 'Rounds:'),
-            TextField(
-              controller: roundsController,
-              decoration: const InputDecoration(hintText: 'Number of rounds'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            ),
-          ],
+              const SizedBox(height: 25),
+              TextFormField(
+                controller: roundsController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a number of rounds';
+                  }
+                  if (int.tryParse(value) == null) {
+                    return 'Please enter a valid number';
+                  }
+                  if (tournament != null &&
+                      (int.parse(value) < tournament.rounds.length)) {
+                    return 'Must not be smaller than ${tournament.rounds.length}';
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Number of rounds',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
+              if (tournament != null && tournament.rounds.isNotEmpty) ...[
+                const SizedBox(height: 20.0),
+                Text(
+                  "The tournament has started and is currently on round ${tournament.rounds.length}. Thus the number of rounds cannot be changed to a value smaller than ${tournament.rounds.length}!",
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ],
+            ],
+          ),
         ),
         actions: <Widget>[
           TextButton(
@@ -58,13 +91,12 @@ void showEditTournamentDialog(
           ),
           TextButton(
             onPressed: () {
-              if (titleController.text.isNotEmpty &&
-                  roundsController.text.isNotEmpty) {
-                tournament.title = titleController.text;
+              if (formKey.currentState!.validate()) {
+                tournament!.title = titleController.text;
                 tournament.numberOfRounds = int.parse(roundsController.text);
                 tournament.update();
-                onSave();
                 Navigator.pop(context);
+                onSave(tournament);
               }
             },
             child: const Text('Save'),

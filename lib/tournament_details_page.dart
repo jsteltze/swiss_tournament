@@ -100,7 +100,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
           TournamentPopupMenu(
             tournament: widget.tournament,
             storage: _storage,
-            onEdit: () {
+            onEdit: (tournament) {
               setState(() {});
               widget.onUpdate?.call();
             },
