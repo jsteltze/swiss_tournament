@@ -4,9 +4,9 @@ import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
 import 'package:swiss_tournament/components/no_data_tile.dart';
+import 'package:swiss_tournament/components/tournament_dialogs.dart';
 import 'package:swiss_tournament/components/tournament_popup_menu.dart';
 
 import 'data/tournament.dart';
@@ -80,57 +80,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addTournament() {
-    final TextEditingController titleController = TextEditingController();
-    final TextEditingController roundsController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add Tournament'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(hintText: 'Tournament name'),
-                autofocus: true,
-              ),
-              TextField(
-                controller: roundsController,
-                decoration: const InputDecoration(hintText: 'Number of rounds'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (titleController.text.isNotEmpty &&
-                    roundsController.text.isNotEmpty) {
-                  var newTournament = Tournament(
-                    title: titleController.text,
-                    numberOfRounds: int.parse(roundsController.text),
-                  );
-                  setState(() {
-                    _tournaments.add(newTournament);
-                  });
-                  _saveTournaments();
-                  Navigator.pop(context);
-                  _navigateToTournamentDetails(newTournament);
-                }
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
-    );
+    showEditTournamentDialog(context, null, (tournament) {
+      setState(() {
+        _tournaments.add(tournament);
+      });
+      _navigateToTournamentDetails(tournament);
+    });
   }
 
   void _deleteTournament(Tournament tournament) {
@@ -399,7 +354,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return TournamentPopupMenu(
                   tournament: tournament,
                   storage: _storage,
-                  onEdit: () => setState(() {}),
+                  onEdit: (tournament) => setState(() {}),
                   onDelete: () => _deleteTournament(tournament),
                   onUpdate: _loadTournaments,
                   child: ListTile(
