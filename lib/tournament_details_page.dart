@@ -100,7 +100,10 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
           TournamentPopupMenu(
             tournament: widget.tournament,
             storage: _storage,
-            onEdit: () => setState(() {}),
+            onEdit: () {
+              setState(() {});
+              widget.onUpdate?.call();
+            },
             onDelete: () {
               widget.onDeleteTournament?.call();
               Navigator.pop(context);

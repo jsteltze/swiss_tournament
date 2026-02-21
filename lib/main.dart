@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
 import 'package:swiss_tournament/components/no_data_tile.dart';
+import 'package:swiss_tournament/components/tournament_popup_menu.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
@@ -395,24 +396,42 @@ class _MyHomePageState extends State<MyHomePage> {
                         'in Progress (${tournament.rounds.length}/${tournament.numberOfRounds})';
                   }
                 }
-                return ListTile(
-                  title: Text(tournament.title),
-                  subtitle: Row(
-                    children: [
-                      Expanded(
-                        child: Text('Rounds: ${tournament.numberOfRounds}'),
+                return TournamentPopupMenu(
+                  tournament: tournament,
+                  storage: _storage,
+                  onEdit: () => setState(() {}),
+                  onDelete: () => _deleteTournament(tournament),
+                  onUpdate: _loadTournaments,
+                  child: ListTile(
+                    title: Text(
+                      tournament.title,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
                       ),
-                      Text(
-                        state,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.tertiary,
-                          fontStyle: FontStyle.italic,
+                    ),
+                    subtitle: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Rounds: ${tournament.numberOfRounds}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                        Text(
+                          state,
+                          style: Theme.of(context).textTheme.bodyMedium!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.tertiary,
+                                fontStyle: FontStyle.italic,
+                              ),
+                        ),
+                      ],
+                    ),
+                    leading: const Icon(Icons.emoji_events),
+                    onTap: () => _navigateToTournamentDetails(tournament),
                   ),
-                  leading: const Icon(Icons.emoji_events),
-                  onTap: () => _navigateToTournamentDetails(tournament),
                 );
               },
             ),
