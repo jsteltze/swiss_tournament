@@ -14,11 +14,11 @@ class LongPressPopupMenu<T> extends StatefulWidget {
 
   /// Default constructor
   const LongPressPopupMenu({
-    Key? key,
+    super.key,
     required this.child,
     required this.items,
     required this.onSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _LongPressPopupMenuState<T>();
