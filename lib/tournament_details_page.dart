@@ -39,7 +39,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
   }
 
   void _addPlayer() {
-    showAddPlayerDialog(context, widget.tournament, _onUpdatePlayers);
+    showEditPlayerDialog(context, widget.tournament, null, _onUpdatePlayers);
   }
 
   void _onRoundUpdate() {

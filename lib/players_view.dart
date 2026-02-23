@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 
-import 'components/input_title.dart';
 import 'components/no_data_tile.dart';
 import 'data/player.dart';
 import 'data/tournament.dart';
@@ -115,7 +114,7 @@ class PlayersView extends StatelessWidget {
                     var popup = PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'edit') {
-                          _showEditPlayerDialog(
+                          showEditPlayerDialog(
                             context,
                             tournament,
                             player,
@@ -156,17 +155,6 @@ class PlayersView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          PopupMenuItem(
-                            value: 'delete',
-                            enabled: tournament.rounds.isEmpty,
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete, size: 20),
-                                SizedBox(width: 8),
-                                Text('Delete'),
-                              ],
-                            ),
-                          ),
                           if (player.leftAt == null)
                             PopupMenuItem(
                               value: 'disable',
@@ -189,6 +177,26 @@ class PlayersView extends StatelessWidget {
                                 ],
                               ),
                             ),
+                          PopupMenuItem(
+                            value: 'delete',
+                            enabled: tournament.rounds.isEmpty,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.delete,
+                                  size: 20,
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ];
                       },
                     );
@@ -307,105 +315,74 @@ class PlayersView extends StatelessWidget {
       },
     );
   }
-
-  void _showEditPlayerDialog(
-    BuildContext context,
-    Tournament tournament,
-    Player player,
-    VoidCallback? onPlayersChanged,
-  ) {
-    final TextEditingController nameController = TextEditingController(
-      text: player.name,
-    );
-    final TextEditingController ratingController = TextEditingController(
-      text: player.rating.toString(),
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Edit Player'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InputTitle(text: 'Name:'),
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(hintText: 'Player Name'),
-                autofocus: true,
-              ),
-              const SizedBox(height: 16),
-              InputTitle(text: 'Rating:'),
-              TextField(
-                controller: ratingController,
-                decoration: const InputDecoration(hintText: 'Rating'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (nameController.text.isNotEmpty) {
-                  player.name = nameController.text;
-                  player.rating = int.parse(
-                    ratingController.text.isEmpty ? '0' : ratingController.text,
-                  );
-                  tournament.sortPlayers();
-                  onPlayersChanged?.call();
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
 
-void showAddPlayerDialog(
+void showEditPlayerDialog(
   BuildContext context,
   Tournament tournament,
-  VoidCallback onPlayerAdded,
+  Player? player,
+  VoidCallback? onPlayersChanged,
 ) {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController ratingController = TextEditingController();
-
-  final isLateJoin = tournament.rounds.isNotEmpty;
+  final TextEditingController nameController = TextEditingController(
+    text: player?.name,
+  );
+  final TextEditingController ratingController = TextEditingController(
+    text: player?.rating.toString(),
+  );
+  final formKey = GlobalKey<FormState>();
+  final isLateJoin = player != null && tournament.rounds.isNotEmpty;
 
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Add Player${isLateJoin ? ' (Late Join)' : ''}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isLateJoin)
-              const Text(
-                'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
+        title: Text(
+          '${player == null ? 'New' : 'Edit'} Player${isLateJoin ? ' (Late Join)' : ''}',
+        ),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isLateJoin)
+                const Text(
+                  'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
+                ),
+              TextFormField(
+                controller: nameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a player name';
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Player name',
+                  border: OutlineInputBorder(),
+                ),
+                autofocus: true,
               ),
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(hintText: 'Player Name'),
-              autofocus: true,
-            ),
-            TextField(
-              controller: ratingController,
-              decoration: const InputDecoration(hintText: 'Rating'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            ),
-          ],
+              const SizedBox(height: 25),
+              TextFormField(
+                controller: ratingController,
+                validator: (value) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      int.tryParse(value) != null) {
+                    return null;
+                  }
+                  return 'Please enter a valid rating (integer)';
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Player rating',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
+            ],
+          ),
         ),
         actions: <Widget>[
           TextButton(
@@ -414,23 +391,23 @@ void showAddPlayerDialog(
           ),
           TextButton(
             onPressed: () {
-              if (nameController.text.isNotEmpty) {
-                tournament.addPlayer(
-                  Player(
-                    name: nameController.text,
-                    rating: int.parse(
-                      ratingController.text.isEmpty
-                          ? '0'
-                          : ratingController.text,
-                    ),
-                    joinedAt: tournament.rounds.length,
-                  ),
+              if (formKey.currentState!.validate()) {
+                final isAdding = player == null;
+                player ??= Player(joinedAt: tournament.rounds.length);
+                player!.name = nameController.text;
+                player!.rating = int.parse(
+                  ratingController.text.isEmpty ? '0' : ratingController.text,
                 );
-                onPlayerAdded();
+                if (isAdding) {
+                  tournament.addPlayer(player!);
+                } else {
+                  tournament.sortPlayers();
+                }
+                onPlayersChanged?.call();
                 Navigator.pop(context);
               }
             },
-            child: const Text('Add'),
+            child: const Text('Save'),
           ),
         ],
       );

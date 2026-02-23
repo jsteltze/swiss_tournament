@@ -4,8 +4,10 @@ class Player {
   final int joinedAt;
   int? leftAt;
 
-  Player({required this.name, required this.rating, int? joinedAt})
-    : joinedAt = joinedAt ?? 0;
+  Player({String? name, int? rating, int? joinedAt})
+    : name = name ?? '',
+      rating = rating ?? 0,
+      joinedAt = joinedAt ?? 0;
 
   static Player bye = Player(name: 'Bye', rating: 0, joinedAt: 0);
 
