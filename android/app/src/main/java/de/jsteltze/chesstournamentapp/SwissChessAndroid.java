@@ -12,13 +12,13 @@ import javafo.api.JaVaFoApi;
 
 public class SwissChessAndroid {
 
-    public static String initTournament(Activity activity, String trfFileContent) {
+    public static String jaVaFoApi(Activity activity, int mode, String trfFileContent) {
         try {
             File f = new File(activity.getCacheDir(), "tournament.trf");
             BufferedWriter writer = new BufferedWriter(new FileWriter(f));
             writer.write(trfFileContent);
             writer.close();
-            String response = JaVaFoApi.exec(1000, new FileInputStream(f));
+            String response = JaVaFoApi.exec(mode, new FileInputStream(f));
             f.delete();
             return response;
         } catch (IOException e) {

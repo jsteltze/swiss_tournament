@@ -84,8 +84,12 @@ Round callJavaFo(Tournament tournament) {
     print(line);
   }
 
-  var response = SwissChessAndroid.initTournament(
+  int mode = tournament.rounds.length < tournament.settings.baku ? 1001 : 1000;
+  print('mode=$mode');
+
+  var response = SwissChessAndroid.jaVaFoApi(
     Jni.androidActivity(PlatformDispatcher.instance.engineId!),
+    mode,
     JString.fromString(trfFileContent),
   );
 

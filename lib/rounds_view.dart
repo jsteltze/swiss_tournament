@@ -155,7 +155,7 @@ class _RoundsViewState extends State<RoundsView> {
                 const SizedBox(height: 10),
                 ...unfinished.map(
                   (e) => Text(
-                    '${widget.tournament.players[e.playerIdW].name} vs ${widget.tournament.players[e.playerIdB].name}',
+                    ' - ${widget.tournament.players[e.playerIdW].name} vs ${widget.tournament.players[e.playerIdB].name}',
                   ),
                 ),
               ],

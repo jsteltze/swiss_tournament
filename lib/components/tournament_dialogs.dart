@@ -342,6 +342,7 @@ void showDuplicateTournamentDialog(
 
 void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
   FirstRoundPairing currentPairing = tournament.settings.firstRoundPairing;
+  int currentBaku = tournament.settings.baku;
 
   showDialog(
     context: context,
@@ -377,6 +378,35 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
                         },
                 ),
                 Description(text: currentPairing.description),
+                const SizedBox(height: 16.0),
+                const InputTitle(text: 'Accelerated Swiss (Baku):'),
+                DropdownButton<int>(
+                  value: currentBaku,
+                  isExpanded: true,
+                  items:
+                      List<int>.generate(
+                        tournament.numberOfRounds + 1,
+                        (i) => i,
+                      ).map((val) {
+                        return DropdownMenuItem(
+                          value: val,
+                          child: Text(
+                            val == 0
+                                ? 'Off'
+                                : 'Round${val == 1 ? ' 1' : 's 1-$val'}',
+                          ),
+                        );
+                      }).toList(),
+                  onChanged: tournament.rounds.isNotEmpty
+                      ? null
+                      : (newValue) {
+                          setDialogState(() => currentBaku = newValue!);
+                        },
+                ),
+                Description(
+                  text:
+                      'The Baku Acceleration Method (BAM) is a FIDE-approved pairing system for large Swiss-system chess tournaments designed to accelerate pairings between top-seeded players. It splits participants into two groups, adding virtual points to the top half to force matchups earlier, preventing high-ranked players from having low-scoring opponents in initial rounds.',
+                ),
                 if (tournament.rounds.isNotEmpty) ...[
                   const SizedBox(height: 16.0),
                   Text(
@@ -398,6 +428,7 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
                     ? null
                     : () {
                         tournament.settings.firstRoundPairing = currentPairing;
+                        tournament.settings.baku = currentBaku;
                         tournament.update();
                         Navigator.pop(context);
                       },

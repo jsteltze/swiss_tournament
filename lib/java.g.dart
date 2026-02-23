@@ -3499,19 +3499,23 @@ class SwissChessAndroid extends jni$_.JObject {
     );
   }
 
-  static final _id_initTournament = _class.staticMethodId(
-    r'initTournament',
-    r'(Landroid/app/Activity;Ljava/lang/String;)Ljava/lang/String;',
+  static final _id_jaVaFoApi = _class.staticMethodId(
+    r'jaVaFoApi',
+    r'(Landroid/app/Activity;ILjava/lang/String;)Ljava/lang/String;',
   );
 
-  static final _initTournament =
+  static final _jaVaFoApi =
       jni$_.ProtectedJniExtensions.lookup<
             jni$_.NativeFunction<
               jni$_.JniResult Function(
                 jni$_.Pointer<jni$_.Void>,
                 jni$_.JMethodIDPtr,
                 jni$_.VarArgs<
-                  (jni$_.Pointer<jni$_.Void>, jni$_.Pointer<jni$_.Void>)
+                  (
+                    jni$_.Pointer<jni$_.Void>,
+                    jni$_.Int32,
+                    jni$_.Pointer<jni$_.Void>,
+                  )
                 >,
               )
             >
@@ -3521,22 +3525,25 @@ class SwissChessAndroid extends jni$_.JObject {
               jni$_.Pointer<jni$_.Void>,
               jni$_.JMethodIDPtr,
               jni$_.Pointer<jni$_.Void>,
+              int,
               jni$_.Pointer<jni$_.Void>,
             )
           >();
 
-  /// from: `static public java.lang.String initTournament(android.app.Activity activity, java.lang.String trfFileContent)`
+  /// from: `static public java.lang.String jaVaFoApi(android.app.Activity activity, int mode, java.lang.String trfFileContent)`
   /// The returned object must be released after use, by calling the [release] method.
-  static jni$_.JString? initTournament(
+  static jni$_.JString? jaVaFoApi(
     jni$_.JObject? activity,
+    int mode,
     jni$_.JString? trfFileContent,
   ) {
     final _$activity = activity?.reference ?? jni$_.jNullReference;
     final _$trfFileContent = trfFileContent?.reference ?? jni$_.jNullReference;
-    return _initTournament(
+    return _jaVaFoApi(
       _class.reference.pointer,
-      _id_initTournament as jni$_.JMethodIDPtr,
+      _id_jaVaFoApi as jni$_.JMethodIDPtr,
       _$activity.pointer,
+      mode,
       _$trfFileContent.pointer,
     ).object<jni$_.JString?>(const jni$_.$JString$NullableType$());
   }
