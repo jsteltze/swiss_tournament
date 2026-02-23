@@ -389,7 +389,7 @@ void showEditPlayerDialog(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 final isAdding = player == null;

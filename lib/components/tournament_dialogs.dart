@@ -88,7 +88,7 @@ void showEditTournamentDialog(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 tournament ??= Tournament();
@@ -196,7 +196,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Cancel'),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   String filename = filenameController.text;
                   if (filename.isEmpty) return;
@@ -298,7 +298,7 @@ void showDuplicateTournamentDialog(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Cancel'),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () async {
                   if (titleController.text.isNotEmpty) {
                     Map<String, dynamic> json;
@@ -393,7 +393,7 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Cancel'),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: tournament.rounds.isNotEmpty
                     ? null
                     : () {
