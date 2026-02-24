@@ -383,20 +383,10 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
                 DropdownButton<int>(
                   value: currentBaku,
                   isExpanded: true,
-                  items:
-                      List<int>.generate(
-                        tournament.numberOfRounds + 1,
-                        (i) => i,
-                      ).map((val) {
-                        return DropdownMenuItem(
-                          value: val,
-                          child: Text(
-                            val == 0
-                                ? 'Off'
-                                : 'Round${val == 1 ? ' 1' : 's 1-$val'}',
-                          ),
-                        );
-                      }).toList(),
+                  items: [
+                    DropdownMenuItem(value: 0, child: Text('Off')),
+                    DropdownMenuItem(value: 1, child: Text('On')),
+                  ],
                   onChanged: tournament.rounds.isNotEmpty
                       ? null
                       : (newValue) {
@@ -405,12 +395,12 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
                 ),
                 Description(
                   text:
-                      'The Baku Acceleration Method (BAM) is a FIDE-approved pairing system for large Swiss-system chess tournaments designed to accelerate pairings between top-seeded players. It splits participants into two groups, adding virtual points to the top half to force matchups earlier, preventing high-ranked players from having low-scoring opponents in initial rounds.',
+                      'The Baku Acceleration Method (BAM) is a FIDE-approved pairing system for large Swiss-system chess tournaments designed to accelerate pairings between top-seeded players. It splits participants into two groups, adding virtual points to the top half to force matchups earlier, preventing high-ranked players from having low-scoring opponents in initial rounds.\nIn detail the systems works as follows: the first half of the rounds (rounded up) are accelerated. For the first half of the accelerated rounds (rounded up) the upper half of players receives a virtual point. For the second half of the accelerated rounds (rounded down) half a virtual point is granted to the upper half of players. The lower half of the players does not receive virtual points. After the accelerated rounds are played, the rest of the tournament will proceed normal.',
                 ),
                 if (tournament.rounds.isNotEmpty) ...[
                   const SizedBox(height: 16.0),
                   Text(
-                    "This property cannot be changed after the tournament start!",
+                    "This settings cannot be changed after the tournament start!",
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                     ),

@@ -8,6 +8,9 @@ import '../data/round.dart';
 import '../java.g.dart';
 
 Round callJavaFo(Tournament tournament) {
+  bool bakuMode = tournament.settings.baku > 0;
+  print('bakuMode=$bakuMode');
+
   var trfFileContent = "";
   trfFileContent += "012 ${tournament.title}\n";
   trfFileContent += "022 City\n";
@@ -83,20 +86,54 @@ Round callJavaFo(Tournament tournament) {
     trfFileContent += line;
     print(line);
   }
-
-  int mode = tournament.rounds.length < tournament.settings.baku ? 1001 : 1000;
-  print('mode=$mode');
+  double virtualPointsForThisRound = 0.0;
+  if (bakuMode) {
+    int numberOfAcceleratedRounds = (tournament.numberOfRounds + 1) ~/ 2;
+    int numberOfVirtualPointsFull = (numberOfAcceleratedRounds + 1) ~/ 2;
+    int numberOfVirtualPointsHalf =
+        numberOfAcceleratedRounds - numberOfVirtualPointsFull;
+    if (tournament.rounds.length < numberOfVirtualPointsFull) {
+      virtualPointsForThisRound = 1.0;
+    } else if (tournament.rounds.length < numberOfAcceleratedRounds) {
+      virtualPointsForThisRound = 0.5;
+    }
+    int playersGA = (2 * tournament.players.length) ~/ 4;
+    int playerId = 1;
+    for (; playerId <= playersGA; playerId++) {
+      final padId = playerId.toString().padLeft(4, ' ');
+      var line = "XXA $padId";
+      for (int r = 0; r < numberOfVirtualPointsFull; r++) {
+        line += "  1.0";
+      }
+      for (int r = 0; r < numberOfVirtualPointsHalf; r++) {
+        line += "  0.5";
+      }
+      line += "\n";
+      print(line);
+      trfFileContent += line;
+    }
+    for (; playerId <= tournament.players.length; playerId++) {
+      final padId = playerId.toString().padLeft(4, ' ');
+      var line = "XXA $padId";
+      for (int r = 0; r < numberOfAcceleratedRounds; r++) {
+        line += "  0.0";
+      }
+      line += "\n";
+      print(line);
+      trfFileContent += line;
+    }
+  }
 
   var response = SwissChessAndroid.jaVaFoApi(
     Jni.androidActivity(PlatformDispatcher.instance.engineId!),
-    mode,
+    bakuMode ? 1001 : 1000,
     JString.fromString(trfFileContent),
   );
 
   var respStr = response!.toDartString();
   print(respStr);
   var lines = respStr.split('\n');
-  var round = Round();
+  var round = Round(acceleratedRoundVirtualPoints: virtualPointsForThisRound);
   for (var i = 1; i < lines.length; i++) {
     var line = lines[i];
     if (line.isEmpty) {
