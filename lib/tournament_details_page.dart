@@ -124,6 +124,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
             )
           : null,
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Players'),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Rounds'),
