@@ -86,6 +86,26 @@ class _EncountersViewState extends State<EncountersView> {
               ),
             ),
         const SizedBox(height: 10),
+        if (round.acceleratedRoundVirtualPoints > 0.0)
+          Row(
+            children: [
+              SizedBox(
+                width: 80,
+                child: Text(
+                  "Baku Info:",
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.primary.withAlpha(160),
+                  ),
+                ),
+              ),
+              Text(
+                "This is an accelerated round.\nPlayers #1-#${(2 * widget.tournament.players.length) ~/ 4} have received ${round.acceleratedRoundVirtualPoints} virtual points.",
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.primary.withAlpha(160),
+                ),
+              ),
+            ],
+          ),
         Row(
           children: [
             SizedBox(
