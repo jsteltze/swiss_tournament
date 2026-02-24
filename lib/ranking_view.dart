@@ -110,7 +110,7 @@ class RankingView extends StatelessWidget {
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Cancel'),
                 ),
-                TextButton(
+                ElevatedButton(
                   onPressed: () {
                     applyTiebreak(selectedTiebreak1, selectedTiebreak2);
                     Navigator.pop(context);
