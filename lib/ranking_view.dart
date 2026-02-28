@@ -80,7 +80,7 @@ class RankingView extends StatelessWidget {
                       });
                     },
                   ),
-                  Description(text: selectedTiebreak1.description),
+                  Description(selectedTiebreak1.description),
                   const SizedBox(height: 20),
                   if (selectedTiebreak1 != Tiebreak.no) ...[
                     InputTitle(text: 'Tiebreak 2:'),
@@ -101,7 +101,7 @@ class RankingView extends StatelessWidget {
                         });
                       },
                     ),
-                    Description(text: selectedTiebreak2.description),
+                    Description(selectedTiebreak2.description),
                   ],
                 ],
               ),

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
+import 'package:swiss_tournament/components/warning.dart';
 
 import '../data/first_round_pairing.dart';
 import '../data/tournament.dart';
@@ -157,8 +158,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Description(
-                  text:
-                      'Export to Downloads folder. The saved file can serve as a backup or can be shared and imported on other devices.',
+                  'Export to Downloads folder. The saved file can serve as a backup or can be shared and imported on other devices.',
                 ),
                 const SizedBox(height: 16),
                 const InputTitle(text: 'Type:'),
@@ -351,62 +351,61 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
         builder: (context, setDialogState) {
           return AlertDialog(
             title: const Text('Advanced Settings'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const InputTitle(text: 'First Round Pairing (Top Player):'),
-                DropdownButton<FirstRoundPairing>(
-                  value: currentPairing,
-                  isExpanded: true,
-                  items: FirstRoundPairing.values.map((val) {
-                    return DropdownMenuItem(
-                      value: val,
-                      child: Text(
-                        val == FirstRoundPairing.white1
-                            ? 'White'
-                            : val == FirstRoundPairing.black1
-                            ? 'Black'
-                            : 'Random',
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: tournament.rounds.isNotEmpty
-                      ? null
-                      : (newValue) {
-                          setDialogState(() => currentPairing = newValue!);
-                        },
-                ),
-                Description(text: currentPairing.description),
-                const SizedBox(height: 16.0),
-                const InputTitle(text: 'Accelerated Swiss (Baku):'),
-                DropdownButton<int>(
-                  value: currentBaku,
-                  isExpanded: true,
-                  items: [
-                    DropdownMenuItem(value: 0, child: Text('Off')),
-                    DropdownMenuItem(value: 1, child: Text('On')),
-                  ],
-                  onChanged: tournament.rounds.isNotEmpty
-                      ? null
-                      : (newValue) {
-                          setDialogState(() => currentBaku = newValue!);
-                        },
-                ),
-                Description(
-                  text:
-                      'The Baku Acceleration Method (BAM) is a FIDE-approved pairing system for large Swiss-system chess tournaments designed to accelerate pairings between top-seeded players. It splits participants into two groups, adding virtual points to the top half to force matchups earlier, preventing high-ranked players from having low-scoring opponents in initial rounds.\nIn detail the systems works as follows: the first half of the rounds (rounded up) are accelerated. For the first half of the accelerated rounds (rounded up) the upper half of players receives a virtual point. For the second half of the accelerated rounds (rounded down) half a virtual point is granted to the upper half of players. The lower half of the players does not receive virtual points. After the accelerated rounds are played, the rest of the tournament will proceed normal.',
-                ),
-                if (tournament.rounds.isNotEmpty) ...[
-                  const SizedBox(height: 16.0),
-                  Text(
-                    "This settings cannot be changed after the tournament start!",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const InputTitle(text: 'First Round Pairing (Top Player):'),
+                  DropdownButton<FirstRoundPairing>(
+                    value: currentPairing,
+                    isExpanded: true,
+                    items: FirstRoundPairing.values.map((val) {
+                      return DropdownMenuItem(
+                        value: val,
+                        child: Text(
+                          val == FirstRoundPairing.white1
+                              ? 'White'
+                              : val == FirstRoundPairing.black1
+                              ? 'Black'
+                              : 'Random',
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: tournament.rounds.isNotEmpty
+                        ? null
+                        : (newValue) {
+                            setDialogState(() => currentPairing = newValue!);
+                          },
                   ),
+                  Description(currentPairing.description, isExpandable: true),
+                  const SizedBox(height: 16.0),
+                  const InputTitle(text: 'Accelerated Swiss (Baku):'),
+                  DropdownButton<int>(
+                    value: currentBaku,
+                    isExpanded: true,
+                    items: [
+                      DropdownMenuItem(value: 0, child: Text('Off')),
+                      DropdownMenuItem(value: 1, child: Text('On')),
+                    ],
+                    onChanged: tournament.rounds.isNotEmpty
+                        ? null
+                        : (newValue) {
+                            setDialogState(() => currentBaku = newValue!);
+                          },
+                  ),
+                  Description(
+                    'The Baku Acceleration Method (BAM) is a FIDE-approved pairing system for large Swiss-system chess tournaments designed to accelerate pairings between top-seeded players. It splits participants into two groups, adding virtual points to the top half to force matchups earlier, preventing high-ranked players from having low-scoring opponents in initial rounds.\nIn detail the systems works as follows: the first half of the rounds (rounded up) are accelerated. For the first half of the accelerated rounds (rounded up) the upper half of players receives a virtual point. For the second half of the accelerated rounds (rounded down) half a virtual point is granted to the upper half of players. The lower half of the players does not receive virtual points. After the accelerated rounds are played, the rest of the tournament will proceed normal.',
+                    isExpandable: true,
+                  ),
+                  if (tournament.rounds.isNotEmpty) ...[
+                    const SizedBox(height: 16.0),
+                    Warning(
+                      "This settings cannot be changed after the tournament has started!",
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
             actions: [
               TextButton(
