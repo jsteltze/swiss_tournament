@@ -3,11 +3,14 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jni/jni.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/no_data_tile.dart';
 import 'package:swiss_tournament/components/tournament_dialogs.dart';
 import 'package:swiss_tournament/components/tournament_popup_menu.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
@@ -286,6 +289,151 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _showInfoDialog() {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setDialogState) {
+              return AlertDialog(
+                title: const Text('App Info'),
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Welcome to ${packageInfo.appName}!\nThis is an Opensource, Free-to-use Android-App for organizing and managing chess tournaments in Swiss mode.\nAll data is stored locally on your device. No Internet connection required.',
+                      ),
+                      ExpansionTile(
+                        title: Text('About'),
+                        children: [
+                          Text(
+                            'I am familiar using the commercial program "Swiss Chess". However besides being costly, the program is running on Windows/PC only.\nMy goal was to create an easy to use and free App, since all the Apps I found so far were either commercial or simply bad. Also I wanted the App to have as little dependencies as possible. So everything is stored locally on your device. You are the owner of your tournament data!\nThis App will probably not support each and every advanced setting for Swiss tournaments. But I hope it will be suitable for the majority of tournaments.',
+                          ),
+                          RichText(
+                            text: TextSpan(
+                              style: Theme.of(context).textTheme.bodyMedium!
+                                  .copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                              text: 'Github Home',
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => launchUrlString(
+                                  'https://github.com/jsteltze/swiss_tournament.git',
+                                ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      ExpansionTile(
+                        title: Text('Version'),
+                        children: [Text('Version: ${packageInfo.version}')],
+                      ),
+                      ExpansionTile(
+                        title: Text('Technologies used'),
+                        children: [
+                          Text(
+                            'This is my first programming with Flutter/Dart. Initially I did not intend to restrict the platform to Android. But I\'m using the pairing engine "JaVaFo", which is a Java library. I was only able to get this Java program running on Android.',
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(width: 90, child: Text('Language:')),
+                              Text('Flutter/Dart'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(width: 90, child: Text('Database:')),
+                              Text('sqflite'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(width: 90, child: Text('Package Info:')),
+                              Text('package_info_plus'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(width: 90, child: Text('Design:')),
+                              Text('Material v3'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(width: 90, child: Text('Icons:')),
+                              Text('Cupertino Icons'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(width: 90, child: Text('Pairing:')),
+                              RichText(
+                                text: TextSpan(
+                                  style: Theme.of(context).textTheme.bodyMedium!
+                                      .copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                      ),
+                                  text: 'JaVaFo library (Java)',
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => launchUrlString(
+                                      'https://www.rrweb.org/javafo/JaVaFo.htm',
+                                    ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      ExpansionTile(
+                        title: Text('License Info'),
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(width: 90, child: Text('Rook Icon:')),
+                              RichText(
+                                text: TextSpan(
+                                  style: Theme.of(context).textTheme.bodyMedium!
+                                      .copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                      ),
+                                  text: 'Icon by Freepik',
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => launchUrlString(
+                                      'https://www.freepik.com/icon/rook_562880#fromView=search&page=1&position=36&uuid=c1e0d777-66db-4757-98d6-8a870ff59f43',
+                                    ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Back'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -303,6 +451,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 _exportTournaments();
               } else if (value == 'import') {
                 _importTournaments();
+              } else if (value == 'info') {
+                _showInfoDialog();
               }
             },
             itemBuilder: (BuildContext context) {
@@ -324,6 +474,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       Icon(Icons.save_alt),
                       SizedBox(width: 8),
                       Text('Export'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'info',
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline),
+                      SizedBox(width: 8),
+                      Text('App Info'),
                     ],
                   ),
                 ),
