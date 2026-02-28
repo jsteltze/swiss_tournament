@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:jni/jni.dart';
 import 'package:swiss_tournament/components/description.dart';
 import 'package:swiss_tournament/components/input_title.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
@@ -6,6 +9,7 @@ import 'package:swiss_tournament/data/tiebreak.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
+import 'java.g.dart';
 
 class RankingView extends StatelessWidget {
   final Tournament tournament;
@@ -44,7 +48,7 @@ class RankingView extends StatelessWidget {
     onSettingsUpdate(s);
   }
 
-  void _showSettingsDialog(BuildContext context) {
+  void _showSettingsDialog(BuildContext context, List<PlayerRatings> ratings) {
     var selectedTiebreak1 = tournament.settings.tb1;
     var selectedTiebreak2 = tournament.settings.tb2;
 
@@ -103,6 +107,40 @@ class RankingView extends StatelessWidget {
                     ),
                     Description(selectedTiebreak2.description),
                   ],
+                  const SizedBox(height: 20),
+                  InputTitle(text: 'Export:'),
+                  TextButton(
+                    onPressed: () {
+                      final String htmlContent = PlayerRatings.toHtml(
+                        tournament,
+                        ratings,
+                        context,
+                      );
+                      final String filename =
+                          '${tournament.title.replaceAll(' ', '_')}_ranking_round_${tournament.rounds.length}.html';
+
+                      SwissChessAndroid.exportToFile(
+                        Jni.androidActivity(
+                          PlatformDispatcher.instance.engineId!,
+                        ),
+                        JString.fromString(htmlContent),
+                        JString.fromString(filename),
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('"$filename" exported to Downloads'),
+                        ),
+                      );
+                    },
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.file_download_outlined),
+                        Text('Export current ranking as HTML'),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               actions: [
@@ -294,7 +332,7 @@ class RankingView extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.settings),
-                onPressed: () => _showSettingsDialog(context),
+                onPressed: () => _showSettingsDialog(context, ratings),
                 color: Theme.of(context).colorScheme.primary,
               ),
             ],
@@ -405,6 +443,7 @@ class RankingView extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.only(right: 5),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 if (r.player.rating > 0 && r.performance! > 0)
                                   Transform.rotate(
