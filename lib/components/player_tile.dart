@@ -39,15 +39,18 @@ class PlayerTile extends StatelessWidget {
           : Row(
               spacing: 5,
               children: [
-                Text(
-                  '#${index + 1}',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
+                SizedBox(
+                  width: 30,
+                  child: Text(
+                    '#${index + 1}',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 ),
                 Expanded(
                   child: Text(
-                    '${detailed ? 'Rating: ' : '('}${player.rating > 0 ? player.rating : 'N/A'}${detailed ? '' : ')'}',
+                    '${detailed ? '| Rating: ' : '('}${player.rating > 0 ? player.rating : 'N/A'}${detailed ? '' : ')'}',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
@@ -89,7 +92,7 @@ class PlayerIcon extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.person),
+        Icon(Icons.person, color: Theme.of(context).colorScheme.secondary),
         if (points != null)
           Text(
             points!.toStringAsFixed(1),

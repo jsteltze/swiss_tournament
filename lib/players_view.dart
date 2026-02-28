@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
+import 'package:swiss_tournament/components/warning.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/player.dart';
@@ -330,7 +331,7 @@ void showEditPlayerDialog(
     text: player?.rating.toString(),
   );
   final formKey = GlobalKey<FormState>();
-  final isLateJoin = player != null && tournament.rounds.isNotEmpty;
+  final isLateJoin = player == null && tournament.rounds.isNotEmpty;
 
   showDialog(
     context: context,
@@ -345,10 +346,12 @@ void showEditPlayerDialog(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (isLateJoin)
-                const Text(
+              if (isLateJoin) ...[
+                const Warning(
                   'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
                 ),
+                const SizedBox(height: 25),
+              ],
               TextFormField(
                 controller: nameController,
                 validator: (value) {
