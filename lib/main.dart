@@ -17,6 +17,8 @@ import 'data/tournament_storage.dart';
 import 'java.g.dart';
 import 'tournament_details_page.dart';
 
+const appTitle = 'Chess Swiss Tournament';
+
 void main() {
   //Jni.spawn(dylibDir: 'build/jni', classPath: ['java']);
   runApp(const MyApp());
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Chess Swiss Tournament',
+      title: appTitle,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -42,7 +44,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
-      home: const MyHomePage(title: "Chess Swiss Tournament"),
+      home: const MyHomePage(title: appTitle),
     );
   }
 }
