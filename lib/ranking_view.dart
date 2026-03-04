@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:jni/jni.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/description.dart';
 import 'package:swiss_tournament/components/input_title.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
+import 'package:swiss_tournament/utils/html_utils.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
@@ -111,27 +113,36 @@ class RankingView extends StatelessWidget {
                   InputTitle(text: 'Export:'),
                   TextButton(
                     onPressed: () {
-                      final String htmlContent = PlayerRatings.toHtml(
-                        tournament,
-                        ratings,
-                        context,
-                      );
-                      final String filename =
-                          '${tournament.title.replaceAll(' ', '_')}_ranking_round_${tournament.rounds.length}.html';
+                      PackageInfo.fromPlatform().then((
+                        PackageInfo packageInfo,
+                      ) {
+                        final String htmlContent = toHtmlRanking(
+                          tournament,
+                          ratings,
+                          context.mounted ? context : null,
+                          packageInfo,
+                        );
+                        final String filename =
+                            '${tournament.title.replaceAll(' ', '_')}_ranking_round_${tournament.rounds.length}.html';
 
-                      SwissChessAndroid.exportToFile(
-                        Jni.androidActivity(
-                          PlatformDispatcher.instance.engineId!,
-                        ),
-                        JString.fromString(htmlContent),
-                        JString.fromString(filename),
-                      );
+                        SwissChessAndroid.exportToFile(
+                          Jni.androidActivity(
+                            PlatformDispatcher.instance.engineId!,
+                          ),
+                          JString.fromString(htmlContent),
+                          JString.fromString(filename),
+                        );
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('"$filename" exported to Downloads'),
-                        ),
-                      );
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '"$filename" exported to Downloads',
+                              ),
+                            ),
+                          );
+                        }
+                      });
                     },
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,

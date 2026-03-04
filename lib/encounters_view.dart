@@ -4,7 +4,9 @@ import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jni/jni.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/data/tournament.dart';
+import 'package:swiss_tournament/utils/html_utils.dart';
 
 import 'java.g.dart';
 import 'single_encounter_view.dart';
@@ -30,21 +32,30 @@ class EncountersView extends StatefulWidget {
 class _EncountersViewState extends State<EncountersView> {
   bool _filterOpen = false;
 
-  void _exportRound(BuildContext ctx) {
-    final round = widget.tournament.rounds[widget.roundIndex];
-    final String htmlContent = round.toHtml(widget.tournament, ctx);
-    final String filename =
-        '${widget.tournament.title.replaceAll(' ', '_')}_round_${widget.roundIndex + 1}.html';
+  void _exportRound() {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      final round = widget.tournament.rounds[widget.roundIndex];
+      final String htmlContent = toHtmlRound(
+        widget.tournament,
+        round,
+        context.mounted ? context : null,
+        packageInfo,
+      );
+      final String filename =
+          '${widget.tournament.title.replaceAll(' ', '_')}_round_${widget.roundIndex + 1}.html';
 
-    SwissChessAndroid.exportToFile(
-      Jni.androidActivity(PlatformDispatcher.instance.engineId!),
-      JString.fromString(htmlContent),
-      JString.fromString(filename),
-    );
+      SwissChessAndroid.exportToFile(
+        Jni.androidActivity(PlatformDispatcher.instance.engineId!),
+        JString.fromString(htmlContent),
+        JString.fromString(filename),
+      );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('"$filename" exported to Downloads')),
-    );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('"$filename" exported to Downloads')),
+        );
+      }
+    });
   }
 
   @override
@@ -164,7 +175,7 @@ class _EncountersViewState extends State<EncountersView> {
                 if (value == 'delete') {
                   widget.deleteRound?.call();
                 } else if (value == 'export') {
-                  _exportRound(context);
+                  _exportRound();
                 }
               },
               itemBuilder: (BuildContext context) {

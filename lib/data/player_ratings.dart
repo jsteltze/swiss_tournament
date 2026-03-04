@@ -1,13 +1,11 @@
 import 'dart:math' as Math;
 
-import 'package:flutter/material.dart';
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/player.dart';
 import 'package:swiss_tournament/data/round.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
-import '../utils/colorx.dart';
 import '../utils/fide_utils.dart';
 
 class PlayerRatings {
@@ -356,24 +354,5 @@ class PlayerRatings {
       }
     }
     return mid.round();
-  }
-
-  static String toHtml(
-    Tournament tournament,
-    List<PlayerRatings> ratings,
-    BuildContext ctx,
-  ) {
-    final bgColor = Theme.of(ctx).colorScheme.inversePrimary.toHexTriplet();
-    final bgColor2 = Theme.of(ctx).colorScheme.surface.toHexTriplet();
-    final secondary = Theme.of(ctx).colorScheme.secondary.toHexTriplet();
-    int roundNum = tournament.rounds.length;
-    String html =
-        '<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Ranking after Round $roundNum</title><style>th {padding: 5px; text-align: left; vertical-align: bottom; background-color: $bgColor; font-weight: initial;} td {padding: 5px;} .arrow-up { border: solid green; border-width: 0 2px 2px 0; display: inline-block; padding: 3px; transform: rotate(-80deg); -webkit-transform: rotate(-80deg); margin-bottom: 2px; } .arrow-down { border: solid red; border-width: 0 2px 2px 0; display: inline-block; padding: 3px; transform: rotate(-10deg); -webkit-transform: rotate(-10deg); margin-bottom: 2px; }</style></head><body><table style="border: 1px solid black; border-collapse: separate; font-family: sans-serif; border-radius: 10px; border-spacing: 0px;"><thead><tr><th colspan="10" style="text-align: center; border-radius: 10px 10px 0px 0px;"><strong>Ranking after Round $roundNum</strong></th></tr><tr><th style="text-align: right">#</th><th style="text-align: right;">Name</th><th style="writing-mode: sideways-lr;">Startrank</th><th>Rating</th><th style="text-align: right;">Perf.</th><th style="writing-mode: sideways-lr;">Games</th><th>W/D/L</th><th>Score</th><th>TB 1:<br>${tournament.settings.tb1.shortName}</th>${tournament.settings.tb2 != Tiebreak.no ? '<th>TB 2:<br>${tournament.settings.tb2.shortName}</th>' : ''}</tr></thead><tbody>';
-    for (var r in ratings) {
-      html +=
-          '<tr><td style="background-color: $bgColor2; text-align: right;">${r.rank}</td><td style="background-color: $bgColor2; font-weight: bold; text-align: right;">${r.player.name}</td><td style="color: $secondary; text-align: right;">${r.playerId + 1}</td><td style="color: $secondary; text-align: right;">${r.player.rating == 0 ? 'N/A' : r.player.rating.toString()}</td><td style="text-align: right;">${r.player.rating > 0 && r.performance! > 0 ? '<i class="arrow-${r.player.rating < r.performance! ? 'up' : 'down'}"></i>' : ''} ${r.performance.toString()}</td><td style="color: $secondary; text-align: right;">${(r.wins! + r.losses! + r.draws!).toString()}</td><td style="color: $secondary; text-align: right;">${r.wins}/${r.draws}/${r.losses}</td><td style="background-color: $bgColor2; text-align: right; font-weight: bold;">${r.points!.toStringAsFixed(1)}</td><td style="text-align: right;">${tournament.settings.tb1.formatScore(r.tiebreak1!)}</td>${tournament.settings.tb2 != Tiebreak.no ? '<td style="text-align: right;">${tournament.settings.tb2.formatScore(r.tiebreak2!)}</td>' : ''}</tr>';
-    }
-    html += '</tbody></table></body></html>';
-    return html;
   }
 }
