@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:swiss_tournament/utils/timestampx.dart';
 
 import '../data/player.dart';
 import '../data/player_ratings.dart';
@@ -75,7 +75,7 @@ String _toHtml(
       '<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>$title</title><style>.secondary {color: $secondary; } .highlighted { background-color: $bgColor2; } th {padding: 5px; text-align: left; vertical-align: bottom; background-color: $bgColor; font-weight: initial;} td {padding: 5px;} .arrow-up { border: solid green; border-width: 0 2px 2px 0; display: inline-block; padding: 3px; transform: rotate(-80deg); -webkit-transform: rotate(-80deg); margin-bottom: 2px; } .arrow-down { border: solid red; border-width: 0 2px 2px 0; display: inline-block; padding: 3px; transform: rotate(-10deg); -webkit-transform: rotate(-10deg); margin-bottom: 2px; }</style></head><body><div style="display: inline-block;"><table style="border: 1px solid black; border-collapse: separate; font-family: sans-serif; border-radius: 10px; border-spacing: 0px;"><thead><tr><th colspan="$cols" style="text-align: center; border-radius: 10px 10px 0px 0px;"><strong>$title</strong></th></tr>';
   html += innerHtml;
   final createdBy =
-      '<span style="font-style: italic; text-align: right; font-family: sans-serif; font-size: x-small; color: $secondary; display: block;">${info.appName} App v${info.version}<br>${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now())}</span>';
+      '<span style="font-style: italic; text-align: right; font-family: sans-serif; font-size: x-small; color: $secondary; display: block;">${info.appName} App v${info.version}<br>${DateTime.now().toHumanString()}</span>';
   html += '</tbody></table>$createdBy</div></body></html>';
   return html;
 }

@@ -7,9 +7,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jni/jni.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:swiss_tournament/components/info_panel.dart';
+import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/components/no_data_tile.dart';
 import 'package:swiss_tournament/components/tournament_dialogs.dart';
 import 'package:swiss_tournament/components/tournament_popup_menu.dart';
+import 'package:swiss_tournament/utils/timestampx.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'data/tournament.dart';
@@ -306,35 +309,61 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        'Welcome to ${packageInfo.appName}!\nThis is an Opensource, Free-to-use Android-App for organizing and managing chess tournaments in Swiss mode.\nAll data is stored locally on your device. No Internet connection required.',
+                      InfoPanel(
+                        Text(
+                          'Welcome to ${packageInfo.appName}!\nThis is an Opensource, Free-to-use Android-App for organizing and managing chess tournaments in Swiss mode.\nAll data is stored locally on your device. No Internet connection required.',
+                        ),
                       ),
                       ExpansionTile(
                         title: Text('About'),
                         children: [
                           Text(
-                            'I am familiar using the commercial program "Swiss Chess". However besides being costly, the program is running on Windows/PC only.\nMy goal was to create an easy to use and free App, since all the Apps I found so far were either commercial or simply bad. Also I wanted the App to have as little dependencies as possible. So everything is stored locally on your device. You are the owner of your tournament data!\nThis App will probably not support each and every advanced setting for Swiss tournaments. But I hope it will be suitable for the majority of tournaments.',
-                          ),
-                          RichText(
-                            text: TextSpan(
-                              style: Theme.of(context).textTheme.bodyMedium!
-                                  .copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
-                                  ),
-                              text: 'Github Home',
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => launchUrlString(
-                                  'https://github.com/jsteltze/swiss_tournament.git',
-                                ),
+                            'I am familiar using the commercial program "Swiss Chess". However besides being costly, the program is running on Windows/PC only.\nMy goal was to create an easy to use and free App, since all the Apps I found so far were either commercial or simply bad. Also I wanted the App to require as little dependencies and permissions as possible. So everything is stored locally on your device. You are the owner of your tournament data!\nThis App will probably not support each and every advanced setting for Swiss tournaments. But I hope it will be suitable for the majority of tournaments.',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
                         ],
                       ),
                       ExpansionTile(
                         title: Text('Version'),
-                        children: [Text('Version: ${packageInfo.version}')],
+                        expandedAlignment: Alignment.topLeft,
+                        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(packageInfo.appName),
+                          InfoRow(
+                            'Version:',
+                            '${packageInfo.version} (${packageInfo.buildNumber})',
+                          ),
+                          InfoRow('Package:', packageInfo.packageName),
+                          InfoRow(
+                            'Installed:',
+                            packageInfo.installTime?.toHumanString() ?? '-',
+                          ),
+                          InfoRow(
+                            'Updated:',
+                            packageInfo.updateTime?.toHumanString() ?? '-',
+                          ),
+                          InfoRow(
+                            'Sources:',
+                            '',
+                            contentWidget: RichText(
+                              text: TextSpan(
+                                style: Theme.of(context).textTheme.bodyMedium!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                                text: 'Github Home',
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => launchUrlString(
+                                    'https://github.com/jsteltze/swiss_tournament.git',
+                                  ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       ExpansionTile(
                         title: Text('Technologies used'),
@@ -342,55 +371,29 @@ class _MyHomePageState extends State<MyHomePage> {
                           Text(
                             'This is my first programming with Flutter/Dart. Initially I did not intend to restrict the platform to Android. But I\'m using the pairing engine "JaVaFo", which is a Java library. I was only able to get this Java program running on Android.',
                           ),
-                          Row(
-                            children: [
-                              SizedBox(width: 90, child: Text('Language:')),
-                              Text('Flutter/Dart'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 90, child: Text('Database:')),
-                              Text('sqflite'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 90, child: Text('Package Info:')),
-                              Text('package_info_plus'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 90, child: Text('Design:')),
-                              Text('Material v3'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 90, child: Text('Icons:')),
-                              Text('Cupertino Icons'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 90, child: Text('Pairing:')),
-                              RichText(
-                                text: TextSpan(
-                                  style: Theme.of(context).textTheme.bodyMedium!
-                                      .copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                      ),
-                                  text: 'JaVaFo library (Java)',
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () => launchUrlString(
-                                      'https://www.rrweb.org/javafo/JaVaFo.htm',
+                          InfoRow('Language:', 'Flutter/Dart'),
+                          InfoRow('Database:', 'sqflite'),
+                          InfoRow('Package Info:', 'package_info_plus'),
+                          InfoRow('Design:', 'Material v3'),
+                          InfoRow('Icons:', 'Cupertino Icons'),
+                          InfoRow(
+                            'Pairing:',
+                            '',
+                            contentWidget: RichText(
+                              text: TextSpan(
+                                style: Theme.of(context).textTheme.bodyMedium!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
                                     ),
-                                ),
+                                text: 'JaVaFo library (Java)',
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => launchUrlString(
+                                    'https://www.rrweb.org/javafo/JaVaFo.htm',
+                                  ),
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
