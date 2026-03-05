@@ -3,20 +3,20 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jni/jni.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/info_table_row.dart';
+import 'package:swiss_tournament/components/link.dart';
 import 'package:swiss_tournament/components/no_data_tile.dart';
 import 'package:swiss_tournament/components/tournament_dialogs.dart';
 import 'package:swiss_tournament/components/tournament_popup_menu.dart';
 import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
 import 'package:swiss_tournament/utils/timestampx.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
+import 'components/styled_text.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
 import 'generated/java.g.dart';
@@ -354,39 +354,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           InfoRow(
                             'Sources:',
                             '',
-                            contentWidget: RichText(
-                              text: TextSpan(
-                                style: Theme.of(context).textTheme.bodyMedium!
-                                    .copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                text: 'Github',
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () => launchUrlString(
-                                    'https://github.com/jsteltze/swiss_tournament.git',
-                                  ),
-                              ),
+                            contentWidget: Link(
+                              'Github',
+                              'https://github.com/jsteltze/swiss_tournament.git',
                             ),
                           ),
                           InfoRow(
                             'Author:',
                             '',
-                            contentWidget: RichText(
-                              text: TextSpan(
-                                style: Theme.of(context).textTheme.bodyMedium!
-                                    .copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                text: 'Johannes Steltzer',
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () => launchUrlString(
-                                    'https://github.com/jsteltze',
-                                  ),
-                              ),
+                            contentWidget: Link(
+                              'Johannes Steltzer',
+                              'https://github.com/jsteltze',
                             ),
                           ),
                         ],
@@ -396,8 +374,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Text(
                             'This is my first programming with Flutter/Dart. Initially I did not intend to restrict the platform to Android. But I\'m using the pairing engine "JaVaFo", which is a Java library. I was only able to get this Java program running on Android.',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
                           ),
-                          InfoRow('Language:', 'Flutter/Dart'),
+                          InfoRow('Language:', 'Flutter 3 / Dart SDK 3'),
                           InfoRow('Database:', 'sqflite'),
                           InfoRow('Package Info:', 'package_info_plus'),
                           InfoRow('Design:', 'Material v3'),
@@ -405,20 +386,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           InfoRow(
                             'Pairing:',
                             '',
-                            contentWidget: RichText(
-                              text: TextSpan(
-                                style: Theme.of(context).textTheme.bodyMedium!
-                                    .copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                text: 'JaVaFo library (Java)',
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () => launchUrlString(
-                                    'https://www.rrweb.org/javafo/JaVaFo.htm',
-                                  ),
-                              ),
+                            contentWidget: Link(
+                              'JaVaFo (Java)',
+                              'https://www.rrweb.org/javafo/JaVaFo.htm',
                             ),
                           ),
                         ],
@@ -426,25 +396,29 @@ class _MyHomePageState extends State<MyHomePage> {
                       ExpansionTile(
                         title: Text('License Info'),
                         children: [
-                          Row(
-                            children: [
-                              SizedBox(width: 90, child: Text('Rook Icon:')),
-                              RichText(
-                                text: TextSpan(
-                                  style: Theme.of(context).textTheme.bodyMedium!
-                                      .copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                      ),
-                                  text: 'Icon by Freepik',
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () => launchUrlString(
-                                      'https://www.freepik.com/icon/rook_562880#fromView=search&page=1&position=36&uuid=c1e0d777-66db-4757-98d6-8a870ff59f43',
-                                    ),
-                                ),
-                              ),
-                            ],
+                          StyledText(
+                            'I want this App to remain open-source (copyleft). Thus this program and all of its sourcecode is licensed under **GPL v3**\nFeel free to use, modify and redistribute it under the terms of this license.',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                          InfoRow(
+                            'License text:',
+                            '',
+                            titleWidth: 90,
+                            contentWidget: Link(
+                              'gnu.org/licenses/gpl-3.0',
+                              'https://www.gnu.org/licenses/gpl-3.0.html',
+                            ),
+                          ),
+                          InfoRow(
+                            'Rook Icon:',
+                            '',
+                            titleWidth: 90,
+                            contentWidget: Link(
+                              'Icon by Freepik',
+                              'https://www.freepik.com/icon/rook_562880#fromView=search&page=1&position=36&uuid=c1e0d777-66db-4757-98d6-8a870ff59f43',
+                            ),
                           ),
                         ],
                       ),
