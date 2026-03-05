@@ -11,7 +11,7 @@ import 'package:swiss_tournament/utils/html_utils.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
-import 'java.g.dart';
+import 'generated/java.g.dart';
 
 class RankingView extends StatelessWidget {
   final Tournament tournament;

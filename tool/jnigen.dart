@@ -8,7 +8,7 @@ void main(List<String> args) {
     Config(
       outputConfig: OutputConfig(
         dartConfig: DartCodeOutputConfig(
-          path: packageRoot.resolve('lib/java.g.dart'),
+          path: packageRoot.resolve('lib/generated/java.g.dart'),
           structure: OutputStructure.singleFile,
         ),
       ),

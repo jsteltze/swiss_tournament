@@ -5,7 +5,7 @@ import 'package:swiss_tournament/data/tournament.dart';
 
 import '../data/encounter.dart';
 import '../data/round.dart';
-import '../java.g.dart';
+import '../generated/java.g.dart';
 
 Round callJavaFo(Tournament tournament) {
   bool bakuMode = tournament.settings.baku > 0;

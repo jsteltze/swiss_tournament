@@ -8,7 +8,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
 
-import 'java.g.dart';
+import 'generated/java.g.dart';
 import 'single_encounter_view.dart';
 
 class EncountersView extends StatefulWidget {

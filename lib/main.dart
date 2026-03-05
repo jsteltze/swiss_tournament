@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jni/jni.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
@@ -12,12 +13,13 @@ import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/components/no_data_tile.dart';
 import 'package:swiss_tournament/components/tournament_dialogs.dart';
 import 'package:swiss_tournament/components/tournament_popup_menu.dart';
+import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
 import 'package:swiss_tournament/utils/timestampx.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
-import 'java.g.dart';
+import 'generated/java.g.dart';
 import 'tournament_details_page.dart';
 
 const appTitle = 'Chess Swiss Tournament';
@@ -330,10 +332,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         expandedAlignment: Alignment.topLeft,
                         expandedCrossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(packageInfo.appName),
+                          Text(
+                            packageInfo.appName,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
                           InfoRow(
                             'Version:',
-                            '${packageInfo.version} (${packageInfo.buildNumber})',
+                            '${packageInfo.version} (${packageInfo.buildNumber}), ${DateFormat('MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp))}',
                           ),
                           InfoRow('Package:', packageInfo.packageName),
                           InfoRow(
@@ -355,7 +362,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         context,
                                       ).colorScheme.primary,
                                     ),
-                                text: 'Github Home',
+                                text: 'Github',
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () => launchUrlString(
                                     'https://github.com/jsteltze/swiss_tournament.git',
@@ -363,10 +370,29 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
+                          InfoRow(
+                            'Author:',
+                            '',
+                            contentWidget: RichText(
+                              text: TextSpan(
+                                style: Theme.of(context).textTheme.bodyMedium!
+                                    .copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                                text: 'Johannes Steltzer',
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => launchUrlString(
+                                    'https://github.com/jsteltze',
+                                  ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       ExpansionTile(
-                        title: Text('Technologies used'),
+                        title: Text('Libraries'),
                         children: [
                           Text(
                             'This is my first programming with Flutter/Dart. Initially I did not intend to restrict the platform to Android. But I\'m using the pairing engine "JaVaFo", which is a Java library. I was only able to get this Java program running on Android.',

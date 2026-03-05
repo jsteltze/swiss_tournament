@@ -9,7 +9,7 @@ import 'package:swiss_tournament/components/warning.dart';
 import '../data/first_round_pairing.dart';
 import '../data/tournament.dart';
 import '../data/tournament_storage.dart';
-import '../java.g.dart';
+import '../generated/java.g.dart';
 import 'description.dart';
 import 'input_title.dart';
 
