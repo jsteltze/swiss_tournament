@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swiss_tournament/components/tournament_popup_menu.dart';
+import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 import 'package:swiss_tournament/ranking_view.dart';
 
 import 'data/tournament.dart';

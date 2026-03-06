@@ -6,12 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
 import 'package:swiss_tournament/components/warning.dart';
 
+import '../components/description.dart';
+import '../components/input_title.dart';
 import '../data/first_round_pairing.dart';
 import '../data/tournament.dart';
 import '../data/tournament_storage.dart';
 import '../generated/java.g.dart';
-import 'description.dart';
-import 'input_title.dart';
 
 void showEditTournamentDialog(
   BuildContext context,

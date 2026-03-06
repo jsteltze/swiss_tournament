@@ -5,10 +5,10 @@ import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:jni/jni.dart';
-import 'package:swiss_tournament/components/main_dialogs.dart';
 import 'package:swiss_tournament/components/no_data_tile.dart';
-import 'package:swiss_tournament/components/tournament_dialogs.dart';
-import 'package:swiss_tournament/components/tournament_popup_menu.dart';
+import 'package:swiss_tournament/dialogs/main_dialogs.dart';
+import 'package:swiss_tournament/dialogs/tournament_dialogs.dart';
+import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';

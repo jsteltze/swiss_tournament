@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:swiss_tournament/components/longpress_popup_menu.dart';
+import 'package:swiss_tournament/dialogs/longpress_popup_menu.dart';
 
 import '../data/tournament.dart';
 import '../data/tournament_storage.dart';
