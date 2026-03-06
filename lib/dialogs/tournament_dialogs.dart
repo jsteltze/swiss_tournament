@@ -161,7 +161,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
                   'Export to Downloads folder. The saved file can serve as a backup or can be shared and imported on other devices.',
                 ),
                 const SizedBox(height: 16),
-                const InputTitle(text: 'Type:'),
+                const InputTitle('Type:'),
                 DropdownButton<String>(
                   value: exportType,
                   isExpanded: true,
@@ -180,7 +180,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
                   },
                 ),
                 const SizedBox(height: 16),
-                const InputTitle(text: 'Filename:'),
+                const InputTitle('Filename:'),
                 TextField(
                   controller: filenameController,
                   decoration: const InputDecoration(
@@ -264,7 +264,7 @@ void showDuplicateTournamentDialog(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const InputTitle(text: 'Type:'),
+                const InputTitle('Type:'),
                 DropdownButton<String>(
                   value: duplicateType,
                   isExpanded: true,
@@ -283,7 +283,7 @@ void showDuplicateTournamentDialog(
                   },
                 ),
                 const SizedBox(height: 16),
-                const InputTitle(text: 'New Title:'),
+                const InputTitle('New Title:'),
                 TextField(
                   controller: titleController,
                   decoration: const InputDecoration(
@@ -356,7 +356,7 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const InputTitle(text: 'First Round Pairing (Top Player):'),
+                  const InputTitle('First Round Pairing (Top Player):'),
                   DropdownButton<FirstRoundPairing>(
                     value: currentPairing,
                     isExpanded: true,
@@ -380,7 +380,7 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
                   ),
                   Description(currentPairing.description, isExpandable: true),
                   const SizedBox(height: 16.0),
-                  const InputTitle(text: 'Accelerated Swiss (Baku):'),
+                  const InputTitle('Accelerated Swiss (Baku):'),
                   DropdownButton<int>(
                     value: currentBaku,
                     isExpanded: true,

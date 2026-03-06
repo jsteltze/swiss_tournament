@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:jni/jni.dart';
 import 'package:swiss_tournament/components/no_data_tile.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_dialogs.dart';
@@ -12,7 +10,6 @@ import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
-import 'generated/java.g.dart';
 import 'tournament_details_page.dart';
 
 const appTitle = 'Chess Swiss Tournament';
@@ -113,20 +110,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _exportTournaments() {
-    final String json = jsonEncode(
-      _tournaments.map((t) => t.toJson()).toList(),
-    );
-    SwissChessAndroid.exportToFile(
-      Jni.androidActivity(PlatformDispatcher.instance.engineId!),
-      JString.fromString(json),
-      JString.fromString("tournaments.json"),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('"tournaments.json" exported to Downloads')),
-    );
-  }
-
   Future<void> _importTournaments() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -184,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'export') {
-                _exportTournaments();
+                showExportDialog(context, _tournaments);
               } else if (value == 'import') {
                 _importTournaments();
               } else if (value == 'info') {

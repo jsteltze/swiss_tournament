@@ -65,7 +65,7 @@ class RankingView extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InputTitle(text: 'Tiebreak 1:'),
+                  InputTitle('Tiebreak 1:'),
                   DropdownButton<Tiebreak>(
                     value: selectedTiebreak1,
                     isExpanded: true,
@@ -89,7 +89,7 @@ class RankingView extends StatelessWidget {
                   Description(selectedTiebreak1.description),
                   const SizedBox(height: 20),
                   if (selectedTiebreak1 != Tiebreak.no) ...[
-                    InputTitle(text: 'Tiebreak 2:'),
+                    InputTitle('Tiebreak 2:'),
                     DropdownButton<Tiebreak>(
                       value: selectedTiebreak2,
                       isExpanded: true,
@@ -110,7 +110,7 @@ class RankingView extends StatelessWidget {
                     Description(selectedTiebreak2.description),
                   ],
                   const SizedBox(height: 20),
-                  InputTitle(text: 'Export:'),
+                  InputTitle('Export:'),
                   TextButton(
                     onPressed: () {
                       PackageInfo.fromPlatform().then((

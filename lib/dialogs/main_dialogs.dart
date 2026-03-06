@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jni/jni.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/info_table_row.dart';
@@ -9,6 +13,9 @@ import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/data/tournament_storage.dart';
 import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
 import 'package:swiss_tournament/utils/timestampx.dart';
+
+import '../components/input_title.dart';
+import '../generated/java.g.dart';
 
 void showImportConfirmationDialog(
   BuildContext context,
@@ -32,14 +39,13 @@ void showImportConfirmationDialog(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  '$filename: contains ${tournaments.length} tournament(s) that can be imported.',
+                InfoPanel(
+                  Text(
+                    '$filename: contains ${tournaments.length} tournament(s) that can be imported.',
+                  ),
                 ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Import type:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                const SizedBox(height: 10),
+                const InputTitle('Import type:'),
                 DropdownButton<String>(
                   value: importType,
                   isExpanded: true,
@@ -57,11 +63,8 @@ void showImportConfirmationDialog(
                     });
                   },
                 ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Select tournament(s) to import:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                const SizedBox(height: 16),
+                const InputTitle('Select tournament(s) to import:'),
                 SizedBox(
                   height: 300,
                   width: double.maxFinite,
@@ -84,9 +87,8 @@ void showImportConfirmationDialog(
                     },
                   ),
                 ),
-                Text(
+                InputTitle(
                   'Selected: ${selected.where((s) => s).length} / ${tournaments.length}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -123,6 +125,110 @@ void showImportConfirmationDialog(
                       },
                 child: Text(
                   'Import Selected (${selected.where((s) => s).length})',
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+void showExportDialog(BuildContext context, List<Tournament> tournaments) {
+  final TextEditingController filenameController = TextEditingController(
+    text: 'tournaments',
+  );
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      List<bool> selected = List.generate(tournaments.length, (index) => true);
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('Export Tournaments'),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                InfoPanel(
+                  Text(
+                    'Export tournaments to Downloads folder. The saved file can serve as a backup or can be shared and imported on other devices.',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const InputTitle('Filename:'),
+                TextField(
+                  controller: filenameController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter filename',
+                    suffixText: '.json',
+                  ),
+                  autofocus: true,
+                ),
+                const SizedBox(height: 20),
+                const InputTitle('Select tournament(s) to export:'),
+                SizedBox(
+                  height: 300,
+                  width: double.maxFinite,
+                  child: ListView.builder(
+                    itemCount: tournaments.length,
+                    itemBuilder: (context, index) {
+                      final t = tournaments[index];
+                      return CheckboxListTile(
+                        title: Text(t.title),
+                        subtitle: Text(
+                          '${t.players.length} players, ${t.numberOfRounds} rounds',
+                        ),
+                        value: selected[index],
+                        onChanged: (val) {
+                          setDialogState(() {
+                            selected[index] = val!;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+                InputTitle(
+                  'Selected: ${selected.where((s) => s).length} / ${tournaments.length}',
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: selected.where((s) => s).isEmpty
+                    ? null
+                    : () async {
+                        String filename = '${filenameController.text}.json';
+                        final selectedList = tournaments
+                            .where((t) => selected[tournaments.indexOf(t)])
+                            .toList();
+                        final String json = jsonEncode(
+                          selectedList.map((t) => t.toJson()).toList(),
+                        );
+                        SwissChessAndroid.exportToFile(
+                          Jni.androidActivity(
+                            PlatformDispatcher.instance.engineId!,
+                          ),
+                          JString.fromString(json),
+                          JString.fromString(filename),
+                        );
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('"$filename" exported to Downloads'),
+                          ),
+                        );
+                      },
+                child: Text(
+                  'Export Selected (${selected.where((s) => s).length})',
                 ),
               ),
             ],
