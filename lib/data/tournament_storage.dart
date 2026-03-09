@@ -9,6 +9,7 @@ import 'tournament.dart';
 
 class TournamentStorage {
   static Database? _database;
+  static String? dbPath;
   static const String _tableName = 'tournaments';
 
   Future<Database> get database async {
@@ -18,8 +19,8 @@ class TournamentStorage {
   }
 
   Future<Database> _initDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'tournament_database.db');
+    dbPath = await getDatabasesPath();
+    final path = join(dbPath!, 'tournament_database.db');
 
     return await openDatabase(
       path,

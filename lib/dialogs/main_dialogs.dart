@@ -17,13 +17,11 @@ import 'package:swiss_tournament/utils/timestampx.dart';
 import '../components/input_title.dart';
 import '../generated/java.g.dart';
 
-void showImportConfirmationDialog(
-  BuildContext context,
-  String filename,
-  List<Tournament> tournaments,
-  TournamentStorage storage,
-  VoidCallback onImportComplete,
-) {
+void showImportConfirmationDialog(BuildContext context,
+    String filename,
+    List<Tournament> tournaments,
+    TournamentStorage storage,
+    VoidCallback onImportComplete,) {
   String importType = 'Full Tournament';
 
   showDialog(
@@ -41,7 +39,8 @@ void showImportConfirmationDialog(
               children: <Widget>[
                 InfoPanel(
                   Text(
-                    '$filename: contains ${tournaments.length} tournament(s) that can be imported.',
+                    '$filename: contains ${tournaments
+                        .length} tournament(s) that can be imported.',
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -51,11 +50,11 @@ void showImportConfirmationDialog(
                   isExpanded: true,
                   items: <String>['Full Tournament', 'Players only']
                       .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      })
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  })
                       .toList(),
                   onChanged: (String? newValue) {
                     setDialogState(() {
@@ -75,7 +74,10 @@ void showImportConfirmationDialog(
                       return CheckboxListTile(
                         title: Text(t.title),
                         subtitle: Text(
-                          '${t.players.length} players${importType == 'Full Tournament' ? ', ${t.numberOfRounds} rounds' : ''}',
+                          '${t.players.length} players${importType ==
+                              'Full Tournament'
+                              ? ', ${t.numberOfRounds} rounds'
+                              : ''}',
                         ),
                         value: selected[index],
                         onChanged: (val) {
@@ -88,7 +90,9 @@ void showImportConfirmationDialog(
                   ),
                 ),
                 InputTitle(
-                  'Selected: ${selected.where((s) => s).length} / ${tournaments.length}',
+                  'Selected: ${selected
+                      .where((s) => s)
+                      .length} / ${tournaments.length}',
                 ),
               ],
             ),
@@ -98,33 +102,37 @@ void showImportConfirmationDialog(
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
-                onPressed: selected.where((s) => s).isEmpty
+                onPressed: selected
+                    .where((s) => s)
+                    .isEmpty
                     ? null
                     : () async {
-                        int count = 0;
-                        for (int i = 0; i < tournaments.length; i++) {
-                          if (selected[i]) {
-                            final t = tournaments[i];
-                            t.id = null; // Save as new
-                            if (importType == 'Players only') {
-                              t.rounds.clear();
-                            }
-                            await storage.updateTournament(t);
-                            count++;
-                          }
-                        }
-                        onImportComplete();
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Imported $count tournament(s)'),
-                            ),
-                          );
-                        }
-                      },
+                  int count = 0;
+                  for (int i = 0; i < tournaments.length; i++) {
+                    if (selected[i]) {
+                      final t = tournaments[i];
+                      t.id = null; // Save as new
+                      if (importType == 'Players only') {
+                        t.rounds.clear();
+                      }
+                      await storage.updateTournament(t);
+                      count++;
+                    }
+                  }
+                  onImportComplete();
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Imported $count tournament(s)'),
+                      ),
+                    );
+                  }
+                },
                 child: Text(
-                  'Import Selected (${selected.where((s) => s).length})',
+                  'Import Selected (${selected
+                      .where((s) => s)
+                      .length})',
                 ),
               ),
             ],
@@ -180,7 +188,8 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
                       return CheckboxListTile(
                         title: Text(t.title),
                         subtitle: Text(
-                          '${t.players.length} players, ${t.numberOfRounds} rounds',
+                          '${t.players.length} players, ${t
+                              .numberOfRounds} rounds',
                         ),
                         value: selected[index],
                         onChanged: (val) {
@@ -193,7 +202,9 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
                   ),
                 ),
                 InputTitle(
-                  'Selected: ${selected.where((s) => s).length} / ${tournaments.length}',
+                  'Selected: ${selected
+                      .where((s) => s)
+                      .length} / ${tournaments.length}',
                 ),
               ],
             ),
@@ -203,32 +214,36 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
-                onPressed: selected.where((s) => s).isEmpty
+                onPressed: selected
+                    .where((s) => s)
+                    .isEmpty
                     ? null
                     : () async {
-                        String filename = '${filenameController.text}.json';
-                        final selectedList = tournaments
-                            .where((t) => selected[tournaments.indexOf(t)])
-                            .toList();
-                        final String json = jsonEncode(
-                          selectedList.map((t) => t.toJson()).toList(),
-                        );
-                        SwissChessAndroid.exportToFile(
-                          Jni.androidActivity(
-                            PlatformDispatcher.instance.engineId!,
-                          ),
-                          JString.fromString(json),
-                          JString.fromString(filename),
-                        );
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('"$filename" exported to Downloads'),
-                          ),
-                        );
-                      },
+                  String filename = '${filenameController.text}.json';
+                  final selectedList = tournaments
+                      .where((t) => selected[tournaments.indexOf(t)])
+                      .toList();
+                  final String json = jsonEncode(
+                    selectedList.map((t) => t.toJson()).toList(),
+                  );
+                  SwissChessAndroid.exportToFile(
+                    Jni.androidActivity(
+                      PlatformDispatcher.instance.engineId!,
+                    ),
+                    JString.fromString(json),
+                    JString.fromString(filename),
+                  );
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('"$filename" exported to Downloads'),
+                    ),
+                  );
+                },
                 child: Text(
-                  'Export Selected (${selected.where((s) => s).length})',
+                  'Export Selected (${selected
+                      .where((s) => s)
+                      .length})',
                 ),
               ),
             ],
@@ -257,7 +272,8 @@ void showAppInfoDialog(BuildContext context) {
                   children: <Widget>[
                     InfoPanel(
                       Text(
-                        'Welcome to ${packageInfo.appName}!\nThis is an Opensource, Free-to-use Android-App for organizing and managing chess tournaments in Swiss mode.\nAll data is stored locally on your device. No Internet connection required.',
+                        'Welcome to ${packageInfo
+                            .appName}!\nThis is an Opensource, Free-to-use Android-App for organizing and managing chess tournaments in Swiss mode.\nAll data is stored locally on your device. No Internet connection required.',
                       ),
                     ),
                     ExpansionTile(
@@ -266,7 +282,10 @@ void showAppInfoDialog(BuildContext context) {
                         StyledText(
                           'I am familiar using the commercial program "Swiss Chess". However besides being costly, the program is running on Windows/PC only.\nMy goal was to create an easy to use and free App, since all the Apps I found so far were either commercial or simply bad. Also I wanted the App to require as little dependencies and permissions as possible. So everything is stored locally on your device. You are the owner of your tournament data!\nThis App will probably not support each and every advanced setting for Swiss tournaments. But I hope it will be suitable for the majority of tournaments.\n\n**How to share tournament data:** to share tournament data between devices, use the export function. This will create a json file in the Android Downloads folder. Now this file can be sent using the default communication apps (e.g. WhatsApp, Telegram, etc.). The receiver can import the file using the import function.\n\nThe same way **backups** can be created. Since data is only stored locally you should organize backups yourself.',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .secondary,
                           ),
                         ),
                       ],
@@ -279,14 +298,21 @@ void showAppInfoDialog(BuildContext context) {
                         Text(
                           packageInfo.appName,
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .secondary,
                           ),
                         ),
                         InfoRow(
                           'Version:',
-                          '${packageInfo.version} (${packageInfo.buildNumber}), ${DateFormat('MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp))}',
+                          '${packageInfo.version} (${packageInfo
+                              .buildNumber}), ${DateFormat('MMM yyyy').format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  lastAppBuildTimestamp))}',
                         ),
                         InfoRow('Package:', packageInfo.packageName),
+                        InfoRow('DB Path:', TournamentStorage.dbPath ?? '-'),
                         InfoRow(
                           'Installed:',
                           packageInfo.installTime?.toHumanString() ?? '-',
@@ -319,7 +345,10 @@ void showAppInfoDialog(BuildContext context) {
                         Text(
                           'This is my first programming with Flutter/Dart. Initially I did not intend to restrict the platform to Android. But I\'m using the pairing engine "JaVaFo", which is a Java library. I was only able to get this Java program running on Android.',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .secondary,
                           ),
                         ),
                         const InfoRow('Language:', 'Flutter 3 / Dart SDK 3'),
@@ -343,7 +372,10 @@ void showAppInfoDialog(BuildContext context) {
                         StyledText(
                           'I want this App to remain open-source (copyleft). Thus this program and all of its sourcecode is licensed under **GPL v3**\nFeel free to use, modify and redistribute it under the terms of this license.',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .secondary,
                           ),
                         ),
                         InfoRow(

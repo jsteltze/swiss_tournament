@@ -15,3 +15,7 @@ This project is a Flutter application written in Dart.
 - To generate the app build timestamp, run `dart run build_runner build --delete-conflicting-outputs`
 
 ### TODOs:
+
+- Fehlerhandling
+- Trim beim Namen
+- Logs in Datei
