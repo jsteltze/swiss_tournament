@@ -13,9 +13,12 @@ This project is a Flutter application written in Dart.
   libraries. Therefore, run `flutter build apk` once before generating bindings
   for the first time, or after a `flutter clean`.
 - To generate the app build timestamp, run `dart run build_runner build --delete-conflicting-outputs`
+- To run in release mode: `flutter run --release`
 
 ### TODOs:
 
 - Fehlerhandling
 - Trim beim Namen
-- Logs in Datei
+- Welcome Dialog
+- Encounters view: Tisch nummer über der Begegnung
+- Dialoge werden zusammengeschoben bei Tastatur overlay

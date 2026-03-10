@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:swiss_tournament/utils/logger.dart';
 
 import 'player.dart';
 import 'round.dart';
@@ -21,11 +22,13 @@ class TournamentStorage {
   Future<Database> _initDatabase() async {
     dbPath = await getDatabasesPath();
     final path = join(dbPath!, 'tournament_database.db');
+    FileLogger.log('Initializing database at $path');
 
     return await openDatabase(
       path,
       version: 1,
       onCreate: (db, version) async {
+        FileLogger.log('Creating tournaments table');
         await db.execute('''
           CREATE TABLE $_tableName(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,7 +106,7 @@ class TournamentStorage {
   }
 
   Future<void> updateTournament(Tournament tournament) async {
-    print('updateTournament');
+    FileLogger.log('Updating tournament: ${tournament.title} (ID: ${tournament.id})');
     final db = await database;
     final values = {
       'title': tournament.title,
@@ -123,6 +126,7 @@ class TournamentStorage {
       );
     } else {
       tournament.id = await db.insert(_tableName, values);
+      FileLogger.log('Inserted new tournament with ID: ${tournament.id}');
     }
   }
 }

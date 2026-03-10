@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swiss_tournament/encounters_view.dart';
+import 'package:swiss_tournament/utils/logger.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/encounter.dart';
@@ -196,13 +197,15 @@ class _RoundsViewState extends State<RoundsView> {
   }
 
   void _startNewRound() async {
+    FileLogger.log('Starting new round for tournament ID: ${widget.tournament.id}');
     var currentDbState = await _storage.getTournament(widget.tournament.id!);
     if (currentDbState == null) {
-      print('no such tournament found!');
+      FileLogger.log('Error: Tournament not found in database!');
       return;
     }
     if (currentDbState.rounds.isNotEmpty &&
         currentDbState.rounds.last.encounters.any((e) => e.result.isEmpty)) {
+      FileLogger.log('Cannot start new round: some encounters are unfinished.');
       notifyUnfinishedEncounters(currentDbState.rounds.last.encounters);
       return;
     }
@@ -243,6 +246,7 @@ class _RoundsViewState extends State<RoundsView> {
                   ),
                   TextButton(
                     onPressed: () {
+                      FileLogger.log('Deleting round ${roundIndex + 1} from tournament ${widget.tournament.id}');
                       widget.tournament.rounds.removeLast();
                       widget.tournament.update();
                       setState(() {
@@ -273,12 +277,14 @@ class _RoundsViewState extends State<RoundsView> {
   }
 
   void _finishLastRound() {
+    FileLogger.log('Finishing last round of tournament ${widget.tournament.id}');
     setState(() {
       _data.last.headerIcon = Icon(Icons.check_circle);
       widget.tournament.rounds.last.finishedAt = DateTime.now();
       widget.tournament.update();
     });
     if (widget.tournament.rounds.length == widget.tournament.numberOfRounds) {
+      FileLogger.log('Tournament ${widget.tournament.id} finished!');
       Future.delayed(const Duration(seconds: 1), () {
         notifyTournamentFinished();
       });

@@ -8,6 +8,7 @@ import 'package:swiss_tournament/components/input_title.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
+import 'package:swiss_tournament/utils/logger.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
@@ -125,6 +126,8 @@ class RankingView extends StatelessWidget {
                         final String filename =
                             '${tournament.title.replaceAll(' ', '_')}_ranking_round_${tournament.rounds.length}.html';
 
+                        FileLogger.log('Exporting ranking to $filename');
+
                         SwissChessAndroid.exportToFile(
                           Jni.androidActivity(
                             PlatformDispatcher.instance.engineId!,
@@ -161,6 +164,7 @@ class RankingView extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    FileLogger.log('Applying new tiebreak settings: TB1=$selectedTiebreak1, TB2=$selectedTiebreak2');
                     applyTiebreak(selectedTiebreak1, selectedTiebreak2);
                     Navigator.pop(context);
                   },
@@ -176,7 +180,6 @@ class RankingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('ranking view');
     final lastRoundNum = tournament.rounds.length;
     final selectedTiebreak1 = tournament.settings.tb1;
     final selectedTiebreak2 = tournament.settings.tb2;

@@ -3,24 +3,31 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/no_data_tile.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
+import 'package:swiss_tournament/utils/logger.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
 import 'tournament_details_page.dart';
 
-const appTitle = 'Chess Swiss Tournament';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FileLogger.init();
+  final packageInfo = await PackageInfo.fromPlatform();
+  FileLogger.log('Starting application...');
 
-void main() {
   //Jni.spawn(dylibDir: 'build/jni', classPath: ['java']);
-  runApp(const MyApp());
+  runApp(MyApp(packageInfo.appName));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String appTitle;
+
+  const MyApp(this.appTitle, {super.key});
 
   // This widget is the root of your application.
   @override
@@ -39,7 +46,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
-      home: const MyHomePage(title: appTitle),
+      home: MyHomePage(title: appTitle),
     );
   }
 }
@@ -68,19 +75,23 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _isLoading = true;
     });
+    FileLogger.log('Loading tournaments...');
     final tournaments = await _storage.loadTournaments();
     setState(() {
       _tournaments = tournaments;
       _isLoading = false;
     });
+    FileLogger.log('Loaded ${tournaments.length} tournaments');
   }
 
   Future<void> _saveTournaments() async {
+    FileLogger.log('Saving all tournaments...');
     await _storage.saveTournaments(_tournaments);
   }
 
   void _addTournament() {
     showEditTournamentDialog(context, null, (tournament) {
+      FileLogger.log('Adding tournament: ${tournament.title}');
       setState(() {
         _tournaments.add(tournament);
       });
@@ -91,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _deleteTournament(Tournament tournament) {
+    FileLogger.log('Deleting tournament: ${tournament.title}');
     setState(() {
       _tournaments.remove(tournament);
     });
@@ -98,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _navigateToTournamentDetails(Tournament tournament) {
+    FileLogger.log('Navigating to tournament details: ${tournament.title}');
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -112,13 +125,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _importTournaments() async {
     try {
+      FileLogger.log('Picking file for import...');
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
 
       if (result != null && result.files.single.path != null) {
-        final file = File(result.files.single.path!);
+        final path = result.files.single.path!;
+        FileLogger.log('Importing from file: $path');
+        final file = File(path);
         final content = await file.readAsString();
         final dynamic decoded = jsonDecode(content);
 
@@ -134,6 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
           parsedTournaments = [Tournament.fromJson(decoded)];
         }
 
+        FileLogger.log(
+          'Parsed ${parsedTournaments.length} tournaments from import',
+        );
+
         if (parsedTournaments.isNotEmpty && mounted) {
           showImportConfirmationDialog(
             context,
@@ -143,8 +163,11 @@ class _MyHomePageState extends State<MyHomePage> {
             _loadTournaments,
           );
         }
+      } else {
+        FileLogger.log('Import cancelled by user');
       }
     } catch (e) {
+      FileLogger.log('Error importing: $e');
       if (mounted) {
         ScaffoldMessenger.of(
           context,
@@ -167,11 +190,15 @@ class _MyHomePageState extends State<MyHomePage> {
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'export') {
+                FileLogger.log('Export triggered');
                 showExportDialog(context, _tournaments);
               } else if (value == 'import') {
                 _importTournaments();
               } else if (value == 'info') {
+                FileLogger.log('App info dialog requested');
                 showAppInfoDialog(context);
+              } else if (value == 'logs') {
+                showLogsDialog(context);
               }
             },
             itemBuilder: (BuildContext context) {
@@ -193,6 +220,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       Icon(Icons.save_alt),
                       SizedBox(width: 8),
                       Text('Export'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'logs',
+                  child: Row(
+                    children: [
+                      Icon(Icons.list_alt),
+                      SizedBox(width: 8),
+                      Text('View Logs'),
                     ],
                   ),
                 ),

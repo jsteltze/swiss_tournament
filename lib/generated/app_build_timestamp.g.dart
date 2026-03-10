@@ -1,4 +1,4 @@
 // Generated file on build.
 
 /// Timestamp that records last build of the app. Can be shown in the app.
-const int lastAppBuildTimestamp = 1772713800343;
+const int lastAppBuildTimestamp = 1773063229486;

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:jni/jni.dart';
 import 'package:swiss_tournament/data/tournament.dart';
+import 'package:swiss_tournament/utils/logger.dart';
 
 import '../data/encounter.dart';
 import '../data/round.dart';
@@ -9,7 +10,7 @@ import '../generated/java.g.dart';
 
 Round callJavaFo(Tournament tournament) {
   bool bakuMode = tournament.settings.baku > 0;
-  print('bakuMode=$bakuMode');
+  FileLogger.log('Starting JaVaFo pairing. bakuMode=$bakuMode');
 
   var trfFileContent = "";
   trfFileContent += "012 ${tournament.title}\n";
@@ -26,7 +27,10 @@ Round callJavaFo(Tournament tournament) {
         .toList();
     trfFileContent += "XXZ ${absentIds.join(' ')}\n";
   }
-  print(trfFileContent);
+
+  FileLogger.log('TRF Header generated');
+  FileLogger.log(trfFileContent);
+
   for (int i = 1; i <= tournament.players.length; i++) {
     final player = tournament.players[i - 1];
     final padId = i.toString().padLeft(4, ' ');
@@ -82,10 +86,11 @@ Round callJavaFo(Tournament tournament) {
     }
     final padPoints = points.toStringAsFixed(1).padLeft(4, ' ');
     var line =
-        "001 $padId m    Playername                        $padRating GER     2212072 1981       $padPoints $padId$roundInfoAll\n";
-    trfFileContent += line;
-    print(line);
+        "001 $padId m    Playername                        $padRating GER     2212072 1981       $padPoints $padId$roundInfoAll";
+    trfFileContent += '$line\n';
+    FileLogger.log(line);
   }
+
   double virtualPointsForThisRound = 0.0;
   if (bakuMode) {
     int numberOfAcceleratedRounds = (tournament.numberOfRounds + 1) ~/ 2;
@@ -109,7 +114,7 @@ Round callJavaFo(Tournament tournament) {
         line += "  0.5";
       }
       line += "\n";
-      print(line);
+      FileLogger.log(line);
       trfFileContent += line;
     }
     for (; playerId <= tournament.players.length; playerId++) {
@@ -119,11 +124,12 @@ Round callJavaFo(Tournament tournament) {
         line += "  0.0";
       }
       line += "\n";
-      print(line);
+      FileLogger.log(line);
       trfFileContent += line;
     }
   }
 
+  FileLogger.log('Calling JaVaFo API...');
   var response = SwissChessAndroid.jaVaFoApi(
     Jni.androidActivity(PlatformDispatcher.instance.engineId!),
     bakuMode ? 1001 : 1000,
@@ -131,7 +137,7 @@ Round callJavaFo(Tournament tournament) {
   );
 
   var respStr = response!.toDartString();
-  print(respStr);
+  FileLogger.log('JaVaFo Response received: $respStr');
   var lines = respStr.split('\n');
   var round = Round(acceleratedRoundVirtualPoints: virtualPointsForThisRound);
   for (var i = 1; i < lines.length; i++) {
@@ -139,7 +145,7 @@ Round callJavaFo(Tournament tournament) {
     if (line.isEmpty) {
       continue;
     }
-    print('line=$line');
+    FileLogger.log('line=$line');
     var parts = line.split(' ');
     var encounter = Encounter(
       playerIdW: int.parse(parts[0]) - 1,
@@ -154,5 +160,8 @@ Round callJavaFo(Tournament tournament) {
     round.encounters.add(encounter);
   }
   response.release();
+  FileLogger.log(
+    'Round pairing completed with ${round.encounters.length} encounters',
+  );
   return round;
 }

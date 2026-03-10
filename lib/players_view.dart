@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/components/warning.dart';
+import 'package:swiss_tournament/utils/logger.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/player.dart';
@@ -35,7 +36,7 @@ class PlayersView extends StatelessWidget {
     final int firstLateJoiner = tournament.players.indexWhere(
       (p) => p.joinedAt > 0,
     );
-    print('firstLateJoiner=$firstLateJoiner');
+    // FileLogger.log('firstLateJoiner=$firstLateJoiner');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,6 +234,7 @@ class PlayersView extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
+                FileLogger.log('Deleting player "${player.name}" from tournament ID: ${tournament.id}');
                 tournament.players.remove(player);
                 onPlayersChanged?.call();
                 Navigator.pop(context);
@@ -269,6 +271,7 @@ class PlayersView extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
+                FileLogger.log('Withdrawing player "${player.name}" (left at round ${tournament.rounds.length})');
                 player.leftAt = tournament.rounds.length;
                 onPlayersChanged?.call();
                 Navigator.pop(context);
@@ -305,6 +308,7 @@ class PlayersView extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
+                FileLogger.log('Re-enabling player "${player.name}"');
                 player.leftAt = null;
                 onPlayersChanged?.call();
                 Navigator.pop(context);
@@ -402,8 +406,10 @@ void showEditPlayerDialog(
                   ratingController.text.isEmpty ? '0' : ratingController.text,
                 );
                 if (isAdding) {
+                  FileLogger.log('Adding new player: ${player!.name} (Rating: ${player!.rating})');
                   tournament.addPlayer(player!);
                 } else {
+                  FileLogger.log('Edited player: ${player!.name} (Rating: ${player!.rating})');
                   tournament.sortPlayers();
                 }
                 onPlayersChanged?.call();
