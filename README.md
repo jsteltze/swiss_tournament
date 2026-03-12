@@ -18,7 +18,7 @@ This project is a Flutter application written in Dart.
 ### TODOs:
 
 - Fehlerhandling
-- Trim beim Namen
 - Welcome Dialog
 - Encounters view: Tisch nummer über der Begegnung
 - Dialoge werden zusammengeschoben bei Tastatur overlay
+- neue Runde mit Loading Spinner (Button blockieren)

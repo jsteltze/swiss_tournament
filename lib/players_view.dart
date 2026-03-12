@@ -234,7 +234,9 @@ class PlayersView extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                FileLogger.log('Deleting player "${player.name}" from tournament ID: ${tournament.id}');
+                FileLogger.log(
+                  'Deleting player "${player.name}" from tournament ID: ${tournament.id}',
+                );
                 tournament.players.remove(player);
                 onPlayersChanged?.call();
                 Navigator.pop(context);
@@ -271,7 +273,9 @@ class PlayersView extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                FileLogger.log('Withdrawing player "${player.name}" (left at round ${tournament.rounds.length})');
+                FileLogger.log(
+                  'Withdrawing player "${player.name}" (left at round ${tournament.rounds.length})',
+                );
                 player.leftAt = tournament.rounds.length;
                 onPlayersChanged?.call();
                 Navigator.pop(context);
@@ -401,15 +405,19 @@ void showEditPlayerDialog(
               if (formKey.currentState!.validate()) {
                 final isAdding = player == null;
                 player ??= Player(joinedAt: tournament.rounds.length);
-                player!.name = nameController.text;
+                player!.name = nameController.text.trim();
                 player!.rating = int.parse(
                   ratingController.text.isEmpty ? '0' : ratingController.text,
                 );
                 if (isAdding) {
-                  FileLogger.log('Adding new player: ${player!.name} (Rating: ${player!.rating})');
+                  FileLogger.log(
+                    'Adding new player: ${player!.name} (Rating: ${player!.rating})',
+                  );
                   tournament.addPlayer(player!);
                 } else {
-                  FileLogger.log('Edited player: ${player!.name} (Rating: ${player!.rating})');
+                  FileLogger.log(
+                    'Edited player: ${player!.name} (Rating: ${player!.rating})',
+                  );
                   tournament.sortPlayers();
                 }
                 onPlayersChanged?.call();
