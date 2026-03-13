@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as FileLogger;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import '../data/first_round_pairing.dart';
 import '../data/tournament.dart';
 import '../data/tournament_storage.dart';
 import '../generated/java.g.dart';
+import 'main_dialogs.dart';
 
 void showEditTournamentDialog(
   BuildContext context,
@@ -219,11 +221,22 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
                   }
 
                   final String jsonContent = jsonEncode(data);
-                  SwissChessAndroid.exportToFile(
+                  final result = SwissChessAndroid.exportToFile(
                     Jni.androidActivity(PlatformDispatcher.instance.engineId!),
                     JString.fromString(jsonContent),
                     JString.fromString(filename),
                   );
+                  if (result != null &&
+                      result.toDartString().startsWith('ERROR: ')) {
+                    FileLogger.log(
+                      'Error while exporting $filename: ${result.toDartString().substring(7)}',
+                    );
+                    showErrorDialog(
+                      context,
+                      result.toDartString().substring(7),
+                    );
+                    return;
+                  }
 
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(

@@ -222,13 +222,24 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
                         final String json = jsonEncode(
                           selectedList.map((t) => t.toJson()).toList(),
                         );
-                        SwissChessAndroid.exportToFile(
+                        final result = SwissChessAndroid.exportToFile(
                           Jni.androidActivity(
                             PlatformDispatcher.instance.engineId!,
                           ),
                           JString.fromString(json),
                           JString.fromString(filename),
                         );
+                        if (result != null &&
+                            result.toDartString().startsWith('ERROR: ')) {
+                          FileLogger.log(
+                            'Error while exporting $filename: ${result.toDartString().substring(7)}',
+                          );
+                          showErrorDialog(
+                            context,
+                            result.toDartString().substring(7),
+                          );
+                          return;
+                        }
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

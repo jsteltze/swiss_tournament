@@ -26,3 +26,6 @@ This project is a Flutter application written in Dart.
 - Abfangen: weniger Spieler als Runden
 - Logs exportieren
 - Permissions anfragen: Storage
+- Mehr Snackbars (Player created etc.)
+- Error Dialog nur so groß wie erforderlich
+- Logmeldungen im Level ERROR/WARN

@@ -12,6 +12,7 @@ import 'package:swiss_tournament/utils/logger.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
+import 'dialogs/main_dialogs.dart';
 import 'generated/java.g.dart';
 
 class RankingView extends StatelessWidget {
@@ -128,13 +129,24 @@ class RankingView extends StatelessWidget {
 
                         FileLogger.log('Exporting ranking to $filename');
 
-                        SwissChessAndroid.exportToFile(
+                        final result = SwissChessAndroid.exportToFile(
                           Jni.androidActivity(
                             PlatformDispatcher.instance.engineId!,
                           ),
                           JString.fromString(htmlContent),
                           JString.fromString(filename),
                         );
+                        if (result != null &&
+                            result.toDartString().startsWith('ERROR: ')) {
+                          FileLogger.log(
+                            'Error while exporting $filename: ${result.toDartString().substring(7)}',
+                          );
+                          showErrorDialog(
+                            context,
+                            result.toDartString().substring(7),
+                          );
+                          return;
+                        }
 
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -164,7 +176,9 @@ class RankingView extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    FileLogger.log('Applying new tiebreak settings: TB1=$selectedTiebreak1, TB2=$selectedTiebreak2');
+                    FileLogger.log(
+                      'Applying new tiebreak settings: TB1=$selectedTiebreak1, TB2=$selectedTiebreak2',
+                    );
                     applyTiebreak(selectedTiebreak1, selectedTiebreak2);
                     Navigator.pop(context);
                   },
