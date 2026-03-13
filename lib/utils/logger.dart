@@ -45,14 +45,14 @@ class FileLogger {
     }
   }
 
-  static void log(String message) {
+  static void log(String message, [Level level = Level.info]) {
     final timestamp = _dateFormat.format(DateTime.now());
     final logMessage = '[$timestamp] $message\n';
 
     // Print to console as well
     print(logMessage.trim());
 
-    logger?.i(logMessage.trim());
+    logger?.log(level, logMessage.trim());
   }
 
   static String getLogs() {

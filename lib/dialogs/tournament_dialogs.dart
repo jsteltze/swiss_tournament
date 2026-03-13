@@ -1,11 +1,12 @@
 import 'dart:convert';
-import 'dart:developer' as FileLogger;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jni/jni.dart';
+import 'package:logger/logger.dart';
 import 'package:swiss_tournament/components/warning.dart';
+import 'package:swiss_tournament/utils/logger.dart';
 
 import '../components/description.dart';
 import '../components/input_title.dart';
@@ -230,6 +231,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
                       result.toDartString().startsWith('ERROR: ')) {
                     FileLogger.log(
                       'Error while exporting $filename: ${result.toDartString().substring(7)}',
+                      Level.error,
                     );
                     showErrorDialog(
                       context,

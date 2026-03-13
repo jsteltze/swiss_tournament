@@ -28,4 +28,3 @@ This project is a Flutter application written in Dart.
 - Permissions anfragen: Storage
 - Mehr Snackbars (Player created etc.)
 - Error Dialog nur so groß wie erforderlich
-- Logmeldungen im Level ERROR/WARN

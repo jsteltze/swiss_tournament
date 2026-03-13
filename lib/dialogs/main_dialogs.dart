@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jni/jni.dart';
+import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/info_table_row.dart';
@@ -233,6 +234,7 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
                             result.toDartString().startsWith('ERROR: ')) {
                           FileLogger.log(
                             'Error while exporting $filename: ${result.toDartString().substring(7)}',
+                            Level.error,
                           );
                           showErrorDialog(
                             context,
