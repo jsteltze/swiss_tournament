@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/components/link.dart';
@@ -11,6 +10,7 @@ import 'package:swiss_tournament/components/warning.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/data/tournament_storage.dart';
 import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
+import 'package:swiss_tournament/utils/globals.dart';
 import 'package:swiss_tournament/utils/logger.dart';
 import 'package:swiss_tournament/utils/timestampx.dart';
 
@@ -241,148 +241,146 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
 }
 
 void showAppInfoDialog(BuildContext context) {
-  PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: const Text('App Info'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    InfoPanel(
-                      Text(
-                        'Welcome to ${packageInfo.appName}!\nThis is an Opensource, Free-to-use Android-App for organizing and managing chess tournaments in Swiss mode.\nAll data is stored locally on your device. No Internet connection required.',
+  if (!context.mounted) return;
+  showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('App Info'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  InfoPanel(
+                    Text(
+                      'Welcome to ${Globals.packageInfo.appName}!\nThis is an Opensource, Free-to-use Android-App for organizing and managing chess tournaments in Swiss mode.\nAll data is stored locally on your device. No Internet connection required.',
+                    ),
+                  ),
+                  ExpansionTile(
+                    title: const Text('About'),
+                    children: [
+                      StyledText(
+                        'I am familiar using the commercial program "Swiss Chess". However besides being costly, the program is running on Windows/PC only.\nMy goal was to create an easy to use and free App, since all the Apps I found so far were either commercial or simply bad. Also I wanted the App to require as little dependencies and permissions as possible. So everything is stored locally on your device. You are the owner of your tournament data!\nThis App will probably not support each and every advanced setting for Swiss tournaments. But I hope it will be suitable for the majority of tournaments.\n\n**How to share tournament data:** to share tournament data between devices, use the export function. This will create a json file in the Android Downloads folder. Now this file can be sent using the default communication apps (e.g. WhatsApp, Telegram, etc.). The receiver can import the file using the import function.\n\nThe same way **backups** can be created. Since data is only stored locally you should organize backups yourself.',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                       ),
-                    ),
-                    ExpansionTile(
-                      title: const Text('About'),
-                      children: [
-                        StyledText(
-                          'I am familiar using the commercial program "Swiss Chess". However besides being costly, the program is running on Windows/PC only.\nMy goal was to create an easy to use and free App, since all the Apps I found so far were either commercial or simply bad. Also I wanted the App to require as little dependencies and permissions as possible. So everything is stored locally on your device. You are the owner of your tournament data!\nThis App will probably not support each and every advanced setting for Swiss tournaments. But I hope it will be suitable for the majority of tournaments.\n\n**How to share tournament data:** to share tournament data between devices, use the export function. This will create a json file in the Android Downloads folder. Now this file can be sent using the default communication apps (e.g. WhatsApp, Telegram, etc.). The receiver can import the file using the import function.\n\nThe same way **backups** can be created. Since data is only stored locally you should organize backups yourself.',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
+                    ],
+                  ),
+                  ExpansionTile(
+                    title: const Text('Version'),
+                    expandedAlignment: Alignment.topLeft,
+                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Globals.packageInfo.appName,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
-                      ],
-                    ),
-                    ExpansionTile(
-                      title: const Text('Version'),
-                      expandedAlignment: Alignment.topLeft,
-                      expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          packageInfo.appName,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
+                      ),
+                      InfoRow(
+                        'Version:',
+                        '${Globals.packageInfo.version}, ${DateFormat('MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp))}',
+                      ),
+                      InfoRow('Package:', Globals.packageInfo.packageName),
+                      InfoRow('DB Path:', TournamentStorage.dbPath ?? '-'),
+                      InfoRow(
+                        'Installed:',
+                        Globals.packageInfo.installTime?.toHumanString() ?? '-',
+                      ),
+                      InfoRow(
+                        'Updated:',
+                        Globals.packageInfo.updateTime?.toHumanString() ?? '-',
+                      ),
+                      InfoRow(
+                        'Sources:',
+                        '',
+                        contentWidget: const Link(
+                          'Github',
+                          'https://github.com/jsteltze/swiss_tournament.git',
                         ),
-                        InfoRow(
-                          'Version:',
-                          '${packageInfo.version}, ${DateFormat('MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp))}',
+                      ),
+                      InfoRow(
+                        'Author:',
+                        '',
+                        contentWidget: const Link(
+                          'Johannes Steltzer',
+                          'https://github.com/jsteltze',
                         ),
-                        InfoRow('Package:', packageInfo.packageName),
-                        InfoRow('DB Path:', TournamentStorage.dbPath ?? '-'),
-                        InfoRow(
-                          'Installed:',
-                          packageInfo.installTime?.toHumanString() ?? '-',
+                      ),
+                    ],
+                  ),
+                  ExpansionTile(
+                    title: const Text('Libraries'),
+                    children: [
+                      Text(
+                        'This is my first programming with Flutter/Dart. Initially I did not intend to restrict the platform to Android. But I\'m using the pairing engine "JaVaFo", which is a Java library. I was only able to get this Java program running on Android.',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
-                        InfoRow(
-                          'Updated:',
-                          packageInfo.updateTime?.toHumanString() ?? '-',
+                      ),
+                      const InfoRow('Language:', 'Flutter 3 / Dart SDK 3'),
+                      const InfoRow('Database:', 'sqflite'),
+                      const InfoRow('Package Info:', 'package_info_plus'),
+                      const InfoRow('Design:', 'Material v3'),
+                      const InfoRow('Icons:', 'Cupertino Icons'),
+                      InfoRow(
+                        'Pairing:',
+                        '',
+                        contentWidget: const Link(
+                          'JaVaFo (Java)',
+                          'https://www.rrweb.org/javafo/JaVaFo.htm',
                         ),
-                        InfoRow(
-                          'Sources:',
-                          '',
-                          contentWidget: const Link(
-                            'Github',
-                            'https://github.com/jsteltze/swiss_tournament.git',
-                          ),
+                      ),
+                    ],
+                  ),
+                  ExpansionTile(
+                    title: const Text('License Info'),
+                    children: [
+                      StyledText(
+                        'I want this App to remain open-source (copyleft). Thus this program and all of its sourcecode is licensed under **GPL v3**\nFeel free to use, modify and redistribute it under the terms of this license.',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
-                        InfoRow(
-                          'Author:',
-                          '',
-                          contentWidget: const Link(
-                            'Johannes Steltzer',
-                            'https://github.com/jsteltze',
-                          ),
+                      ),
+                      InfoRow(
+                        'License text:',
+                        '',
+                        titleWidth: 90,
+                        contentWidget: const Link(
+                          'gnu.org/licenses/gpl-3.0',
+                          'https://www.gnu.org/licenses/gpl-3.0.html',
                         ),
-                      ],
-                    ),
-                    ExpansionTile(
-                      title: const Text('Libraries'),
-                      children: [
-                        Text(
-                          'This is my first programming with Flutter/Dart. Initially I did not intend to restrict the platform to Android. But I\'m using the pairing engine "JaVaFo", which is a Java library. I was only able to get this Java program running on Android.',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
+                      ),
+                      InfoRow(
+                        'Rook Icon:',
+                        '',
+                        titleWidth: 90,
+                        contentWidget: const Link(
+                          'Icon by Freepik',
+                          'https://www.freepik.com/icon/rook_562880#fromView=search&page=1&position=36&uuid=c1e0d777-66db-4757-98d6-8a870ff59f43',
                         ),
-                        const InfoRow('Language:', 'Flutter 3 / Dart SDK 3'),
-                        const InfoRow('Database:', 'sqflite'),
-                        const InfoRow('Package Info:', 'package_info_plus'),
-                        const InfoRow('Design:', 'Material v3'),
-                        const InfoRow('Icons:', 'Cupertino Icons'),
-                        InfoRow(
-                          'Pairing:',
-                          '',
-                          contentWidget: const Link(
-                            'JaVaFo (Java)',
-                            'https://www.rrweb.org/javafo/JaVaFo.htm',
-                          ),
-                        ),
-                      ],
-                    ),
-                    ExpansionTile(
-                      title: const Text('License Info'),
-                      children: [
-                        StyledText(
-                          'I want this App to remain open-source (copyleft). Thus this program and all of its sourcecode is licensed under **GPL v3**\nFeel free to use, modify and redistribute it under the terms of this license.',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                        InfoRow(
-                          'License text:',
-                          '',
-                          titleWidth: 90,
-                          contentWidget: const Link(
-                            'gnu.org/licenses/gpl-3.0',
-                            'https://www.gnu.org/licenses/gpl-3.0.html',
-                          ),
-                        ),
-                        InfoRow(
-                          'Rook Icon:',
-                          '',
-                          titleWidth: 90,
-                          contentWidget: const Link(
-                            'Icon by Freepik',
-                            'https://www.freepik.com/icon/rook_562880#fromView=search&page=1&position=36&uuid=c1e0d777-66db-4757-98d6-8a870ff59f43',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Back'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  });
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Back'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
 }
 
 void showLogsDialog(BuildContext context) {

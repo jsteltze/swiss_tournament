@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/description.dart';
 import 'package:swiss_tournament/components/input_title.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
@@ -110,25 +109,20 @@ class RankingView extends StatelessWidget {
                   const SizedBox(height: 20),
                   InputTitle('Export:'),
                   TextButton(
-                    onPressed: () {
-                      PackageInfo.fromPlatform().then((
-                        PackageInfo packageInfo,
-                      ) async {
-                        final String htmlContent = toHtmlRanking(
-                          tournament,
-                          ratings,
-                          context.mounted ? context : null,
-                          packageInfo,
-                        );
-                        final String filename =
-                            '${tournament.title.replaceAll(' ', '_')}_ranking_round_${tournament.rounds.length}.html';
+                    onPressed: () async {
+                      final String htmlContent = toHtmlRanking(
+                        tournament,
+                        ratings,
+                        context.mounted ? context : null,
+                      );
+                      final String filename =
+                          '${tournament.title.replaceAll(' ', '_')}_ranking_round_${tournament.rounds.length}.html';
 
-                        await ExportHandler.exportToDownloads(
-                          context,
-                          filename,
-                          htmlContent,
-                        );
-                      });
+                      await ExportHandler.exportToDownloads(
+                        context,
+                        filename,
+                        htmlContent,
+                      );
                     },
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,

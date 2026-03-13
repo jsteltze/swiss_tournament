@@ -8,6 +8,7 @@ import 'package:swiss_tournament/components/no_data_tile.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
+import 'package:swiss_tournament/utils/globals.dart';
 import 'package:swiss_tournament/utils/logger.dart';
 
 import 'data/tournament.dart';
@@ -18,22 +19,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FileLogger.init();
   final packageInfo = await PackageInfo.fromPlatform();
+  Globals.packageInfo = packageInfo;
   FileLogger.log('Starting application...');
 
   //Jni.spawn(dylibDir: 'build/jni', classPath: ['java']);
-  runApp(MyApp(packageInfo.appName));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final String appTitle;
-
-  const MyApp(this.appTitle, {super.key});
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: appTitle,
+      title: Globals.packageInfo.appName,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
-      home: MyHomePage(title: appTitle),
+      home: MyHomePage(title: Globals.packageInfo.appName),
     );
   }
 }

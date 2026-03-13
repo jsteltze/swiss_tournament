@@ -1,7 +1,6 @@
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/utils/export_handler.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
@@ -29,20 +28,17 @@ class EncountersView extends StatefulWidget {
 class _EncountersViewState extends State<EncountersView> {
   bool _filterOpen = false;
 
-  void _exportRound() {
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
-      final round = widget.tournament.rounds[widget.roundIndex];
-      final String htmlContent = toHtmlRound(
-        widget.tournament,
-        round,
-        context.mounted ? context : null,
-        packageInfo,
-      );
-      final String filename =
-          '${widget.tournament.title.replaceAll(' ', '_')}_round_${widget.roundIndex + 1}.html';
+  Future<void> _exportRound() async {
+    final round = widget.tournament.rounds[widget.roundIndex];
+    final String htmlContent = toHtmlRound(
+      widget.tournament,
+      round,
+      context.mounted ? context : null,
+    );
+    final String filename =
+        '${widget.tournament.title.replaceAll(' ', '_')}_round_${widget.roundIndex + 1}.html';
 
-      await ExportHandler.exportToDownloads(context, filename, htmlContent);
-    });
+    await ExportHandler.exportToDownloads(context, filename, htmlContent);
   }
 
   @override

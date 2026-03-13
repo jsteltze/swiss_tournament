@@ -28,4 +28,4 @@ This project is a Flutter application written in Dart.
 - Mehr Snackbars (Player created etc.)
 - geht die Snackbar auch etwas schöner?
 - context mounted beheben
-- den nervigen PackageInfo call in Globale variable auslagern
+- Hinweis keine offizielle FIDE Software
