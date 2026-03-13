@@ -1,4 +1,4 @@
-import 'dart:math' as Math;
+import 'dart:math';
 
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/player.dart';
@@ -335,11 +335,7 @@ class PlayerRatings {
       (x, y) =>
           x +
           1.0 /
-              (1.0 +
-                  Math.pow(
-                    10.0,
-                    (y.toDouble() - ownRating.toDouble()) / 400.0,
-                  )),
+              (1.0 + pow(10.0, (y.toDouble() - ownRating.toDouble()) / 400.0)),
     );
 
     var lo = 0.0;

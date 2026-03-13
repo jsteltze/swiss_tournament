@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/tournament.dart';
@@ -41,18 +42,34 @@ class SingleEncounterView extends StatelessWidget {
       tournament.rounds.indexOf(round),
     );
 
-    return Material(
-      color: encounter.result.isNotEmpty
-          ? Theme.of(context).colorScheme.primary.withAlpha(10)
-          : Colors.transparent,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withAlpha(40),
+        ),
+        borderRadius: BorderRadius.circular(10),
+        color: encounter.result.isNotEmpty
+            ? Theme.of(context).colorScheme.primary.withAlpha(20)
+            : Colors.transparent,
+      ),
       child: InkWell(
         onTap: encounter.playerIdW == -1 || encounter.playerIdB == -1
             ? null
             : () => _showResultDialog(encounter, context),
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: 30,
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10.0),
+                  topRight: Radius.circular(10.0),
+                ),
+                color: Theme.of(context).colorScheme.primary.withAlpha(
+                  encounter.result.isEmpty ? 20 : 0,
+                ),
+              ),
+              width: double.infinity,
+              alignment: Alignment.center,
               child: Text(
                 '#${index + 1}',
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
@@ -60,30 +77,45 @@ class SingleEncounterView extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: PlayerTile(
-                player: playerW,
-                points: pointsW,
-                index: encounter.playerIdW,
-              ),
-            ),
-            SizedBox(
-              width: 30,
-              child: Center(
-                child: Text(
-                  encounter.result.isEmpty
-                      ? 'vs'
-                      : encounter.result.replaceAll('0.5', '\u{00BD}'),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: PlayerTile(
+                    player: playerW,
+                    points: pointsW,
+                    index: encounter.playerIdW,
+                  ),
                 ),
-              ),
-            ),
-            Expanded(
-              child: PlayerTile(
-                player: playerB,
-                points: pointsB,
-                index: encounter.playerIdB,
-                alignLeft: false,
-              ),
+                Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                    color: encounter.result.isEmpty
+                        ? Colors.transparent
+                        : Theme.of(context).focusColor,
+                  ),
+
+                  child: Center(
+                    child: Text(
+                      encounter.result.isEmpty
+                          ? 'vs'
+                          : encounter.result.replaceAll('0.5', '\u{00BD}'),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: PlayerTile(
+                    player: playerB,
+                    points: pointsB,
+                    index: encounter.playerIdB,
+                    alignLeft: false,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -108,8 +140,11 @@ class SingleEncounterView extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Enter result for:\n${tournament.players[encounter.playerIdW].name} vs ${tournament.players[encounter.playerIdB].name}",
+                  const Text("Enter result for:"),
+                  InfoPanel(
+                    Text(
+                      "${tournament.players[encounter.playerIdW].name} vs ${tournament.players[encounter.playerIdB].name}",
+                    ),
                   ),
                   const SizedBox(height: 20),
                   DropdownButton<String>(
@@ -198,7 +233,7 @@ class SingleEncounterView extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                 ),
-                TextButton(
+                ElevatedButton(
                   child: const Text('Save'),
                   onPressed: () {
                     encounter.result = selectedResult!;

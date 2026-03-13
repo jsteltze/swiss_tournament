@@ -19,7 +19,6 @@ This project is a Flutter application written in Dart.
 
 - Fehlerhandling
 - Welcome Dialog
-- Encounters view: Tisch nummer über der Begegnung
 - Dialoge werden zusammengeschoben bei Tastatur overlay
 - neue Runde mit Loading Spinner (Button blockieren)
 - Einheitliche Dialog-Funktion mit ScrollView
@@ -28,3 +27,4 @@ This project is a Flutter application written in Dart.
 - Mehr Snackbars (Player created etc.)
 - geht die Snackbar auch etwas schöner?
 - Hinweis keine offizielle FIDE Software
+- Ranking während Runde 1?!
