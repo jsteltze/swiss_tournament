@@ -9,6 +9,7 @@ import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/components/link.dart';
 import 'package:swiss_tournament/components/styled_text.dart';
+import 'package:swiss_tournament/components/warning.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/data/tournament_storage.dart';
 import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
@@ -392,8 +393,8 @@ void showAppInfoDialog(BuildContext context) {
   });
 }
 
-void showLogsDialog(BuildContext context) async {
-  final logs = await FileLogger.getLogs();
+void showLogsDialog(BuildContext context) {
+  final logs = FileLogger.getLogs();
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -419,6 +420,24 @@ void showLogsDialog(BuildContext context) async {
           child: const Text('Clear'),
         ),
         ElevatedButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Close'),
+        ),
+      ],
+    ),
+  );
+}
+
+void showErrorDialog(BuildContext context, String msg) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Error'),
+      content: Column(
+        children: [const Text('An error occurred:'), Warning(msg)],
+      ),
+      actions: [
+        TextButton(
           onPressed: () => Navigator.pop(context),
           child: const Text('Close'),
         ),

@@ -138,6 +138,10 @@ Round callJavaFo(Tournament tournament) {
 
   var respStr = response!.toDartString();
   FileLogger.log('JaVaFo Response received: $respStr');
+  if (respStr.startsWith('ERROR:')) {
+    throw Exception(respStr.substring(7));
+  }
+
   var lines = respStr.split('\n');
   var round = Round(acceleratedRoundVirtualPoints: virtualPointsForThisRound);
   for (var i = 1; i < lines.length; i++) {

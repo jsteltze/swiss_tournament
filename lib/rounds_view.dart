@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/encounters_view.dart';
 import 'package:swiss_tournament/utils/logger.dart';
 
@@ -197,7 +198,9 @@ class _RoundsViewState extends State<RoundsView> {
   }
 
   void _startNewRound() async {
-    FileLogger.log('Starting new round for tournament ID: ${widget.tournament.id}');
+    FileLogger.log(
+      'Starting new round for tournament ID: ${widget.tournament.id}',
+    );
     var currentDbState = await _storage.getTournament(widget.tournament.id!);
     if (currentDbState == null) {
       FileLogger.log('Error: Tournament not found in database!');
@@ -210,23 +213,27 @@ class _RoundsViewState extends State<RoundsView> {
       return;
     }
 
-    var round = callJavaFo(widget.tournament);
-    widget.tournament.rounds.add(round);
-    widget.tournament.update();
-    setState(() {
-      for (var item in _data) {
-        item.isExpanded = false;
-      }
-      _data.add(
-        generateItem(
-          widget.tournament,
-          widget.tournament.rounds.length - 1,
-          _finishLastRound,
-          () => _deleteRound(widget.tournament.rounds.length - 1),
-        ),
-      );
-    });
-    widget.onRoundUpdate?.call();
+    try {
+      var round = callJavaFo(widget.tournament);
+      widget.tournament.rounds.add(round);
+      widget.tournament.update();
+      setState(() {
+        for (var item in _data) {
+          item.isExpanded = false;
+        }
+        _data.add(
+          generateItem(
+            widget.tournament,
+            widget.tournament.rounds.length - 1,
+            _finishLastRound,
+            () => _deleteRound(widget.tournament.rounds.length - 1),
+          ),
+        );
+      });
+      widget.onRoundUpdate?.call();
+    } catch (ex) {
+      showErrorDialog(context, ex.toString());
+    }
   }
 
   void _deleteRound(int roundIndex) {
@@ -246,7 +253,9 @@ class _RoundsViewState extends State<RoundsView> {
                   ),
                   TextButton(
                     onPressed: () {
-                      FileLogger.log('Deleting round ${roundIndex + 1} from tournament ${widget.tournament.id}');
+                      FileLogger.log(
+                        'Deleting round ${roundIndex + 1} from tournament ${widget.tournament.id}',
+                      );
                       widget.tournament.rounds.removeLast();
                       widget.tournament.update();
                       setState(() {
@@ -277,7 +286,9 @@ class _RoundsViewState extends State<RoundsView> {
   }
 
   void _finishLastRound() {
-    FileLogger.log('Finishing last round of tournament ${widget.tournament.id}');
+    FileLogger.log(
+      'Finishing last round of tournament ${widget.tournament.id}',
+    );
     setState(() {
       _data.last.headerIcon = Icon(Icons.check_circle);
       widget.tournament.rounds.last.finishedAt = DateTime.now();
