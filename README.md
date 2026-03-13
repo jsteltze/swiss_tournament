@@ -27,4 +27,4 @@ This project is a Flutter application written in Dart.
 - Logs exportieren
 - Permissions anfragen: Storage
 - Mehr Snackbars (Player created etc.)
-- Error Dialog nur so groß wie erforderlich
+- geht die Snackbar auch etwas schöner?

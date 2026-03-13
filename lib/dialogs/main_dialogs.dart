@@ -447,6 +447,7 @@ void showErrorDialog(BuildContext context, String msg) {
     builder: (context) => AlertDialog(
       title: const Text('Error'),
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [const Text('An error occurred:'), Warning(msg)],
       ),
       actions: [
