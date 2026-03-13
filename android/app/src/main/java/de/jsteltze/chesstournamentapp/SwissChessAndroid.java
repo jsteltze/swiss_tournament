@@ -2,6 +2,9 @@ package de.jsteltze.chesstournamentapp;
 
 import android.app.Activity;
 import android.os.Environment;
+
+import androidx.annotation.Keep;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +13,7 @@ import java.io.IOException;
 
 import javafo.api.JaVaFoApi;
 
+@Keep
 public class SwissChessAndroid {
 
     public static String jaVaFoApi(Activity activity, int mode, String trfFileContent) {
@@ -22,7 +26,7 @@ public class SwissChessAndroid {
             f.delete();
             return response;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return "ERROR: " + e.getMessage();
         }
     }
 
@@ -38,7 +42,7 @@ public class SwissChessAndroid {
             writer.close();
             return file.getAbsolutePath();
         } catch (IOException e) {
-            return "Error: " + e.getMessage();
+            return "ERROR: " + e.getMessage();
         }
     }
 }

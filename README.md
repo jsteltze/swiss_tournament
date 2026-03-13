@@ -22,3 +22,7 @@ This project is a Flutter application written in Dart.
 - Encounters view: Tisch nummer über der Begegnung
 - Dialoge werden zusammengeschoben bei Tastatur overlay
 - neue Runde mit Loading Spinner (Button blockieren)
+- Einheitliche Dialog-Funktion mit ScrollView
+- Abfangen: weniger Spieler als Runden
+- Logs exportieren
+- Permissions anfragen: Storage
