@@ -1,20 +1,15 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:jni/jni.dart';
-import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/description.dart';
 import 'package:swiss_tournament/components/input_title.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
+import 'package:swiss_tournament/utils/export_handler.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
 import 'package:swiss_tournament/utils/logger.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
-import 'dialogs/main_dialogs.dart';
-import 'generated/java.g.dart';
 
 class RankingView extends StatelessWidget {
   final Tournament tournament;
@@ -118,7 +113,7 @@ class RankingView extends StatelessWidget {
                     onPressed: () {
                       PackageInfo.fromPlatform().then((
                         PackageInfo packageInfo,
-                      ) {
+                      ) async {
                         final String htmlContent = toHtmlRanking(
                           tournament,
                           ratings,
@@ -128,37 +123,11 @@ class RankingView extends StatelessWidget {
                         final String filename =
                             '${tournament.title.replaceAll(' ', '_')}_ranking_round_${tournament.rounds.length}.html';
 
-                        FileLogger.log('Exporting ranking to $filename');
-
-                        final result = SwissChessAndroid.exportToFile(
-                          Jni.androidActivity(
-                            PlatformDispatcher.instance.engineId!,
-                          ),
-                          JString.fromString(htmlContent),
-                          JString.fromString(filename),
+                        await ExportHandler.exportToDownloads(
+                          context,
+                          filename,
+                          htmlContent,
                         );
-                        if (result != null &&
-                            result.toDartString().startsWith('ERROR: ')) {
-                          FileLogger.log(
-                            'Error while exporting $filename: ${result.toDartString().substring(7)}',
-                            Level.error,
-                          );
-                          showErrorDialog(
-                            context,
-                            result.toDartString().substring(7),
-                          );
-                          return;
-                        }
-
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '"$filename" exported to Downloads',
-                              ),
-                            ),
-                          );
-                        }
                       });
                     },
                     child: const Row(

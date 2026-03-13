@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jni/jni.dart';
-import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/info_table_row.dart';
@@ -18,7 +15,7 @@ import 'package:swiss_tournament/utils/logger.dart';
 import 'package:swiss_tournament/utils/timestampx.dart';
 
 import '../components/input_title.dart';
-import '../generated/java.g.dart';
+import '../utils/export_handler.dart';
 
 void showImportConfirmationDialog(
   BuildContext context,
@@ -223,30 +220,12 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
                         final String json = jsonEncode(
                           selectedList.map((t) => t.toJson()).toList(),
                         );
-                        final result = SwissChessAndroid.exportToFile(
-                          Jni.androidActivity(
-                            PlatformDispatcher.instance.engineId!,
-                          ),
-                          JString.fromString(json),
-                          JString.fromString(filename),
-                        );
-                        if (result != null &&
-                            result.toDartString().startsWith('ERROR: ')) {
-                          FileLogger.log(
-                            'Error while exporting $filename: ${result.toDartString().substring(7)}',
-                            Level.error,
-                          );
-                          showErrorDialog(
-                            context,
-                            result.toDartString().substring(7),
-                          );
-                          return;
-                        }
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('"$filename" exported to Downloads'),
-                          ),
+
+                        await ExportHandler.exportToDownloads(
+                          context,
+                          filename,
+                          json,
+                          () => Navigator.pop(context),
                         );
                       },
                 child: Text(

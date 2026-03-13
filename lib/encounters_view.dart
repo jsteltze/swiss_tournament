@@ -1,17 +1,11 @@
-import 'dart:ui';
-
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jni/jni.dart';
-import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/data/tournament.dart';
-import 'package:swiss_tournament/dialogs/main_dialogs.dart';
+import 'package:swiss_tournament/utils/export_handler.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
-import 'package:swiss_tournament/utils/logger.dart';
 
-import 'generated/java.g.dart';
 import 'single_encounter_view.dart';
 
 class EncountersView extends StatefulWidget {
@@ -36,7 +30,7 @@ class _EncountersViewState extends State<EncountersView> {
   bool _filterOpen = false;
 
   void _exportRound() {
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
       final round = widget.tournament.rounds[widget.roundIndex];
       final String htmlContent = toHtmlRound(
         widget.tournament,
@@ -47,25 +41,7 @@ class _EncountersViewState extends State<EncountersView> {
       final String filename =
           '${widget.tournament.title.replaceAll(' ', '_')}_round_${widget.roundIndex + 1}.html';
 
-      final result = SwissChessAndroid.exportToFile(
-        Jni.androidActivity(PlatformDispatcher.instance.engineId!),
-        JString.fromString(htmlContent),
-        JString.fromString(filename),
-      );
-      if (result != null && result.toDartString().startsWith('ERROR: ')) {
-        FileLogger.log(
-          'Error while exporting $filename: ${result.toDartString().substring(7)}',
-          Level.error,
-        );
-        showErrorDialog(context, result.toDartString().substring(7));
-        return;
-      }
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('"$filename" exported to Downloads')),
-        );
-      }
+      await ExportHandler.exportToDownloads(context, filename, htmlContent);
     });
   }
 

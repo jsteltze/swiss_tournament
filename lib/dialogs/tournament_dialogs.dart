@@ -1,20 +1,15 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:jni/jni.dart';
-import 'package:logger/logger.dart';
 import 'package:swiss_tournament/components/warning.dart';
-import 'package:swiss_tournament/utils/logger.dart';
 
 import '../components/description.dart';
 import '../components/input_title.dart';
 import '../data/first_round_pairing.dart';
 import '../data/tournament.dart';
 import '../data/tournament_storage.dart';
-import '../generated/java.g.dart';
-import 'main_dialogs.dart';
+import '../utils/export_handler.dart';
 
 void showEditTournamentDialog(
   BuildContext context,
@@ -200,7 +195,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
                 child: const Text('Cancel'),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   String filename = filenameController.text;
                   if (filename.isEmpty) return;
                   if (!filename.toLowerCase().endsWith('.json')) {
@@ -222,29 +217,12 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
                   }
 
                   final String jsonContent = jsonEncode(data);
-                  final result = SwissChessAndroid.exportToFile(
-                    Jni.androidActivity(PlatformDispatcher.instance.engineId!),
-                    JString.fromString(jsonContent),
-                    JString.fromString(filename),
-                  );
-                  if (result != null &&
-                      result.toDartString().startsWith('ERROR: ')) {
-                    FileLogger.log(
-                      'Error while exporting $filename: ${result.toDartString().substring(7)}',
-                      Level.error,
-                    );
-                    showErrorDialog(
-                      context,
-                      result.toDartString().substring(7),
-                    );
-                    return;
-                  }
 
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('"$filename" exported to Downloads'),
-                    ),
+                  await ExportHandler.exportToDownloads(
+                    context,
+                    filename,
+                    jsonContent,
+                    () => Navigator.pop(context),
                   );
                 },
                 child: const Text('Export'),

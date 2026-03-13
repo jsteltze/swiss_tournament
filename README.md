@@ -25,6 +25,7 @@ This project is a Flutter application written in Dart.
 - Einheitliche Dialog-Funktion mit ScrollView
 - Abfangen: weniger Spieler als Runden
 - Logs exportieren
-- Permissions anfragen: Storage
 - Mehr Snackbars (Player created etc.)
 - geht die Snackbar auch etwas schöner?
+- context mounted beheben
+- den nervigen PackageInfo call in Globale variable auslagern
