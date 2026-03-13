@@ -232,7 +232,9 @@ class _RoundsViewState extends State<RoundsView> {
       });
       widget.onRoundUpdate?.call();
     } catch (ex) {
-      showErrorDialog(context, ex.toString());
+      if (mounted) {
+        showErrorDialog(context, ex.toString());
+      }
     }
   }
 

@@ -27,13 +27,17 @@ class ExportHandler {
         'Error while exporting $filename: ${result.toDartString().substring(7)}',
         Level.error,
       );
-      showErrorDialog(context, result.toDartString().substring(7));
+      if (context.mounted) {
+        showErrorDialog(context, result.toDartString().substring(7));
+      }
       return false;
     } else {
       FileLogger.log('Exporting $filename was successful');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('"$filename" exported to Downloads')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('"$filename" exported to Downloads')),
+        );
+      }
       onSuccess?.call();
       return true;
     }

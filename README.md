@@ -27,5 +27,4 @@ This project is a Flutter application written in Dart.
 - Logs exportieren
 - Mehr Snackbars (Player created etc.)
 - geht die Snackbar auch etwas schöner?
-- context mounted beheben
 - Hinweis keine offizielle FIDE Software
