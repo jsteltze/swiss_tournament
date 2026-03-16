@@ -20,7 +20,6 @@ This project is a Flutter application written in Dart.
 - Fehlerhandling
 - Welcome Dialog
 - Dialoge werden zusammengeschoben bei Tastatur overlay
-- neue Runde mit Loading Spinner (Button blockieren)
 - Einheitliche Dialog-Funktion mit ScrollView
 - Abfangen: weniger Spieler als Runden
 - Mehr Snackbars (Player created etc.)

@@ -67,6 +67,7 @@ class RoundsView extends StatefulWidget {
 class _RoundsViewState extends State<RoundsView> {
   final List<RoundsPanel> _data = [];
   final TournamentStorage _storage = TournamentStorage();
+  bool _isLoadingNewRound = false;
 
   @override
   void initState() {
@@ -120,10 +121,20 @@ class _RoundsViewState extends State<RoundsView> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton.icon(
-              icon: Icon(
-                Icons.play_arrow,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
+              icon: _isLoadingNewRound
+                  ? Container(
+                      width: 24,
+                      height: 24,
+                      padding: const EdgeInsets.all(2.0),
+                      child: const CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 3,
+                      ),
+                    )
+                  : Icon(
+                      Icons.play_arrow,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primary,
               ),
@@ -133,7 +144,7 @@ class _RoundsViewState extends State<RoundsView> {
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
-              onPressed: _startNewRound,
+              onPressed: _isLoadingNewRound ? null : _startNewRound,
             ),
           ),
       ],
@@ -198,18 +209,27 @@ class _RoundsViewState extends State<RoundsView> {
   }
 
   void _startNewRound() async {
+    setState(() {
+      _isLoadingNewRound = true;
+    });
     FileLogger.log(
       'Starting new round for tournament ID: ${widget.tournament.id}',
     );
     var currentDbState = await _storage.getTournament(widget.tournament.id!);
     if (currentDbState == null) {
       FileLogger.log('Error: Tournament not found in database!');
+      setState(() {
+        _isLoadingNewRound = false;
+      });
       return;
     }
     if (currentDbState.rounds.isNotEmpty &&
         currentDbState.rounds.last.encounters.any((e) => e.result.isEmpty)) {
       FileLogger.log('Cannot start new round: some encounters are unfinished.');
       notifyUnfinishedEncounters(currentDbState.rounds.last.encounters);
+      setState(() {
+        _isLoadingNewRound = false;
+      });
       return;
     }
 
@@ -235,6 +255,10 @@ class _RoundsViewState extends State<RoundsView> {
       if (mounted) {
         showErrorDialog(context, ex.toString());
       }
+    } finally {
+      setState(() {
+        _isLoadingNewRound = false;
+      });
     }
   }
 
