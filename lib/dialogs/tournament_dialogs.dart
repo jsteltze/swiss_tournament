@@ -74,9 +74,8 @@ void showEditTournamentDialog(
               ),
               if (tournament != null && tournament!.rounds.isNotEmpty) ...[
                 const SizedBox(height: 20.0),
-                Text(
+                Warning(
                   "The tournament has started and is currently on round ${tournament!.rounds.length}. Thus the number of rounds cannot be changed to a value smaller than ${tournament!.rounds.length}!",
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ],
             ],

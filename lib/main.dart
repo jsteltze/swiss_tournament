@@ -10,6 +10,7 @@ import 'package:swiss_tournament/dialogs/tournament_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 import 'package:swiss_tournament/utils/globals.dart';
 import 'package:swiss_tournament/utils/logger.dart';
+import 'package:swiss_tournament/utils/snackbar_utils.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
@@ -169,9 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       FileLogger.log('Error importing: $e');
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error importing: $e')));
+        showSnackbar(context, 'Error importing: $e');
       }
     }
   }

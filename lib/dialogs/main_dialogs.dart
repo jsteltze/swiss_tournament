@@ -12,6 +12,7 @@ import 'package:swiss_tournament/data/tournament_storage.dart';
 import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
 import 'package:swiss_tournament/utils/globals.dart';
 import 'package:swiss_tournament/utils/logger.dart';
+import 'package:swiss_tournament/utils/snackbar_utils.dart';
 import 'package:swiss_tournament/utils/timestampx.dart';
 
 import '../components/input_title.dart';
@@ -120,10 +121,9 @@ void showImportConfirmationDialog(
                         onImportComplete();
                         if (context.mounted) {
                           Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Imported $count tournament(s)'),
-                            ),
+                          showSnackbar(
+                            context,
+                            'Imported $count tournament(s)',
                           );
                         }
                       },

@@ -5,6 +5,7 @@ import 'package:jni/jni.dart';
 import 'package:logger/logger.dart';
 import 'package:swiss_tournament/utils/logger.dart';
 import 'package:swiss_tournament/utils/permission_handler.dart';
+import 'package:swiss_tournament/utils/snackbar_utils.dart';
 
 import '../dialogs/main_dialogs.dart';
 import '../generated/java.g.dart';
@@ -34,9 +35,7 @@ class ExportHandler {
     } else {
       FileLogger.log('Exporting $filename was successful');
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('"$filename" exported to Downloads')),
-        );
+        showSnackbar(context, '"$filename" exported to Downloads');
       }
       onSuccess?.call();
       return true;
