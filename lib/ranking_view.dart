@@ -453,7 +453,9 @@ class RankingView extends StatelessWidget {
                                     ),
                                   ),
                                 Text(
-                                  r.performance.toString(),
+                                  r.performance == 0
+                                      ? '-'
+                                      : r.performance.toString(),
                                   style: TextStyle(
                                     color: Theme.of(
                                       context,

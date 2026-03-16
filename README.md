@@ -27,4 +27,3 @@ This project is a Flutter application written in Dart.
 - Mehr Snackbars (Player created etc.)
 - geht die Snackbar auch etwas schöner?
 - Hinweis keine offizielle FIDE Software
-- Ranking während Runde 1?!

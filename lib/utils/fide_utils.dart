@@ -123,7 +123,7 @@ int calcPerformance(List<Round> rounds, List<Player> players, int playerId) {
         } else if (encounter.result == "0.5-0.5") {
           ratedScore += 0.5;
         }
-        ratedGames++;
+        if (encounter.result.isNotEmpty) ratedGames++;
         continue;
       } else if (encounter.playerIdB == playerId) {
         if (encounter.playerIdW == -1 ||
@@ -136,11 +136,13 @@ int calcPerformance(List<Round> rounds, List<Player> players, int playerId) {
         } else if (encounter.result == "0.5-0.5") {
           ratedScore += 0.5;
         }
-        ratedGames++;
+        if (encounter.result.isNotEmpty) ratedGames++;
         continue;
       }
     }
   }
+
+  if (opponentsWithRatings.isEmpty || ratedGames == 0) return 0;
 
   int avgRating =
       opponentsWithRatings.reduce((a, b) => a + b) ~/
