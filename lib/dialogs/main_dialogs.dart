@@ -399,7 +399,20 @@ void showLogsDialog(BuildContext context) {
         ),
       ),
       actions: [
-        TextButton(
+        TextButton.icon(
+          onPressed: () {
+            final filename = 'logs-${DateTime.now().toTechString()}.txt';
+            ExportHandler.exportToDownloads(
+              context,
+              filename,
+              logs,
+              () => Navigator.pop(context),
+            );
+          },
+          icon: Icon(Icons.save_alt),
+          label: const Text('Export'),
+        ),
+        TextButton.icon(
           onPressed: () {
             FileLogger.clearLogs();
             Navigator.pop(context);
@@ -407,7 +420,8 @@ void showLogsDialog(BuildContext context) {
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).colorScheme.error,
           ),
-          child: const Text('Clear'),
+          icon: Icon(Icons.delete_outline),
+          label: const Text('Clear'),
         ),
         ElevatedButton(
           onPressed: () => Navigator.pop(context),

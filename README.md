@@ -23,6 +23,5 @@ This project is a Flutter application written in Dart.
 - neue Runde mit Loading Spinner (Button blockieren)
 - Einheitliche Dialog-Funktion mit ScrollView
 - Abfangen: weniger Spieler als Runden
-- Logs exportieren
 - Mehr Snackbars (Player created etc.)
 - Hinweis keine offizielle FIDE Software
