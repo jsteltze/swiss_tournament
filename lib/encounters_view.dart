@@ -163,13 +163,13 @@ class _EncountersViewState extends State<EncountersView> {
               },
               itemBuilder: (BuildContext context) {
                 return [
-                  const PopupMenuItem<String>(
+                  PopupMenuItem<String>(
                     value: 'export',
                     child: Row(
                       children: [
-                        Icon(Icons.save_alt, size: 20),
-                        SizedBox(width: 8),
-                        Text('Export Round (HTML)'),
+                        const Icon(Icons.save_alt, size: 20),
+                        const SizedBox(width: 8),
+                        Text('Export Round ${widget.roundIndex + 1} (HTML)'),
                       ],
                     ),
                   ),
@@ -185,7 +185,7 @@ class _EncountersViewState extends State<EncountersView> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Delete Round',
+                            'Delete Round ${widget.roundIndex + 1}',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.error,
                             ),

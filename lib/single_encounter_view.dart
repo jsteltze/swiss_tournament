@@ -87,10 +87,10 @@ class SingleEncounterView extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 30,
-                  height: 30,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                    borderRadius: const BorderRadius.all(Radius.circular(18.0)),
                     color: encounter.result.isEmpty
                         ? Colors.transparent
                         : Theme.of(context).focusColor,
@@ -102,7 +102,11 @@ class SingleEncounterView extends StatelessWidget {
                           ? 'vs'
                           : encounter.result.replaceAll('0.5', '\u{00BD}'),
                       style: TextStyle(
+                        fontSize: Theme.of(
+                          context,
+                        ).textTheme.bodyLarge!.fontSize,
                         color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
