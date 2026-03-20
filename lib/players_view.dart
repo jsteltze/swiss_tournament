@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/info_table_row.dart';
+import 'package:swiss_tournament/components/input_field.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/components/warning.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
@@ -488,22 +488,7 @@ void showEditPlayerDialog(
     text: player?.rating.toString(),
   );
   final formKey = GlobalKey<FormState>();
-  final nameKey = GlobalKey();
-  final ratingKey = GlobalKey();
-  final FocusNode focusNode = FocusNode();
   final isLateJoin = player == null && tournament.rounds.isNotEmpty;
-  focusNode.addListener(() {
-    if (focusNode.hasFocus) {
-      // Small delay to ensure the keyboard is fully visible
-      Future.delayed(Duration(milliseconds: 700), () {
-        Scrollable.ensureVisible(
-          focusNode.context!,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeIn,
-        );
-      });
-    }
-  });
 
   showDialog(
     context: context,
@@ -526,61 +511,17 @@ void showEditPlayerDialog(
                   ),
                   const SizedBox(height: 25),
                 ],
-                TextFormField(
-                  key: nameKey,
-                  onTap: () {
-                    // Small delay to ensure the keyboard is fully visible
-                    Future.delayed(Duration(milliseconds: 700), () {
-                      Scrollable.ensureVisible(
-                        nameKey.currentContext!,
-                        alignment: 0.5,
-                        //duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn,
-                      );
-                    });
-                  },
-                  controller: nameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a player name';
-                    }
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Player name',
-                    border: OutlineInputBorder(),
-                  ),
-                  autofocus: !isLateJoin,
+                InputField(
+                  'Player name',
+                  nameController,
+                  autoFocus: !isLateJoin,
                 ),
                 const SizedBox(height: 25),
-                TextFormField(
-                  key: ratingKey,
-                  onTap: () {
-                    // Small delay to ensure the keyboard is fully visible
-                    Future.delayed(Duration(milliseconds: 700), () {
-                      Scrollable.ensureVisible(
-                        ratingKey.currentContext!,
-                        alignment: 0.5,
-                        //duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn,
-                      );
-                    });
-                  },
-                  controller: ratingController,
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        int.tryParse(value) != null) {
-                      return null;
-                    }
-                    return 'Please enter a valid rating (integer)';
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Player rating',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                InputField(
+                  'Player rating',
+                  ratingController,
+                  isOptional: true,
+                  inputType: TextInputType.number,
                 ),
               ],
             ),
