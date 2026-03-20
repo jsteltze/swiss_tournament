@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:swiss_tournament/components/info_panel.dart';
+import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/components/warning.dart';
+import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/utils/logger.dart';
 
 import 'components/no_data_tile.dart';
@@ -207,11 +210,157 @@ class PlayersView extends StatelessWidget {
                       index: index,
                       detailed: true,
                       popup: popup,
+                      onTap: () => _showPlayerDetailsDialog(context, index),
                     );
                   },
                 ),
         ),
       ],
+    );
+  }
+
+  void _showPlayerDetailsDialog(BuildContext context, int index) {
+    final rowWidth = 95.0;
+    // map to PlayerRatings class
+    final ratings = tournament.players
+        .map(
+          (p) =>
+              PlayerRatings(player: p, playerId: tournament.players.indexOf(p)),
+        )
+        .toList();
+    PlayerRatings.calculateRanks(ratings, tournament);
+    final r = ratings.firstWhere((r) => r.playerId == index);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.person, size: 40),
+            const SizedBox(width: 10),
+            Expanded(child: Text(r.player.name)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InfoPanel(
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: rowWidth,
+                        child: Text(
+                          'Score',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          '(Win/Draw/Lose)',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.tertiary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: rowWidth,
+                        child: Text(
+                          r.points!.toStringAsFixed(1),
+                          style: Theme.of(context).textTheme.headlineLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          '(${r.wins}/${r.draws}/${r.losses})',
+                          style: Theme.of(context).textTheme.headlineLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  InfoRow(
+                    'Current Rank:',
+                    '#${r.rank} ${r.sharedPlace.isNotEmpty ? '(shared)' : ''}',
+                    titleWidth: rowWidth,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            InfoRow(
+              'Tiebreak:',
+              '${tournament.settings.tb1.formatScore(r.tiebreak1!)} (${tournament.settings.tb1.shortName})',
+              titleWidth: rowWidth,
+            ),
+            InfoRow('Start Rank:', '#${index + 1}', titleWidth: rowWidth),
+            InfoRow(
+              'Rating:',
+              r.player.rating > 0 ? r.player.rating.toString() : 'N/A',
+              titleWidth: rowWidth,
+            ),
+            InfoRow(
+              'Performance:',
+              '',
+              titleWidth: rowWidth,
+              contentWidget: Row(
+                children: [
+                  if (r.player.rating > 0 && r.performance! > 0)
+                    Transform.rotate(
+                      angle: (r.player.rating - r.performance!).sign * 0.8,
+                      child: Icon(
+                        size: 12,
+                        Icons.arrow_forward,
+                        color: r.performance! > r.player.rating
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                    ),
+                  Text(r.performance == 0 ? '-' : r.performance.toString()),
+                ],
+              ),
+            ),
+            InfoRow(
+              'Status:',
+              r.player.leftAt == null ? 'Active' : 'Withdrawn',
+              titleWidth: rowWidth,
+            ),
+            if (r.player.joinedAt > 0)
+              InfoRow(
+                'Joined at:',
+                'Round ${r.player.joinedAt}',
+                titleWidth: rowWidth,
+              ),
+            if (r.player.leftAt != null)
+              InfoRow(
+                'Left at:',
+                'Round ${r.player.leftAt}',
+                titleWidth: rowWidth,
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
     );
   }
 

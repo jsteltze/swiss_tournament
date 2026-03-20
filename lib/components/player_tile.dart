@@ -9,6 +9,7 @@ class PlayerTile extends StatelessWidget {
   final bool detailed;
   final bool alignLeft;
   final PopupMenuButton? popup;
+  final VoidCallback? onTap;
 
   const PlayerTile({
     super.key,
@@ -18,6 +19,7 @@ class PlayerTile extends StatelessWidget {
     bool? alignLeft,
     this.points,
     this.popup,
+    this.onTap,
   }) : detailed = detailed ?? false,
        alignLeft = alignLeft ?? true;
 
@@ -33,6 +35,7 @@ class PlayerTile extends StatelessWidget {
       );
     }
     return ListTile(
+      onTap: onTap,
       title: Text(player.name, style: style),
       subtitle: index == -1
           ? null

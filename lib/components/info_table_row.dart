@@ -26,14 +26,7 @@ class InfoRow extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: contentWidget != null
-              ? contentWidget!
-              : Text(
-                  contentText,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
+          child: contentWidget != null ? contentWidget! : Text(contentText),
         ),
       ],
     );
