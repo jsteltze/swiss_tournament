@@ -488,60 +488,102 @@ void showEditPlayerDialog(
     text: player?.rating.toString(),
   );
   final formKey = GlobalKey<FormState>();
+  final nameKey = GlobalKey();
+  final ratingKey = GlobalKey();
+  final FocusNode focusNode = FocusNode();
   final isLateJoin = player == null && tournament.rounds.isNotEmpty;
+  focusNode.addListener(() {
+    if (focusNode.hasFocus) {
+      // Small delay to ensure the keyboard is fully visible
+      Future.delayed(Duration(milliseconds: 700), () {
+        Scrollable.ensureVisible(
+          focusNode.context!,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+        );
+      });
+    }
+  });
 
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
+        insetPadding: EdgeInsets.all(20),
         title: Text(
           '${player == null ? 'New' : 'Edit'} Player${isLateJoin ? ' (Late Join)' : ''}',
         ),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isLateJoin) ...[
-                const Warning(
-                  'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
+        content: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isLateJoin) ...[
+                  const Warning(
+                    'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
+                  ),
+                  const SizedBox(height: 25),
+                ],
+                TextFormField(
+                  key: nameKey,
+                  onTap: () {
+                    // Small delay to ensure the keyboard is fully visible
+                    Future.delayed(Duration(milliseconds: 700), () {
+                      Scrollable.ensureVisible(
+                        nameKey.currentContext!,
+                        alignment: 0.5,
+                        //duration: Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
+                      );
+                    });
+                  },
+                  controller: nameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a player name';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Player name',
+                    border: OutlineInputBorder(),
+                  ),
+                  autofocus: !isLateJoin,
                 ),
                 const SizedBox(height: 25),
+                TextFormField(
+                  key: ratingKey,
+                  onTap: () {
+                    // Small delay to ensure the keyboard is fully visible
+                    Future.delayed(Duration(milliseconds: 700), () {
+                      Scrollable.ensureVisible(
+                        ratingKey.currentContext!,
+                        alignment: 0.5,
+                        //duration: Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
+                      );
+                    });
+                  },
+                  controller: ratingController,
+                  validator: (value) {
+                    if (value == null ||
+                        value.isEmpty ||
+                        int.tryParse(value) != null) {
+                      return null;
+                    }
+                    return 'Please enter a valid rating (integer)';
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Player rating',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                ),
               ],
-              TextFormField(
-                controller: nameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a player name';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Player name',
-                  border: OutlineInputBorder(),
-                ),
-                autofocus: true,
-              ),
-              const SizedBox(height: 25),
-              TextFormField(
-                controller: ratingController,
-                validator: (value) {
-                  if (value == null ||
-                      value.isEmpty ||
-                      int.tryParse(value) != null) {
-                    return null;
-                  }
-                  return 'Please enter a valid rating (integer)';
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Player rating',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              ),
-            ],
+            ),
           ),
         ),
         actions: <Widget>[
