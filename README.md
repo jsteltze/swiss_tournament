@@ -22,4 +22,3 @@ This project is a Flutter application written in Dart.
 - Einheitliche Dialog-Funktion mit ScrollView
 - Abfangen: weniger Spieler als Runden
 - Mehr Snackbars (Player created etc.)
-- in Players Dialog Einzelergebisse auflisten

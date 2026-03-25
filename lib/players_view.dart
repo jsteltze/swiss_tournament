@@ -226,6 +226,7 @@ class PlayersView extends StatelessWidget {
 
   void _showPlayerDetailsDialog(BuildContext context, int index) {
     final rowWidth = 110.0;
+    final resultWidth = 50.0;
     // map to PlayerRatings class
     final ratings = tournament.players
         .map(
@@ -294,7 +295,7 @@ class PlayersView extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 InfoRow(
-                  'Current Rank:',
+                  '${tournament.isFinished() ? 'Final' : 'Current'} Rank:',
                   '#${r.rank} ${r.sharedPlace.isNotEmpty ? '(shared)' : ''}',
                   titleWidth: rowWidth,
                 ),
@@ -351,6 +352,60 @@ class PlayersView extends StatelessWidget {
               'Round ${r.player.leftAt}',
               titleWidth: rowWidth,
             ),
+          if (tournament.rounds.isNotEmpty) ...[
+            SizedBox(height: 10),
+            InfoRow('Results:', ''),
+            ...tournament.rounds.map((r) {
+              final encounter = r.encounters.firstWhere(
+                (e) => e.playerIdB == index || e.playerIdW == index,
+              );
+              final isWhite = encounter.playerIdW == index;
+              String result = encounter.result;
+              if (isWhite) {
+                if (result == '0.5-0.5') result = '½';
+                if (result == '1-0') result = '1';
+                if (result == '0-1') result = '0';
+                if (result == '+ -') result = '+';
+                if (result == '- +') result = '-';
+              } else {
+                if (result == '0.5-0.5') result = '½';
+                if (result == '1-0') result = '0';
+                if (result == '0-1') result = '1';
+                if (result == '+ -') result = '-';
+                if (result == '- +') result = '+';
+              }
+              final tableDeco = BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                border: BoxBorder.all(
+                  color: Theme.of(context).colorScheme.secondary.withAlpha(100),
+                ),
+              );
+              return Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: tableDeco,
+                      child: Text(
+                        tournament
+                            .players[isWhite
+                                ? encounter.playerIdB
+                                : encounter.playerIdW]
+                            .name,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: resultWidth,
+                    decoration: tableDeco,
+                    child: Text('$result (${isWhite ? 'w' : 'b'})'),
+                  ),
+                ],
+              );
+            }),
+          ],
         ],
       ),
       closeButtonTitle: 'Close',

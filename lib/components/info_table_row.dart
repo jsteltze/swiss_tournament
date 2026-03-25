@@ -4,6 +4,7 @@ class InfoRow extends StatelessWidget {
   final String title;
   final String contentText;
   final Widget? contentWidget;
+  final Decoration? decoration;
   final double titleWidth;
 
   const InfoRow(
@@ -11,6 +12,7 @@ class InfoRow extends StatelessWidget {
     this.contentText, {
     super.key,
     double? titleWidth,
+    this.decoration,
     this.contentWidget,
   }) : titleWidth = titleWidth ?? 75;
 
@@ -18,15 +20,19 @@ class InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
+        Container(
           width: titleWidth,
+          decoration: decoration,
           child: Text(
             title,
             style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
           ),
         ),
         Expanded(
-          child: contentWidget != null ? contentWidget! : Text(contentText),
+          child: Container(
+            decoration: decoration,
+            child: contentWidget != null ? contentWidget! : Text(contentText),
+          ),
         ),
       ],
     );
