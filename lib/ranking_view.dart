@@ -9,6 +9,7 @@ import 'package:swiss_tournament/utils/logger.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
+import 'dialogs/dialog_utils.dart';
 
 class RankingView extends StatelessWidget {
   final Tournament tournament;
@@ -29,109 +30,96 @@ class RankingView extends StatelessWidget {
     var selectedTiebreak1 = tournament.settings.tb1;
     var selectedTiebreak2 = tournament.settings.tb2;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: const Text('Ranking Settings'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InputTitle('Tiebreak 1:'),
-                  DropdownButton<Tiebreak>(
-                    value: selectedTiebreak1,
-                    isExpanded: true,
-                    items: Tiebreak.values.map<DropdownMenuItem<Tiebreak>>((
-                      Tiebreak value,
-                    ) {
-                      return DropdownMenuItem<Tiebreak>(
-                        value: value,
-                        child: Text(value.longName),
-                      );
-                    }).toList(),
-                    onChanged: (Tiebreak? newValue) {
-                      setDialogState(() {
-                        selectedTiebreak1 = newValue!;
-                        if (selectedTiebreak1 == Tiebreak.no) {
-                          selectedTiebreak2 = Tiebreak.no;
-                        }
-                      });
-                    },
-                  ),
-                  Description(selectedTiebreak1.description),
-                  const SizedBox(height: 20),
-                  if (selectedTiebreak1 != Tiebreak.no) ...[
-                    InputTitle('Tiebreak 2:'),
-                    DropdownButton<Tiebreak>(
-                      value: selectedTiebreak2,
-                      isExpanded: true,
-                      items: Tiebreak.values.map<DropdownMenuItem<Tiebreak>>((
-                        Tiebreak value,
-                      ) {
-                        return DropdownMenuItem<Tiebreak>(
-                          value: value,
-                          child: Text(value.longName),
-                        );
-                      }).toList(),
-                      onChanged: (Tiebreak? newValue) {
-                        setDialogState(() {
-                          selectedTiebreak2 = newValue!;
-                        });
-                      },
-                    ),
-                    Description(selectedTiebreak2.description),
-                  ],
-                  const SizedBox(height: 20),
-                  InputTitle('Export:'),
-                  TextButton(
-                    onPressed: () async {
-                      final String htmlContent = toHtmlRanking(
-                        tournament,
-                        ratings,
-                        context.mounted ? context : null,
-                      );
-                      final String filename =
-                          '${tournament.title.replaceAll(' ', '_')}_ranking_round_${tournament.rounds.length}.html';
+    openDialog(
+      context,
+      title: 'Ranking Settings',
+      titleIcon: Icon(Icons.settings),
+      child: (ctx, setDialogState) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InputTitle('Tiebreak 1:'),
+          DropdownButton<Tiebreak>(
+            value: selectedTiebreak1,
+            isExpanded: true,
+            items: Tiebreak.values.map<DropdownMenuItem<Tiebreak>>((
+              Tiebreak value,
+            ) {
+              return DropdownMenuItem<Tiebreak>(
+                value: value,
+                child: Text(value.longName),
+              );
+            }).toList(),
+            onChanged: (Tiebreak? newValue) {
+              setDialogState(() {
+                selectedTiebreak1 = newValue!;
+                if (selectedTiebreak1 == Tiebreak.no) {
+                  selectedTiebreak2 = Tiebreak.no;
+                }
+              });
+            },
+          ),
+          Description(selectedTiebreak1.description),
+          const SizedBox(height: 20),
+          if (selectedTiebreak1 != Tiebreak.no) ...[
+            InputTitle('Tiebreak 2:'),
+            DropdownButton<Tiebreak>(
+              value: selectedTiebreak2,
+              isExpanded: true,
+              items: Tiebreak.values.map<DropdownMenuItem<Tiebreak>>((
+                Tiebreak value,
+              ) {
+                return DropdownMenuItem<Tiebreak>(
+                  value: value,
+                  child: Text(value.longName),
+                );
+              }).toList(),
+              onChanged: (Tiebreak? newValue) {
+                setDialogState(() {
+                  selectedTiebreak2 = newValue!;
+                });
+              },
+            ),
+            Description(selectedTiebreak2.description),
+          ],
+          const SizedBox(height: 20),
+          InputTitle('Export:'),
+          TextButton(
+            onPressed: () async {
+              final String htmlContent = toHtmlRanking(
+                tournament,
+                ratings,
+                context.mounted ? context : null,
+              );
+              final String filename =
+                  '${tournament.title.replaceAll(' ', '_')}_ranking_round_${tournament.rounds.length}.html';
 
-                      await ExportHandler.exportToDownloads(
-                        context,
-                        filename,
-                        htmlContent,
-                      );
-                    },
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.file_download_outlined),
-                        Text('Export current ranking as HTML'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    FileLogger.log(
-                      'Applying new tiebreak settings: TB1=$selectedTiebreak1, TB2=$selectedTiebreak2',
-                    );
-                    applyTiebreak(selectedTiebreak1, selectedTiebreak2);
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Save'),
-                ),
+              await ExportHandler.exportToDownloads(
+                context,
+                filename,
+                htmlContent,
+              );
+            },
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.file_download_outlined),
+                Text('Export current ranking as HTML'),
               ],
-            );
-          },
-        );
-      },
+            ),
+          ),
+        ],
+      ),
+      mainAction: DialogAction(
+        title: 'Save',
+        onPressed: () {
+          FileLogger.log(
+            'Applying new tiebreak settings: TB1=$selectedTiebreak1, TB2=$selectedTiebreak2',
+          );
+          applyTiebreak(selectedTiebreak1, selectedTiebreak2);
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 

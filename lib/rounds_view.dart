@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swiss_tournament/components/warning.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/encounters_view.dart';
 import 'package:swiss_tournament/utils/logger.dart';
@@ -7,6 +8,7 @@ import 'components/no_data_tile.dart';
 import 'data/encounter.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
+import 'dialogs/dialog_utils.dart';
 import 'utils/javafo_utils.dart';
 
 // stores ExpansionPanel state information
@@ -154,57 +156,43 @@ class _RoundsViewState extends State<RoundsView> {
   void notifyUnfinishedEncounters(List<Encounter> encounters) {
     var unfinished = encounters.where((e) => e.result.isEmpty).toList();
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Missing results'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                const Text(
-                  'Cannot proceed to the next round because there are missing results:',
-                ),
-                const SizedBox(height: 10),
-                ...unfinished.map(
-                  (e) => Text(
-                    ' - ${widget.tournament.players[e.playerIdW].name} vs ${widget.tournament.players[e.playerIdB].name}',
-                  ),
-                ),
-              ],
+    openDialog(
+      context,
+      title: 'Missing results',
+      titleIcon: Icon(Icons.link_off_sharp),
+      child: (ctx, setDialogState) => ListBody(
+        children: <Widget>[
+          const Warning(
+            'Cannot proceed to the next round because there are missing results:',
+          ),
+          const SizedBox(height: 10),
+          ...unfinished.map(
+            (e) => Text(
+              ' - ${widget.tournament.players[e.playerIdW].name} vs ${widget.tournament.players[e.playerIdB].name}',
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
+        ],
+      ),
+      closeButtonTitle: 'OK',
     );
   }
 
   void notifyTournamentFinished() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Tournament finished'),
-          content: const Text(
-            'Congratulations!\nThe tournament is finished.\n\nYou can now view the ranking.',
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => {
-                Navigator.pop(context),
-                widget.onTournamentFinished?.call(),
-              },
-              child: const Text('Go to ranking'),
-            ),
-          ],
-        );
-      },
+    openDialog(
+      context,
+      title: 'Tournament finished',
+      titleIcon: Icon(Icons.emoji_events_outlined),
+      child: (ctx, setDialogState) => const Text(
+        'Congratulations!\nThe tournament is finished.\n\nYou can now view the ranking.',
+      ),
+      closeButtonTitle: 'Close',
+      mainAction: DialogAction(
+        title: 'Go to ranking',
+        onPressed: () => {
+          Navigator.pop(context),
+          widget.onTournamentFinished?.call(),
+        },
+      ),
     );
   }
 
@@ -263,51 +251,32 @@ class _RoundsViewState extends State<RoundsView> {
   }
 
   void _deleteRound(int roundIndex) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return roundIndex == widget.tournament.rounds.length - 1
-            ? AlertDialog(
-                title: const Text('Delete round'),
-                content: Text(
-                  'Are you sure you want to delete round ${roundIndex + 1}?',
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      FileLogger.log(
-                        'Deleting round ${roundIndex + 1} from tournament ${widget.tournament.id}',
-                      );
-                      widget.tournament.rounds.removeLast();
-                      widget.tournament.update();
-                      setState(() {
-                        _data.removeLast();
-                      });
-                      Navigator.pop(context);
-                      widget.onRoundUpdate?.call();
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                    child: const Text('Delete'),
-                  ),
-                ],
-              )
-            : AlertDialog(
-                title: const Text('Cannot delete round'),
-                content: Text('Only the last round can be deleted!'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Ok'),
-                  ),
-                ],
-              );
-      },
+    openDialog(
+      context,
+      title: 'Delete round',
+      titleIcon: Icon(Icons.delete),
+      child: (ctx, setDialogState) =>
+          roundIndex == widget.tournament.rounds.length - 1
+          ? Text('Are you sure you want to delete round ${roundIndex + 1}?')
+          : Warning('Only the last round can be deleted!'),
+      mainAction: DialogAction(
+        title: 'Delete',
+        isDestructive: true,
+        onPressed: roundIndex == widget.tournament.rounds.length - 1
+            ? () {
+                FileLogger.log(
+                  'Deleting round ${roundIndex + 1} from tournament ${widget.tournament.id}',
+                );
+                widget.tournament.rounds.removeLast();
+                widget.tournament.update();
+                setState(() {
+                  _data.removeLast();
+                });
+                Navigator.pop(context);
+                widget.onRoundUpdate?.call();
+              }
+            : null,
+      ),
     );
   }
 

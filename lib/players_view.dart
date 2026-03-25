@@ -10,6 +10,7 @@ import 'package:swiss_tournament/utils/logger.dart';
 import 'components/no_data_tile.dart';
 import 'data/player.dart';
 import 'data/tournament.dart';
+import 'dialogs/dialog_utils.dart';
 
 class PlayersView extends StatelessWidget {
   final Tournament tournament;
@@ -196,7 +197,10 @@ class PlayersView extends StatelessWidget {
                                 Text(
                                   'Delete',
                                   style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
+                                    color: Theme.of(context).colorScheme.error
+                                        .withAlpha(
+                                          tournament.rounds.isEmpty ? 255 : 150,
+                                        ),
                                   ),
                                 ),
                               ],
@@ -220,7 +224,7 @@ class PlayersView extends StatelessWidget {
   }
 
   void _showPlayerDetailsDialog(BuildContext context, int index) {
-    final rowWidth = 95.0;
+    final rowWidth = 110.0;
     // map to PlayerRatings class
     final ratings = tournament.players
         .map(
@@ -231,136 +235,124 @@ class PlayersView extends StatelessWidget {
     PlayerRatings.calculateRanks(ratings, tournament);
     final r = ratings.firstWhere((r) => r.playerId == index);
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            const Icon(Icons.person, size: 40),
-            const SizedBox(width: 10),
-            Expanded(child: Text(r.player.name)),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InfoPanel(
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: rowWidth,
-                        child: Text(
-                          'Score',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
+    openDialog(
+      context,
+      title: r.player.name,
+      titleIcon: Icon(Icons.person),
+      child: (ctx, setDialogState) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InfoPanel(
+            Column(
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: rowWidth,
+                      child: Text(
+                        'Score',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.tertiary,
                         ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          '(Win/Draw/Lose)',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.tertiary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: rowWidth,
-                        child: Text(
-                          r.points!.toStringAsFixed(1),
-                          style: Theme.of(context).textTheme.headlineLarge!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          '(${r.wins}/${r.draws}/${r.losses})',
-                          style: Theme.of(context).textTheme.headlineLarge!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  InfoRow(
-                    'Current Rank:',
-                    '#${r.rank} ${r.sharedPlace.isNotEmpty ? '(shared)' : ''}',
-                    titleWidth: rowWidth,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            InfoRow(
-              'Tiebreak:',
-              '${tournament.settings.tb1.formatScore(r.tiebreak1!)} (${tournament.settings.tb1.shortName})',
-              titleWidth: rowWidth,
-            ),
-            InfoRow('Start Rank:', '#${index + 1}', titleWidth: rowWidth),
-            InfoRow(
-              'Rating:',
-              r.player.rating > 0 ? r.player.rating.toString() : 'N/A',
-              titleWidth: rowWidth,
-            ),
-            InfoRow(
-              'Performance:',
-              '',
-              titleWidth: rowWidth,
-              contentWidget: Row(
-                children: [
-                  if (r.player.rating > 0 && r.performance! > 0)
-                    Transform.rotate(
-                      angle: (r.player.rating - r.performance!).sign * 0.8,
-                      child: Icon(
-                        size: 12,
-                        Icons.arrow_forward,
-                        color: r.performance! > r.player.rating
-                            ? Colors.green
-                            : Colors.red,
                       ),
                     ),
-                  Text(r.performance == 0 ? '-' : r.performance.toString()),
-                ],
-              ),
+                    Expanded(
+                      child: Text(
+                        '(Win/Draw/Lose)',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: rowWidth,
+                      child: Text(
+                        r.points!.toStringAsFixed(1),
+                        style: Theme.of(context).textTheme.headlineLarge!
+                            .copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        '(${r.wins}/${r.draws}/${r.losses})',
+                        style: Theme.of(context).textTheme.headlineLarge!
+                            .copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                InfoRow(
+                  'Current Rank:',
+                  '#${r.rank} ${r.sharedPlace.isNotEmpty ? '(shared)' : ''}',
+                  titleWidth: rowWidth,
+                ),
+              ],
             ),
+          ),
+          const SizedBox(height: 10),
+          InfoRow(
+            'Tiebreak:',
+            '${tournament.settings.tb1.formatScore(r.tiebreak1!)} (${tournament.settings.tb1.shortName})',
+            titleWidth: rowWidth,
+          ),
+          InfoRow('Start Rank:', '#${index + 1}', titleWidth: rowWidth),
+          InfoRow(
+            'Rating:',
+            r.player.rating > 0 ? r.player.rating.toString() : 'N/A',
+            titleWidth: rowWidth,
+          ),
+          InfoRow(
+            'Performance:',
+            '',
+            titleWidth: rowWidth,
+            contentWidget: Row(
+              children: [
+                if (r.player.rating > 0 && r.performance! > 0)
+                  Transform.rotate(
+                    angle: (r.player.rating - r.performance!).sign * 0.8,
+                    child: Icon(
+                      size: 12,
+                      Icons.arrow_forward,
+                      color: r.performance! > r.player.rating
+                          ? Colors.green
+                          : Colors.red,
+                    ),
+                  ),
+                Text(r.performance == 0 ? '-' : r.performance.toString()),
+              ],
+            ),
+          ),
+          InfoRow(
+            'Status:',
+            r.player.leftAt == null ? 'Active' : 'Withdrawn',
+            titleWidth: rowWidth,
+          ),
+          if (r.player.joinedAt > 0)
             InfoRow(
-              'Status:',
-              r.player.leftAt == null ? 'Active' : 'Withdrawn',
+              'Joined at:',
+              'Round ${r.player.joinedAt}',
               titleWidth: rowWidth,
             ),
-            if (r.player.joinedAt > 0)
-              InfoRow(
-                'Joined at:',
-                'Round ${r.player.joinedAt}',
-                titleWidth: rowWidth,
-              ),
-            if (r.player.leftAt != null)
-              InfoRow(
-                'Left at:',
-                'Round ${r.player.leftAt}',
-                titleWidth: rowWidth,
-              ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
+          if (r.player.leftAt != null)
+            InfoRow(
+              'Left at:',
+              'Round ${r.player.leftAt}',
+              titleWidth: rowWidth,
+            ),
         ],
       ),
+      closeButtonTitle: 'Close',
     );
   }
 
@@ -370,34 +362,25 @@ class PlayersView extends StatelessWidget {
     Player player,
     VoidCallback? onPlayersChanged,
   ) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Player'),
-          content: Text('Are you sure you want to delete "${player.name}"?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                FileLogger.log(
-                  'Deleting player "${player.name}" from tournament ID: ${tournament.id}',
-                );
-                tournament.players.remove(player);
-                onPlayersChanged?.call();
-                Navigator.pop(context);
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
+    openDialog(
+      context,
+      title: 'Delete Player',
+      titleIcon: Icon(Icons.delete),
+      child: (ctx, setDialogState) => Text(
+        'Are you sure you want to delete "${player.name}"?\n\nYou can also withdraw the player. In this case the player is just disabled and can be re-enabled in future rounds.',
+      ),
+      mainAction: DialogAction(
+        title: 'Delete',
+        isDestructive: true,
+        onPressed: () {
+          FileLogger.log(
+            'Deleting player "${player.name}" from tournament ID: ${tournament.id}',
+          );
+          tournament.players.remove(player);
+          onPlayersChanged?.call();
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 
@@ -407,36 +390,25 @@ class PlayersView extends StatelessWidget {
     Player player,
     VoidCallback? onPlayersChanged,
   ) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Withdraw Player'),
-          content: Text(
-            'Are you sure you want to withdraw (disable) "${player.name}"?\nDisabled players will not be paired in future rounds.',
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                FileLogger.log(
-                  'Withdrawing player "${player.name}" (left at round ${tournament.rounds.length})',
-                );
-                player.leftAt = tournament.rounds.length;
-                onPlayersChanged?.call();
-                Navigator.pop(context);
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('Disable'),
-            ),
-          ],
-        );
-      },
+    openDialog(
+      context,
+      title: 'Withdraw Player',
+      titleIcon: Icon(Icons.person_off),
+      child: (ctx, setDialogState) => Text(
+        'Are you sure you want to withdraw (disable) "${player.name}"?\nDisabled players will not be paired in future rounds but can be re-enabled.',
+      ),
+      mainAction: DialogAction(
+        title: 'Disable',
+        onPressed: () {
+          FileLogger.log(
+            'Withdrawing player "${player.name}" (left at round ${tournament.rounds.length})',
+          );
+          player.leftAt = tournament.rounds.length;
+          onPlayersChanged?.call();
+          Navigator.pop(context);
+        },
+        isDestructive: true,
+      ),
     );
   }
 
@@ -446,31 +418,22 @@ class PlayersView extends StatelessWidget {
     Player player,
     VoidCallback? onPlayersChanged,
   ) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Re-enable Player'),
-          content: Text(
-            'Are you sure you want to re-enable "${player.name}"?\nThis player will be paired again in future rounds.',
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                FileLogger.log('Re-enabling player "${player.name}"');
-                player.leftAt = null;
-                onPlayersChanged?.call();
-                Navigator.pop(context);
-              },
-              child: const Text('Re-enable'),
-            ),
-          ],
-        );
-      },
+    openDialog(
+      context,
+      title: 'Re-enable Player',
+      titleIcon: Icon(Icons.person),
+      child: (ctx, setDialogState) => Text(
+        'Are you sure you want to re-enable "${player.name}"?\nThis player will be paired again in future rounds.',
+      ),
+      mainAction: DialogAction(
+        title: 'Re-enable',
+        onPressed: () {
+          FileLogger.log('Re-enabling player "${player.name}"');
+          player.leftAt = null;
+          onPlayersChanged?.call();
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 }
@@ -490,76 +453,60 @@ void showEditPlayerDialog(
   final formKey = GlobalKey<FormState>();
   final isLateJoin = player == null && tournament.rounds.isNotEmpty;
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        insetPadding: EdgeInsets.all(20),
-        title: Text(
-          '${player == null ? 'New' : 'Edit'} Player${isLateJoin ? ' (Late Join)' : ''}',
-        ),
-        content: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isLateJoin) ...[
-                  const Warning(
-                    'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
-                  ),
-                  const SizedBox(height: 25),
-                ],
-                InputField(
-                  'Player name',
-                  nameController,
-                  autoFocus: !isLateJoin,
-                ),
-                const SizedBox(height: 25),
-                InputField(
-                  'Player rating',
-                  ratingController,
-                  isOptional: true,
-                  inputType: TextInputType.number,
-                ),
-              ],
+  openDialog(
+    context,
+    title:
+        '${player == null ? 'New' : 'Edit'} Player${isLateJoin ? ' (Late Join)' : ''}',
+    titleIcon: Icon(player == null ? Icons.person_add_alt_1 : Icons.edit),
+    child: (ctx, setDialogState) => Form(
+      key: formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (isLateJoin) ...[
+            const Warning(
+              'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
             ),
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                final isAdding = player == null;
-                player ??= Player(joinedAt: tournament.rounds.length);
-                player!.name = nameController.text.trim();
-                player!.rating = int.parse(
-                  ratingController.text.isEmpty ? '0' : ratingController.text,
-                );
-                if (isAdding) {
-                  FileLogger.log(
-                    'Adding new player: ${player!.name} (Rating: ${player!.rating})',
-                  );
-                  tournament.addPlayer(player!);
-                } else {
-                  FileLogger.log(
-                    'Edited player: ${player!.name} (Rating: ${player!.rating})',
-                  );
-                  tournament.sortPlayers();
-                }
-                onPlayersChanged?.call();
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Save'),
+            const SizedBox(height: 25),
+          ],
+          InputField('Player name', nameController, autoFocus: !isLateJoin),
+          const SizedBox(height: 25),
+          InputField(
+            'Player rating',
+            ratingController,
+            isOptional: true,
+            inputType: TextInputType.number,
           ),
         ],
-      );
-    },
+      ),
+    ),
+    mainAction: DialogAction(
+      title: 'Save',
+      onPressed: () {
+        if (formKey.currentState!.validate()) {
+          final isAdding = player == null;
+          player ??= Player(joinedAt: tournament.rounds.length);
+          player!.name = nameController.text.trim();
+          player!.rating = int.parse(
+            ratingController.text.isEmpty ? '0' : ratingController.text,
+          );
+          if (isAdding) {
+            FileLogger.log(
+              'Adding new player: ${player!.name} (Rating: ${player!.rating})',
+            );
+            tournament.addPlayer(player!);
+          } else {
+            FileLogger.log(
+              'Edited player: ${player!.name} (Rating: ${player!.rating})',
+            );
+            tournament.sortPlayers();
+          }
+          onPlayersChanged?.call();
+          Navigator.pop(context);
+        }
+      },
+    ),
+    closeButtonTitle: 'Cancel',
   );
 }

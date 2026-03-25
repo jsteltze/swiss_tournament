@@ -7,6 +7,7 @@ import 'package:swiss_tournament/data/tournament.dart';
 import 'data/player.dart';
 import 'data/player_ratings.dart';
 import 'data/round.dart';
+import 'dialogs/dialog_utils.dart';
 
 class SingleEncounterView extends StatelessWidget {
   final Round round;
@@ -133,124 +134,114 @@ class SingleEncounterView extends StatelessWidget {
         ? encounter.result
         : null;
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: const Text('Select Result'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Enter result for:"),
-                  InfoPanel(
+    openDialog(
+      context,
+      title: 'Select Result',
+      titleIcon: Icon(Icons.safety_divider),
+      child: (ctx, setDialogState) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Enter result for:"),
+          InfoPanel(
+            Text(
+              "${tournament.players[encounter.playerIdW].name} vs ${tournament.players[encounter.playerIdB].name}",
+            ),
+          ),
+          const SizedBox(height: 20),
+          DropdownButton<String>(
+            isExpanded: true,
+            value: selectedResult,
+            hint: const Text("Select result"),
+            items: [
+              DropdownMenuItem(
+                value: "1-0",
+                child: Row(
+                  children: [
+                    Expanded(child: Text("1-0")),
                     Text(
-                      "${tournament.players[encounter.playerIdW].name} vs ${tournament.players[encounter.playerIdB].name}",
+                      "(white win)",
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  DropdownButton<String>(
-                    isExpanded: true,
-                    value: selectedResult,
-                    hint: const Text("Select result"),
-                    items: [
-                      DropdownMenuItem(
-                        value: "1-0",
-                        child: Row(
-                          children: [
-                            Expanded(child: Text("1-0")),
-                            Text(
-                              "(white win)",
-                              style: Theme.of(context).textTheme.bodySmall!
-                                  .copyWith(fontStyle: FontStyle.italic),
-                            ),
-                          ],
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: "0-1",
-                        child: Row(
-                          children: [
-                            Expanded(child: Text("0-1")),
-                            Text(
-                              "(black win)",
-                              style: Theme.of(context).textTheme.bodySmall!
-                                  .copyWith(fontStyle: FontStyle.italic),
-                            ),
-                          ],
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: "0.5-0.5",
-                        child: Row(
-                          children: [
-                            Expanded(child: Text("\u{00BD}-\u{00BD}")),
-                            Text(
-                              "(draw)",
-                              style: Theme.of(context).textTheme.bodySmall!
-                                  .copyWith(fontStyle: FontStyle.italic),
-                            ),
-                          ],
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: "+ -",
-                        child: Row(
-                          children: [
-                            Expanded(child: Text("+ -")),
-                            Text(
-                              "(uncontested white)",
-                              style: Theme.of(context).textTheme.bodySmall!
-                                  .copyWith(fontStyle: FontStyle.italic),
-                            ),
-                          ],
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: "- +",
-                        child: Row(
-                          children: [
-                            Expanded(child: Text("- +")),
-                            Text(
-                              "(uncontested black)",
-                              style: Theme.of(context).textTheme.bodySmall!
-                                  .copyWith(fontStyle: FontStyle.italic),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    onChanged: (String? newValue) {
-                      setDialogState(() {
-                        selectedResult = newValue;
-                      });
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Cancel'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+              DropdownMenuItem(
+                value: "0-1",
+                child: Row(
+                  children: [
+                    Expanded(child: Text("0-1")),
+                    Text(
+                      "(black win)",
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  child: const Text('Save'),
-                  onPressed: () {
-                    encounter.result = selectedResult!;
-                    tournament.update();
-                    Navigator.of(context).pop();
-                    updateParent();
-                  },
+              ),
+              DropdownMenuItem(
+                value: "0.5-0.5",
+                child: Row(
+                  children: [
+                    Expanded(child: Text("\u{00BD}-\u{00BD}")),
+                    Text(
+                      "(draw)",
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            );
-          },
-        );
-      },
+              ),
+              DropdownMenuItem(
+                value: "+ -",
+                child: Row(
+                  children: [
+                    Expanded(child: Text("+ -")),
+                    Text(
+                      "(uncontested white)",
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              DropdownMenuItem(
+                value: "- +",
+                child: Row(
+                  children: [
+                    Expanded(child: Text("- +")),
+                    Text(
+                      "(uncontested black)",
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            onChanged: (String? newValue) {
+              setDialogState(() {
+                selectedResult = newValue;
+              });
+            },
+          ),
+        ],
+      ),
+      mainAction: DialogAction(
+        title: 'Save',
+        onPressed: () {
+          encounter.result = selectedResult!;
+          tournament.update();
+          Navigator.of(context).pop();
+          updateParent();
+        },
+      ),
     );
   }
 }
