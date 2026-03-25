@@ -51,28 +51,31 @@ class PlayerTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    '${detailed ? '| Rating: ' : '('}${player.rating > 0 ? player.rating : 'N/A'}${detailed ? '' : ')'}',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
+                Text(
+                  '${detailed ? '| Rating: ' : '('}${player.rating > 0 ? player.rating : 'N/A'}${detailed ? '' : ')'}',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
                   ),
                 ),
                 if (detailed && player.leftAt != null)
-                  Text(
-                    'withdraw after round ${player.leftAt}',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontStyle: FontStyle.italic,
+                  Expanded(
+                    child: Text(
+                      'withdrawn ${player.leftAt == 0 ? '' : '(round ${player.leftAt})'}',
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                   ),
                 if (detailed && player.joinedAt > 0 && player.leftAt == null)
-                  Text(
-                    'joined after round ${player.joinedAt}',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontStyle: FontStyle.italic,
+                  Expanded(
+                    child: Text(
+                      'joined after round ${player.joinedAt}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                   ),
               ],
