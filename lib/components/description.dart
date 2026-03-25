@@ -17,15 +17,20 @@ class _DescriptionState extends State<Description> {
   @override
   Widget build(BuildContext context) {
     if (widget.isExpandable) {
-      final firstSpaceAfter100 = widget.text.indexOf(' ', 100);
-      final shortText = '${widget.text.substring(0, firstSpaceAfter100)}...';
+      final foldIndex = widget.text.indexOf(' ', 80);
+      final shortText = '${widget.text.substring(0, foldIndex)}...';
       return Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(
-            _isExpanded ? widget.text : shortText,
-            style: Theme.of(context).textTheme.bodySmall!.copyWith(
-              color: Theme.of(context).colorScheme.secondary,
+          AnimatedSize(
+            curve: Curves.easeInOut,
+            alignment: Alignment.topCenter,
+            duration: Duration(milliseconds: 500),
+            child: Text(
+              _isExpanded ? widget.text : shortText,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
           ),
           TextButton(
