@@ -120,7 +120,11 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
           ? FloatingActionButton(
               onPressed: _addPlayer,
               tooltip: 'Add Player',
-              child: const Icon(Icons.add),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: Icon(
+                Icons.add,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             )
           : null,
       bottomNavigationBar: BottomNavigationBar(

@@ -301,7 +301,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ],
                     ),
-                    leading: const Icon(Icons.emoji_events),
+                    leading: Icon(
+                      Icons.emoji_events,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                     onTap: () => _navigateToTournamentDetails(tournament),
                   ),
                 );
@@ -310,7 +313,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addTournament,
         tooltip: 'Add Tournament',
-        child: const Icon(Icons.add),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
       ),
     );
   }
