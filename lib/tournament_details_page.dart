@@ -116,7 +116,8 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         ],
       ),
       body: bodyContent,
-      floatingActionButton: _selectedIndex == 0
+      floatingActionButton:
+          _selectedIndex == 0 && !widget.tournament.isFinished()
           ? FloatingActionButton(
               onPressed: _addPlayer,
               tooltip: 'Add Player',
