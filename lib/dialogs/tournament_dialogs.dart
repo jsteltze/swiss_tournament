@@ -10,6 +10,7 @@ import '../data/first_round_pairing.dart';
 import '../data/tournament.dart';
 import '../data/tournament_storage.dart';
 import '../utils/export_handler.dart';
+import '../utils/snackbar_utils.dart';
 import 'dialog_utils.dart';
 
 void showEditTournamentDialog(
@@ -85,12 +86,17 @@ void showEditTournamentDialog(
       title: 'Save',
       onPressed: () {
         if (formKey.currentState!.validate()) {
+          final isAdding = tournament == null;
           tournament ??= Tournament();
           tournament!.title = titleController.text;
           tournament!.numberOfRounds = int.parse(roundsController.text);
           tournament!.update();
           Navigator.pop(context);
           onSave(tournament!);
+          showSnackbar(
+            context,
+            'Tournament "${tournament!.title}" ${isAdding ? 'added' : 'edited'}',
+          );
         }
       },
     ),
@@ -113,6 +119,7 @@ void confirmDeleteTournament(
       onPressed: () {
         Navigator.pop(context);
         onDelete();
+        showSnackbar(context, 'Tournament "${tournament.title}" deleted');
       },
       isDestructive: true,
     ),
@@ -287,6 +294,7 @@ void showDuplicateTournamentDialog(
           if (context.mounted) {
             Navigator.pop(context); // Close dialog
             onDuplicate();
+            showSnackbar(context, 'Tournament "${newTournament.title}" added');
           }
         }
       },
@@ -365,6 +373,7 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
               tournament.settings.baku = currentBaku;
               tournament.update();
               Navigator.pop(context);
+              showSnackbar(context, 'Tournament settings saved');
             },
     ),
   );

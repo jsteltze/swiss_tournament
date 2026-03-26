@@ -10,6 +10,7 @@ import '../components/warning.dart';
 import '../data/encounter.dart';
 import '../data/player.dart';
 import '../data/player_ratings.dart';
+import '../utils/snackbar_utils.dart';
 import 'dialog_utils.dart';
 
 void showPlayerDetailsDialog(
@@ -246,6 +247,7 @@ void confirmDeletePlayer(
         tournament.players.remove(player);
         onPlayersChanged?.call();
         Navigator.pop(context);
+        showSnackbar(context, 'Player "${player.name}" deleted');
       },
     ),
   );
@@ -273,6 +275,7 @@ void confirmDisablePlayer(
         player.leftAt = tournament.rounds.length;
         onPlayersChanged?.call();
         Navigator.pop(context);
+        showSnackbar(context, 'Player "${player.name}" disabled');
       },
       isDestructive: true,
     ),
@@ -299,6 +302,7 @@ void confirmReenablePlayer(
         player.leftAt = null;
         onPlayersChanged?.call();
         Navigator.pop(context);
+        showSnackbar(context, 'Player "${player.name}" re-enabled');
       },
     ),
   );
@@ -377,6 +381,10 @@ void showEditPlayerDialog(
           }
           onPlayersChanged?.call();
           Navigator.pop(context);
+          showSnackbar(
+            context,
+            'Player "${player!.name}" ${isAdding ? 'added' : 'edited'}',
+          );
         }
       },
     ),

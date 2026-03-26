@@ -18,4 +18,3 @@ This project is a Flutter application written in Dart.
 ### TODOs:
 
 - Welcome Dialog
-- Mehr Snackbars (Player created etc.)

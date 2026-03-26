@@ -3,6 +3,7 @@ import 'package:swiss_tournament/components/warning.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/encounters_view.dart';
 import 'package:swiss_tournament/utils/logger.dart';
+import 'package:swiss_tournament/utils/snackbar_utils.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/encounter.dart';
@@ -293,6 +294,7 @@ class _RoundsViewState extends State<RoundsView> {
                 });
                 Navigator.pop(context);
                 widget.onRoundUpdate?.call();
+                showSnackbar(context, 'Round deleted');
               }
             : null,
       ),

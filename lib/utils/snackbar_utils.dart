@@ -6,6 +6,7 @@ void showSnackbar(BuildContext ctx, String text, [bool isError = false]) {
       SnackBar(
         content: Text(
           text,
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: isError
                 ? Theme.of(ctx).colorScheme.onErrorContainer

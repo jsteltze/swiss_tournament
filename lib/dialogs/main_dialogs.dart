@@ -360,6 +360,7 @@ void showLogsDialog(BuildContext context) {
         title: 'Clear',
         onPressed: () {
           FileLogger.clearLogs();
+          showSnackbar(context, 'Logs removed');
           Navigator.pop(context);
         },
         isDestructive: true,

@@ -6,6 +6,7 @@ import 'package:swiss_tournament/data/tiebreak.dart';
 import 'package:swiss_tournament/utils/export_handler.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
 import 'package:swiss_tournament/utils/logger.dart';
+import 'package:swiss_tournament/utils/snackbar_utils.dart';
 
 import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
@@ -118,6 +119,7 @@ class RankingView extends StatelessWidget {
           );
           applyTiebreak(selectedTiebreak1, selectedTiebreak2);
           Navigator.pop(context);
+          showSnackbar(context, 'Ranking settings saved');
         },
       ),
     );
