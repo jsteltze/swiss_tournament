@@ -18,7 +18,4 @@ This project is a Flutter application written in Dart.
 ### TODOs:
 
 - Welcome Dialog
-- Dialoge werden zusammengeschoben bei Tastatur overlay
-- Einheitliche Dialog-Funktion mit ScrollView
-- Abfangen: weniger Spieler als Runden
 - Mehr Snackbars (Player created etc.)

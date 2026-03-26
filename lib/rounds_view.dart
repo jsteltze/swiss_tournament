@@ -196,13 +196,22 @@ class _RoundsViewState extends State<RoundsView> {
     );
   }
 
+  void notifyNotEnoughPlayers() {
+    openDialog(
+      context,
+      title: 'Not enough players',
+      titleIcon: Icon(Icons.error_outline),
+      child: (ctx, setDialogState) => const Warning(
+        'The number of (active) players is less or equal than the number of rounds.\nA Swiss tournament is not advisable for this conditions.\n\nIf the number of players is relatively small think about different tournament modes (like Round-Robin). Otherwise add more players or reduce the number of rounds.',
+      ),
+      closeButtonTitle: 'Close',
+    );
+  }
+
   void _startNewRound() async {
     setState(() {
       _isLoadingNewRound = true;
     });
-    FileLogger.log(
-      'Starting new round for tournament ID: ${widget.tournament.id}',
-    );
     var currentDbState = await _storage.getTournament(widget.tournament.id!);
     if (currentDbState == null) {
       FileLogger.log('Error: Tournament not found in database!');
@@ -220,7 +229,17 @@ class _RoundsViewState extends State<RoundsView> {
       });
       return;
     }
-
+    if (currentDbState.numberOfRounds >= currentDbState.players.length) {
+      FileLogger.log('notify: not enough players');
+      notifyNotEnoughPlayers();
+      setState(() {
+        _isLoadingNewRound = false;
+      });
+      return;
+    }
+    FileLogger.log(
+      'Starting new round for tournament ID: ${widget.tournament.id}',
+    );
     try {
       var round = callJavaFo(widget.tournament);
       widget.tournament.rounds.add(round);
