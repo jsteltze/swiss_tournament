@@ -5,6 +5,7 @@ import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/components/input_field.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/components/warning.dart';
+import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/utils/logger.dart';
 
@@ -226,7 +227,12 @@ class PlayersView extends StatelessWidget {
 
   void _showPlayerDetailsDialog(BuildContext context, int index) {
     final rowWidth = 110.0;
-    final resultWidth = 50.0;
+    final tableDeco = BoxDecoration(
+      color: Theme.of(context).colorScheme.surfaceContainer,
+      border: BoxBorder.all(
+        color: Theme.of(context).colorScheme.secondary.withAlpha(50),
+      ),
+    );
     // map to PlayerRatings class
     final ratings = tournament.players
         .map(
@@ -358,39 +364,47 @@ class PlayersView extends StatelessWidget {
             ...tournament.rounds.map((r) {
               final encounter = r.encounters.firstWhere(
                 (e) => e.playerIdB == index || e.playerIdW == index,
+                orElse: () => Encounter(playerIdW: -1, playerIdB: -1),
               );
-              final isWhite = encounter.playerIdW == index;
+              String opponentName = '-';
+              String opponentRating = '';
               String result = encounter.result;
-              if (isWhite) {
-                if (result == '0.5-0.5') result = '½';
-                if (result == '1-0') result = '1';
-                if (result == '0-1') result = '0';
-                if (result == '+ -') result = '+';
-                if (result == '- +') result = '-';
-              } else {
-                if (result == '0.5-0.5') result = '½';
-                if (result == '1-0') result = '0';
-                if (result == '0-1') result = '1';
-                if (result == '+ -') result = '-';
-                if (result == '- +') result = '+';
+              if (encounter.playerIdW != -1 || encounter.playerIdB != -1) {
+                final isWhite = encounter.playerIdW == index;
+                if (isWhite) {
+                  if (result == '0.5-0.5') result = '½ (w)';
+                  if (result == '1-0') result = '1 (w)';
+                  if (result == '0-1') result = '0 (w)';
+                  if (result == '+ -') result = '+ (w)';
+                  if (result == '- +') result = '- (w)';
+                } else {
+                  if (result == '0.5-0.5') result = '½ (b)';
+                  if (result == '1-0') result = '0 (b)';
+                  if (result == '0-1') result = '1 (b)';
+                  if (result == '+ -') result = '- (b)';
+                  if (result == '- +') result = '+ (b)';
+                }
+
+                final opponentId = isWhite
+                    ? encounter.playerIdB
+                    : encounter.playerIdW;
+                opponentName = opponentId == -1
+                    ? 'Bye'
+                    : tournament.players[opponentId].name;
+                opponentRating = opponentId == -1
+                    ? ''
+                    : tournament.players[opponentId].rating.toString();
+                if (opponentRating == '0') {
+                  opponentRating = 'N/A';
+                }
               }
-              final tableDeco = BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainer,
-                border: BoxBorder.all(
-                  color: Theme.of(context).colorScheme.secondary.withAlpha(100),
-                ),
-              );
               return Row(
                 children: [
                   Expanded(
                     child: Container(
                       decoration: tableDeco,
                       child: Text(
-                        tournament
-                            .players[isWhite
-                                ? encounter.playerIdB
-                                : encounter.playerIdW]
-                            .name,
+                        opponentName,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -398,9 +412,19 @@ class PlayersView extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    width: resultWidth,
+                    width: 50,
                     decoration: tableDeco,
-                    child: Text('$result (${isWhite ? 'w' : 'b'})'),
+                    child: Text(
+                      opponentRating,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 50,
+                    decoration: tableDeco,
+                    child: Text(result),
                   ),
                 ],
               );
