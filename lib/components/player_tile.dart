@@ -72,6 +72,7 @@ class PlayerTile extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'joined after round ${player.joinedAt}',
+                      textAlign: TextAlign.end,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontStyle: FontStyle.italic,
