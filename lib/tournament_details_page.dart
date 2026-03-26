@@ -4,6 +4,7 @@ import 'package:swiss_tournament/ranking_view.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
+import 'dialogs/player_dialogs.dart';
 import 'players_view.dart';
 import 'rounds_view.dart';
 
