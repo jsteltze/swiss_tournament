@@ -16,7 +16,7 @@ class _DescriptionState extends State<Description> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isExpandable) {
+    if (widget.isExpandable && widget.text.length > 80) {
       final foldIndex = widget.text.indexOf(' ', 80);
       final shortText = '${widget.text.substring(0, foldIndex)}...';
       return Column(
