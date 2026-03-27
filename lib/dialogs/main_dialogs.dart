@@ -281,7 +281,10 @@ void showAppInfoDialog(BuildContext context) {
             ),
             const InfoRow('Language:', 'Flutter 3 / Dart SDK 3'),
             const InfoRow('Database:', 'sqflite'),
-            const InfoRow('Package Info:', 'package_info_plus'),
+            const InfoRow(
+              'Packages:',
+              'package_info_plus, expandable_search_bar_plus, url_launcher',
+            ),
             const InfoRow('Design:', 'Material v3'),
             const InfoRow('Icons:', 'Cupertino Icons'),
             InfoRow(
