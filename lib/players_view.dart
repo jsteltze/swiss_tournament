@@ -7,11 +7,13 @@ import 'dialogs/player_dialogs.dart';
 
 class PlayersView extends StatelessWidget {
   final Tournament tournament;
+  final String filter;
   final VoidCallback? onPlayersChanged;
 
   const PlayersView({
     super.key,
     required this.tournament,
+    required this.filter,
     this.onPlayersChanged,
   });
 
@@ -33,6 +35,13 @@ class PlayersView extends StatelessWidget {
     final int firstLateJoiner = tournament.players.indexWhere(
       (p) => p.joinedAt > 0,
     );
+
+    final filteredPlayers = filter.isEmpty
+        ? tournament.players.toList()
+        : tournament.players
+              .where((p) => p.name.toLowerCase().contains(filter.toLowerCase()))
+              .toList();
+
     // FileLogger.log('firstLateJoiner=$firstLateJoiner');
 
     return Column(
@@ -95,8 +104,13 @@ class PlayersView extends StatelessWidget {
             ),
           ),
         Expanded(
-          child: tournament.players.isEmpty
-              ? NoDataTile(text: 'No players added yet.', icon: Icons.people)
+          child: filteredPlayers.isEmpty
+              ? NoDataTile(
+                  text: filter.isEmpty
+                      ? 'No players added yet.'
+                      : 'No players "$filter".',
+                  icon: Icons.people,
+                )
               : ListView.separated(
                   padding: const EdgeInsets.only(bottom: 80),
                   separatorBuilder: (context, index) =>
@@ -107,9 +121,9 @@ class PlayersView extends StatelessWidget {
                           ).colorScheme.primary.withAlpha(100),
                         )
                       : const Divider(color: Colors.transparent),
-                  itemCount: tournament.players.length,
+                  itemCount: filteredPlayers.length,
                   itemBuilder: (context, index) {
-                    final player = tournament.players[index];
+                    final player = filteredPlayers[index];
                     var popup = PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'edit') {
@@ -204,7 +218,7 @@ class PlayersView extends StatelessWidget {
                     );
                     return PlayerTile(
                       player: player,
-                      index: index,
+                      index: tournament.players.indexOf(player),
                       detailed: true,
                       popup: popup,
                       onTap: () =>

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swiss_tournament/components/search_field.dart';
 import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 import 'package:swiss_tournament/ranking_view.dart';
 
@@ -26,6 +27,7 @@ class TournamentDetailsPage extends StatefulWidget {
 
 class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
   int _selectedIndex = 0;
+  String _playerSearch = '';
   final TournamentStorage _storage = TournamentStorage();
 
   void _onItemTapped(int index) {
@@ -35,7 +37,9 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
   }
 
   void _onUpdatePlayers() {
-    setState(() {});
+    setState(() {
+      _playerSearch = '';
+    });
     widget.tournament.update();
   }
 
@@ -78,6 +82,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
       default:
         bodyContent = PlayersView(
           tournament: widget.tournament,
+          filter: _playerSearch,
           onPlayersChanged: _onUpdatePlayers,
         );
     }
@@ -119,14 +124,27 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
       body: bodyContent,
       floatingActionButton:
           _selectedIndex == 0 && !widget.tournament.isFinished()
-          ? FloatingActionButton(
-              onPressed: _addPlayer,
-              tooltip: 'Add Player',
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              child: Icon(
-                Icons.add,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              spacing: 10,
+              children: [
+                SearchField(
+                  onSearch: (value) {
+                    setState(() {
+                      _playerSearch = value;
+                    });
+                  },
+                ),
+                FloatingActionButton(
+                  onPressed: _addPlayer,
+                  tooltip: 'Add Player',
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  child: Icon(
+                    Icons.add,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
+              ],
             )
           : null,
       bottomNavigationBar: BottomNavigationBar(
