@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swiss_tournament/components/warning.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
+import 'package:swiss_tournament/dialogs/player_dialogs.dart';
 import 'package:swiss_tournament/encounters_view.dart';
 import 'package:swiss_tournament/utils/logger.dart';
 import 'package:swiss_tournament/utils/snackbar_utils.dart';
@@ -210,39 +211,40 @@ class _RoundsViewState extends State<RoundsView> {
   }
 
   void _startNewRound() async {
-    setState(() {
-      _isLoadingNewRound = true;
-    });
     var currentDbState = await _storage.getTournament(widget.tournament.id!);
     if (currentDbState == null) {
       FileLogger.log('Error: Tournament not found in database!');
-      setState(() {
-        _isLoadingNewRound = false;
-      });
       return;
     }
     if (currentDbState.rounds.isNotEmpty &&
         currentDbState.rounds.last.encounters.any((e) => e.result.isEmpty)) {
       FileLogger.log('Cannot start new round: some encounters are unfinished.');
       notifyUnfinishedEncounters(currentDbState.rounds.last.encounters);
-      setState(() {
-        _isLoadingNewRound = false;
-      });
       return;
     }
     if (currentDbState.numberOfRounds >= currentDbState.players.length) {
       FileLogger.log('notify: not enough players');
       notifyNotEnoughPlayers();
-      setState(() {
-        _isLoadingNewRound = false;
-      });
       return;
     }
+    if (currentDbState.settings.bye > 0) {
+      FileLogger.log('open bye selection dialog');
+      selectByePlayersDialog(context, currentDbState, _callJaVaFo);
+      return;
+    }
+
+    _callJaVaFo([]);
+  }
+
+  void _callJaVaFo(List<int> byes) async {
+    setState(() {
+      _isLoadingNewRound = true;
+    });
     FileLogger.log(
       'Starting new round for tournament ID: ${widget.tournament.id}',
     );
     try {
-      var round = callJavaFo(widget.tournament);
+      var round = callJavaFo(widget.tournament, byes);
       widget.tournament.rounds.add(round);
       widget.tournament.update();
       setState(() {

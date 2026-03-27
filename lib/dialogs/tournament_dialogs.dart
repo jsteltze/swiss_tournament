@@ -305,6 +305,7 @@ void showDuplicateTournamentDialog(
 void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
   FirstRoundPairing currentPairing = tournament.settings.firstRoundPairing;
   int currentBaku = tournament.settings.baku;
+  int currentBye = tournament.settings.bye;
 
   openDialog(
     context,
@@ -356,6 +357,27 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
           'The Baku Acceleration Method (BAM) is a FIDE-approved pairing system for large Swiss-system chess tournaments designed to accelerate pairings between top-seeded players. It splits participants into two groups, adding virtual points to the top half to force matchups earlier, preventing high-ranked players from having low-scoring opponents in initial rounds.\nIn detail the systems works as follows: the first half of the rounds (rounded up) are accelerated. For the first half of the accelerated rounds (rounded up) the upper half of players receives a virtual point. For the second half of the accelerated rounds (rounded down) half a virtual point is granted to the upper half of players. The lower half of the players does not receive virtual points. After the accelerated rounds are played, the rest of the tournament will proceed normal.',
           isExpandable: true,
         ),
+        const SizedBox(height: 16.0),
+        const InputTitle('Allow requesting byes:'),
+        DropdownButton<int>(
+          value: currentBye,
+          isExpanded: true,
+          items: [
+            DropdownMenuItem(value: 0, child: Text('0 (disabled)')),
+            DropdownMenuItem(value: 1, child: Text('1')),
+            DropdownMenuItem(value: 2, child: Text('2')),
+            DropdownMenuItem(value: 3, child: Text('3')),
+          ],
+          onChanged: tournament.rounds.isNotEmpty
+              ? null
+              : (newValue) {
+                  setDialogState(() => currentBye = newValue!);
+                },
+        ),
+        Description(
+          'If enabled players can request the selected number of half-point byes. By doing so they skip the round and receive half a point (as if they played a draw). Using a bye must be announced BEFORE the pairing of a round (there will be a selection dialog). Taking byes might be useful for the players (personal/organizational reasons, avoid scheduling conflicts) or can be used as a tactical instrument.\nThe requested half-point bye is not to be confused with the automatic bye (full point) due to an odd number of players.',
+          isExpandable: true,
+        ),
         if (tournament.rounds.isNotEmpty) ...[
           const SizedBox(height: 16.0),
           Warning(
@@ -371,6 +393,7 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
           : () {
               tournament.settings.firstRoundPairing = currentPairing;
               tournament.settings.baku = currentBaku;
+              tournament.settings.bye = currentBye;
               tournament.update();
               Navigator.pop(context);
               showSnackbar(context, 'Tournament settings saved');

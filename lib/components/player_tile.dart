@@ -28,7 +28,7 @@ class PlayerTile extends StatelessWidget {
     var style = detailed && player.leftAt != null
         ? TextStyle(decoration: TextDecoration.lineThrough)
         : null;
-    if (index == -1) {
+    if (index < 0) {
       style = TextStyle(
         color: Theme.of(context).colorScheme.secondary,
         fontStyle: FontStyle.italic,
@@ -37,8 +37,8 @@ class PlayerTile extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       title: Text(player.name, style: style),
-      subtitle: index == -1
-          ? null
+      subtitle: index < 0
+          ? Text(index == -1 ? '(automatic)' : '(requested)')
           : Row(
               spacing: 5,
               children: [
@@ -81,10 +81,9 @@ class PlayerTile extends StatelessWidget {
                   ),
               ],
             ),
-      leading: alignLeft && index != -1 ? PlayerIcon(points: points) : null,
+      leading: alignLeft && index >= 0 ? PlayerIcon(points: points) : null,
       trailing:
-          popup ??
-          (alignLeft || index == -1 ? null : PlayerIcon(points: points)),
+          popup ?? (alignLeft || index < 0 ? null : PlayerIcon(points: points)),
     );
   }
 }

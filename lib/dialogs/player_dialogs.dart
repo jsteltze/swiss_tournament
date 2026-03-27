@@ -1,3 +1,4 @@
+import 'package:expandable_search_bar_plus/expandable_search_bar_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/utils/logger.dart';
@@ -6,6 +7,7 @@ import '../components/description.dart';
 import '../components/info_panel.dart';
 import '../components/info_table_row.dart';
 import '../components/input_field.dart';
+import '../components/input_title.dart';
 import '../components/warning.dart';
 import '../data/encounter.dart';
 import '../data/player.dart';
@@ -157,7 +159,7 @@ void showPlayerDetailsDialog(
             String opponentName = '-';
             String opponentRating = '';
             String result = encounter.result;
-            if (encounter.playerIdW != -1 || encounter.playerIdB != -1) {
+            if (encounter.playerIdW >= 0 || encounter.playerIdB >= 0) {
               final isWhite = encounter.playerIdW == index;
               if (isWhite) {
                 if (result == '0.5-0.5') result = '½ (w)';
@@ -176,10 +178,10 @@ void showPlayerDetailsDialog(
               final opponentId = isWhite
                   ? encounter.playerIdB
                   : encounter.playerIdW;
-              opponentName = opponentId == -1
+              opponentName = opponentId < 0
                   ? 'Bye'
                   : tournament.players[opponentId].name;
-              opponentRating = opponentId == -1
+              opponentRating = opponentId < 0
                   ? ''
                   : tournament.players[opponentId].rating.toString();
               if (opponentRating == '0') {
@@ -388,6 +390,120 @@ void showEditPlayerDialog(
         }
       },
     ),
-    closeButtonTitle: 'Cancel',
+  );
+}
+
+void selectByePlayersDialog(
+  BuildContext context,
+  Tournament tournament,
+  Function(List<int>) onByesSelected,
+) {
+  List<bool> selected = List.generate(
+    tournament.players.length,
+    (index) => false,
+  );
+  List<Player> filteredPlayers = tournament.players.toList();
+  final filterController = TextEditingController();
+  bool isSearchExpanded = false;
+
+  openDialog(
+    context,
+    title: 'Requested byes',
+    titleIcon: Icon(Icons.person_off),
+    child: (ctx, setDialogState) => Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InputTitle(
+          'Select the players who requested a bye for the upcoming round ${tournament.rounds.length + 1}.\nPlayers using a bye get half a point and will not be paired in the next round.',
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ExpandableSearchBarPlus(
+              controller: filterController,
+              hintText: 'Search player',
+              iconColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              iconBackgroundColor: Theme.of(
+                context,
+              ).colorScheme.surfaceContainer,
+              icon: isSearchExpanded ? Icon(Icons.close) : Icon(Icons.search),
+              textStyle: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              onTap: (isExpanded) {
+                if (!isExpanded) {
+                  filterController.clear();
+                  setDialogState(() {
+                    isSearchExpanded = isExpanded;
+                    filteredPlayers = tournament.players.toList();
+                  });
+                } else {
+                  setDialogState(() {
+                    isSearchExpanded = isExpanded;
+                  });
+                }
+              },
+              onChanged: (value) {
+                setDialogState(() {
+                  filteredPlayers = tournament.players
+                      .where(
+                        (p) =>
+                            p.name.toLowerCase().contains(value.toLowerCase()),
+                      )
+                      .toList();
+                });
+              },
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 300,
+          width: double.maxFinite,
+          child: ListView.builder(
+            itemCount: filteredPlayers.length,
+            itemBuilder: (context, index) {
+              final player = filteredPlayers[index];
+              final realIndex = tournament.players.indexOf(player);
+              final byesUsed = tournament.rounds
+                  .where(
+                    (r) => r.encounters.any(
+                      (e) => e.playerIdW == realIndex && e.playerIdB == -2,
+                    ),
+                  )
+                  .length;
+              return CheckboxListTile(
+                title: Text(player.name),
+                enabled: byesUsed < tournament.settings.bye,
+                subtitle: Text(
+                  'Byes used: $byesUsed / ${tournament.settings.bye}',
+                ),
+                value: selected[realIndex],
+                onChanged: (val) {
+                  setDialogState(() {
+                    selected[realIndex] = val!;
+                  });
+                },
+              );
+            },
+          ),
+        ),
+        InputTitle(
+          'Selected: ${selected.where((s) => s).length} / ${tournament.players.length}',
+        ),
+      ],
+    ),
+    mainAction: DialogAction(
+      title: 'Continue',
+      onPressed: () {
+        final List<int> playerIds = [];
+        for (final (index, s) in selected.indexed) {
+          if (s) playerIds.add(index);
+        }
+        Navigator.pop(context);
+        onByesSelected.call(playerIds);
+      },
+    ),
   );
 }

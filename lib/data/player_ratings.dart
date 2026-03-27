@@ -89,7 +89,7 @@ class PlayerRatings {
         if (game.playerIdW == playerId &&
             ["1-0", "+ -"].contains(game.result)) {
           // win (white)
-          points += (game.playerIdB == -1 && treatForfeitAsDraw ? 0.5 : 1.0);
+          points += (game.playerIdB < 0 && treatForfeitAsDraw ? 0.5 : 1.0);
           playerOccurred = true;
           break;
         } else if (game.playerIdW == playerId && game.result == "0.5-0.5") {
@@ -105,7 +105,7 @@ class PlayerRatings {
         } else if (game.playerIdB == playerId &&
             ["0-1", "- +"].contains(game.result)) {
           // win (black)
-          points += (game.playerIdW == -1 && treatForfeitAsDraw ? 0.5 : 1.0);
+          points += (game.playerIdW < 0 && treatForfeitAsDraw ? 0.5 : 1.0);
           playerOccurred = true;
           break;
         } else if (game.playerIdB == playerId || game.playerIdW == playerId) {
@@ -134,7 +134,7 @@ class PlayerRatings {
         ? (rounds, playerId) => getPoints(rounds, playerId, 99, true)
         : (rounds, playerId) => getPoints(rounds, playerId);
     double eval(playerId, opponentsId, isUnplayedRound, rounds, roundIndex) =>
-        opponentsId == -1 || isUnplayedRound
+        opponentsId < 0 || isUnplayedRound
         ? unplayedRoundEval(rounds, playerId, roundIndex)
         : normalEval(rounds, opponentsId);
 
@@ -170,7 +170,7 @@ class PlayerRatings {
         ? (rounds, playerId) => getPoints(rounds, playerId, 99, true)
         : (rounds, playerId) => getPoints(rounds, playerId);
     double eval(playerId, opponentsId, isUnplayedRound, rounds, roundIndex) =>
-        opponentsId == -1 || isUnplayedRound
+        opponentsId < 0 || isUnplayedRound
         ? unplayedRoundEval(rounds, playerId, roundIndex)
         : normalEval(rounds, opponentsId);
 
@@ -257,7 +257,7 @@ class PlayerRatings {
       for (int e = 0; e < rounds[r].encounters.length; e++) {
         final encounter = rounds[r].encounters[e];
         if (encounter.playerIdW == playerId) {
-          if (encounter.playerIdB == -1 ||
+          if (encounter.playerIdB < 0 ||
               players[encounter.playerIdB].rating == 0) {
             continue;
           }
@@ -270,7 +270,7 @@ class PlayerRatings {
           ratedGames++;
           continue;
         } else if (encounter.playerIdB == playerId) {
-          if (encounter.playerIdW == -1 ||
+          if (encounter.playerIdW < 0 ||
               players[encounter.playerIdW].rating == 0) {
             continue;
           }
@@ -303,7 +303,7 @@ class PlayerRatings {
       for (int e = 0; e < rounds[r].encounters.length; e++) {
         final encounter = rounds[r].encounters[e];
         if (encounter.playerIdW == playerId) {
-          if (encounter.playerIdB == -1 ||
+          if (encounter.playerIdB < 0 ||
               players[encounter.playerIdB].rating == 0) {
             continue;
           }
@@ -315,7 +315,7 @@ class PlayerRatings {
           }
           continue;
         } else if (encounter.playerIdB == playerId) {
-          if (encounter.playerIdW == -1 ||
+          if (encounter.playerIdW < 0 ||
               players[encounter.playerIdW].rating == 0) {
             continue;
           }

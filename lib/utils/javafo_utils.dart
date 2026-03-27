@@ -8,7 +8,7 @@ import '../data/encounter.dart';
 import '../data/round.dart';
 import '../generated/java.g.dart';
 
-Round callJavaFo(Tournament tournament) {
+Round callJavaFo(Tournament tournament, List<int>? byes) {
   bool bakuMode = tournament.settings.baku > 0;
   FileLogger.log('Starting JaVaFo pairing. bakuMode=$bakuMode');
 
@@ -21,10 +21,15 @@ Round callJavaFo(Tournament tournament) {
   trfFileContent += "${tournament.settings.firstRoundPairing.javaFoCode}\n";
   final absentPlayers = tournament.players.where((p) => p.leftAt != null);
   if (absentPlayers.isNotEmpty) {
+    // withdrawn players (left the tournament)
     final absentIds = absentPlayers
         .map((p) => tournament.players.indexOf(p) + 1)
         .map((id) => id.toString())
         .toList();
+    // players who requested a bye
+    if (byes != null) {
+      absentIds.addAll(byes.map((id) => (id + 1).toString()));
+    }
     trfFileContent += "XXZ ${absentIds.join(' ')}\n";
   }
 
@@ -164,6 +169,13 @@ Round callJavaFo(Tournament tournament) {
     round.encounters.add(encounter);
   }
   response.release();
+  if (byes != null) {
+    for (var bye in byes) {
+      round.encounters.add(
+        Encounter(playerIdW: bye, playerIdB: -2, result: '0.5-0.5'),
+      );
+    }
+  }
   FileLogger.log(
     'Round pairing completed with ${round.encounters.length} encounters',
   );

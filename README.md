@@ -18,3 +18,4 @@ This project is a Flutter application written in Dart.
 ### TODOs:
 
 - Welcome Dialog
+- Search player (floating action button)

@@ -9,17 +9,20 @@ class TournamentSettings {
   static const DEFAULT_TB2 = Tiebreak.soberg09;
   static const DEFAULT_FRP = FirstRoundPairing.random;
   static const DEFAULT_BAKU = 0;
+  static const DEFAULT_BYE_COUNT = 0;
 
   Tiebreak tb1;
   Tiebreak tb2;
   FirstRoundPairing firstRoundPairing;
   int baku;
+  int bye;
 
   TournamentSettings({
     this.tb1 = DEFAULT_TB1,
     this.tb2 = DEFAULT_TB2,
     this.firstRoundPairing = DEFAULT_FRP,
     this.baku = DEFAULT_BAKU,
+    this.bye = DEFAULT_BYE_COUNT,
   });
 
   Map<String, dynamic> toJson() => {
@@ -27,6 +30,7 @@ class TournamentSettings {
     if (tb2 != DEFAULT_TB2) 'tb2': tb2.name,
     if (firstRoundPairing != DEFAULT_FRP) 'frp': firstRoundPairing.name,
     if (baku != DEFAULT_BAKU) 'baku': baku,
+    if (bye != DEFAULT_BYE_COUNT) 'bye': bye,
   };
 
   factory TournamentSettings.fromJson(Map<String, dynamic> json) {
@@ -41,6 +45,7 @@ class TournamentSettings {
           ? FirstRoundPairing.values.firstWhere((e) => e.name == json['frp'])
           : DEFAULT_FRP,
       baku: json['baku'] ?? DEFAULT_BAKU,
+      bye: json['bye'] ?? DEFAULT_BYE_COUNT,
     );
   }
 }

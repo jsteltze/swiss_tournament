@@ -113,7 +113,7 @@ int calcPerformance(List<Round> rounds, List<Player> players, int playerId) {
     for (int e = 0; e < rounds[r].encounters.length; e++) {
       final encounter = rounds[r].encounters[e];
       if (encounter.playerIdW == playerId) {
-        if (encounter.playerIdB == -1 ||
+        if (encounter.playerIdB < 0 ||
             players[encounter.playerIdB].rating == 0) {
           continue;
         }

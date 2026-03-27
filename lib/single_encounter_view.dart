@@ -26,10 +26,10 @@ class SingleEncounterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final index = round.encounters.indexOf(encounter);
-    final playerW = encounter.playerIdW == -1
+    final playerW = encounter.playerIdW < 0
         ? Player.bye
         : tournament.players[encounter.playerIdW];
-    final playerB = encounter.playerIdB == -1
+    final playerB = encounter.playerIdB < 0
         ? Player.bye
         : tournament.players[encounter.playerIdB];
     var pointsW = PlayerRatings.getPoints(
@@ -54,9 +54,7 @@ class SingleEncounterView extends StatelessWidget {
             : Colors.transparent,
       ),
       child: InkWell(
-        onTap: encounter.playerIdW == -1 || encounter.playerIdB == -1
-            ? null
-            : () => _showResultDialog(encounter, context),
+        onTap: () => _showResultDialog(encounter, context),
         child: Column(
           children: [
             Container(
@@ -129,6 +127,27 @@ class SingleEncounterView extends StatelessWidget {
   }
 
   void _showResultDialog(Encounter encounter, BuildContext context) {
+    if (encounter.playerIdW < 0 || encounter.playerIdB < 0) {
+      String reason = encounter.playerIdW == -1 || encounter.playerIdB == -1
+          ? 'Reason: The player (currently last place in the standings) is granted a full point due to an odd number of players in this round.'
+          : 'Reason: The player has chosen to request a voluntary half-point bye.';
+      openDialog(
+        context,
+        title: 'Bye information',
+        titleIcon: Icon(Icons.safety_divider),
+        child: (ctx, setDialogState) => Column(
+          children: [
+            InfoPanel(
+              Text('This is an automatic result that cannot be changed.'),
+            ),
+            Text(reason),
+          ],
+        ),
+        closeButtonTitle: 'Close',
+      );
+      return;
+    }
+
     String? selectedResult =
         ["1-0", "0-1", "0.5-0.5", "+ -", "- +"].contains(encounter.result)
         ? encounter.result
