@@ -315,6 +315,12 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (tournament.rounds.isNotEmpty) ...[
+          Warning(
+            "This settings cannot be changed after the tournament has started!",
+          ),
+          const SizedBox(height: 16.0),
+        ],
         const InputTitle('First Round Pairing (Top Player):'),
         DropdownButton<FirstRoundPairing>(
           value: currentPairing,
@@ -378,12 +384,6 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
           'If enabled players can request the selected number of half-point byes. By doing so they skip the round and receive half a point (as if they played a draw). Using a bye must be announced BEFORE the pairing of a round (there will be a selection dialog). Taking byes might be useful for the players (personal/organizational reasons, avoid scheduling conflicts) or can be used as a tactical instrument.\nThe requested half-point bye is not to be confused with the automatic bye (full point) due to an odd number of players.',
           isExpandable: true,
         ),
-        if (tournament.rounds.isNotEmpty) ...[
-          const SizedBox(height: 16.0),
-          Warning(
-            "This settings cannot be changed after the tournament has started!",
-          ),
-        ],
       ],
     ),
     mainAction: DialogAction(

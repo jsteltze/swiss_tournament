@@ -19,7 +19,6 @@ This project is a Flutter application written in Dart.
 
 - Datumsformatierung nach Locale
 - Testabdeckung checken
-- Warnung settings cannot be changed am Anfang des Dialogs
 - SizedBox for Tournament Name (Textfeld Titel soll sichtbar bleiben)
 - Farbe vom Bronze Pokal
 - Pokale schattieren?
