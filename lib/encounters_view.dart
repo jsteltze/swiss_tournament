@@ -1,9 +1,9 @@
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/utils/export_handler.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
+import 'package:swiss_tournament/utils/timestampx.dart';
 
 import 'single_encounter_view.dart';
 
@@ -112,7 +112,7 @@ class _EncountersViewState extends State<EncountersView> {
               ),
             ),
             Text(
-              "${DateFormat.yMMMd().format(round.startedAt)}, ${DateFormat.Hm().format(round.startedAt)}",
+              round.startedAt.toHumanString(),
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
                 color: Theme.of(context).colorScheme.primary.withAlpha(160),
               ),
@@ -132,7 +132,7 @@ class _EncountersViewState extends State<EncountersView> {
                 ),
               ),
               Text(
-                "${DateFormat.yMMMd().format(round.finishedAt!)}, ${DateFormat.Hm().format(round.finishedAt!)} (",
+                "${round.finishedAt!.toHumanString()} (",
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
                   color: Theme.of(context).colorScheme.primary.withAlpha(160),
                 ),
