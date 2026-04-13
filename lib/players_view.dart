@@ -216,13 +216,18 @@ class PlayersView extends StatelessWidget {
                         ];
                       },
                     );
+                    final playerIndex = tournament.players.indexOf(player);
+
                     return PlayerTile(
                       player: player,
-                      index: tournament.players.indexOf(player),
+                      index: playerIndex,
                       detailed: true,
                       popup: popup,
-                      onTap: () =>
-                          showPlayerDetailsDialog(context, index, tournament),
+                      onTap: () => showPlayerDetailsDialog(
+                        context,
+                        playerIndex,
+                        tournament,
+                      ),
                     );
                   },
                 ),
