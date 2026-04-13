@@ -103,7 +103,21 @@ void showPlayerDetailsDialog(
           ),
         ),
         const SizedBox(height: 10),
-        InfoRow('Wins - Losses:', r.winsLossesString, titleWidth: rowWidth),
+        InfoRow(
+          'Wins - Losses:',
+          '',
+          titleWidth: rowWidth,
+          contentWidget: Text(
+            r.winsLossesString,
+            style: r.winsLossesString.startsWith(RegExp(r'\+|-'))
+                ? TextStyle(
+                    color: r.winsLossesString.startsWith('+')
+                        ? Colors.green
+                        : Colors.red,
+                  )
+                : null,
+          ),
+        ),
         InfoRow(
           'Tiebreak:',
           '${tournament.settings.tb1.formatScore(r.tiebreak1!)} (${tournament.settings.tb1.shortName})',

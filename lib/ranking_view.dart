@@ -376,10 +376,31 @@ class RankingView extends StatelessWidget {
                           ),
                         ),
                         DataCell(
-                          Text(
-                            '${r.wins}/${r.draws}/${r.losses} (${r.winsLossesString})',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: '${r.wins}/${r.draws}/${r.losses} (',
+                                ),
+                                TextSpan(
+                                  text: r.winsLossesString,
+                                  style:
+                                      r.winsLossesString.startsWith(
+                                        RegExp(r'\+|-'),
+                                      )
+                                      ? TextStyle(
+                                          color:
+                                              r.winsLossesString.startsWith('+')
+                                              ? Colors.green
+                                              : Colors.red,
+                                        )
+                                      : null,
+                                ),
+                                TextSpan(text: ')'),
+                              ],
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
                             ),
                           ),
                         ),
