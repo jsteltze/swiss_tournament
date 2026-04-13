@@ -275,11 +275,20 @@ class RankingView extends StatelessWidget {
                           Row(
                             children: [
                               if (r.rank == 1)
-                                Icon(Icons.emoji_events, color: Colors.yellow),
+                                Icon(
+                                  Icons.emoji_events,
+                                  color: Color.fromARGB(255, 255, 215, 0),
+                                ),
                               if (r.rank == 2)
-                                Icon(Icons.emoji_events, color: Colors.grey),
+                                Icon(
+                                  Icons.emoji_events,
+                                  color: Color.fromARGB(255, 192, 192, 192),
+                                ),
                               if (r.rank == 3)
-                                Icon(Icons.emoji_events, color: Colors.orange),
+                                Icon(
+                                  Icons.emoji_events,
+                                  color: Color.fromARGB(255, 205, 127, 50),
+                                ),
                               Expanded(
                                 child: Text(
                                   r.rank.toString(),

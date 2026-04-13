@@ -19,6 +19,5 @@ This project is a Flutter application written in Dart.
 
 - Datumsformatierung nach Locale
 - Testabdeckung checken
-- Farbe vom Bronze Pokal
 - Pokale schattieren?
 - Player suchen und anklicken führt zum falschen Player
