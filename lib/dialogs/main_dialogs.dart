@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/info_table_row.dart';
+import 'package:swiss_tournament/components/input_field.dart';
 import 'package:swiss_tournament/components/link.dart';
 import 'package:swiss_tournament/components/styled_text.dart';
 import 'package:swiss_tournament/components/warning.dart';
@@ -65,27 +66,22 @@ void showImportConfirmationDialog(
         ),
         const SizedBox(height: 16),
         const InputTitle('Select tournament(s) to import:'),
-        SizedBox(
-          height: 300,
-          width: double.maxFinite,
-          child: ListView.builder(
-            itemCount: tournaments.length,
-            itemBuilder: (context, index) {
-              final t = tournaments[index];
-              return CheckboxListTile(
-                title: Text(t.title),
-                subtitle: Text(
-                  '${t.players.length} players${importType == 'Full Tournament' ? ', ${t.numberOfRounds} rounds' : ''}',
-                ),
-                value: selected[index],
-                onChanged: (val) {
-                  setDialogState(() {
-                    selected[index] = val!;
-                  });
-                },
-              );
-            },
-          ),
+        Column(
+          children: tournaments.map((t) {
+            final index = tournaments.indexOf(t);
+            return CheckboxListTile(
+              title: Text(t.title),
+              subtitle: Text(
+                '${t.players.length} players${importType == 'Full Tournament' ? ', ${t.numberOfRounds} rounds' : ''}',
+              ),
+              value: selected[index],
+              onChanged: (val) {
+                setDialogState(() {
+                  selected[index] = val!;
+                });
+              },
+            );
+          }).toList(),
         ),
         InputTitle(
           'Selected: ${selected.where((s) => s).length} / ${tournaments.length}',
@@ -142,38 +138,25 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
           ),
         ),
         const SizedBox(height: 10),
-        const InputTitle('Filename:'),
-        TextField(
-          controller: filenameController,
-          decoration: const InputDecoration(
-            hintText: 'Enter filename',
-            suffixText: '.json',
-          ),
-          autofocus: true,
-        ),
+        InputField('Filename', filenameController, suffixText: '.json'),
         const SizedBox(height: 20),
         const InputTitle('Select tournament(s) to export:'),
-        SizedBox(
-          height: 300,
-          width: double.maxFinite,
-          child: ListView.builder(
-            itemCount: tournaments.length,
-            itemBuilder: (context, index) {
-              final t = tournaments[index];
-              return CheckboxListTile(
-                title: Text(t.title),
-                subtitle: Text(
-                  '${t.players.length} players, ${t.numberOfRounds} rounds',
-                ),
-                value: selected[index],
-                onChanged: (val) {
-                  setDialogState(() {
-                    selected[index] = val!;
-                  });
-                },
-              );
-            },
-          ),
+        Column(
+          children: tournaments.map((t) {
+            final index = tournaments.indexOf(t);
+            return CheckboxListTile(
+              title: Text(t.title),
+              subtitle: Text(
+                '${t.players.length} players, ${t.numberOfRounds} rounds',
+              ),
+              value: selected[index],
+              onChanged: (val) {
+                setDialogState(() {
+                  selected[index] = val!;
+                });
+              },
+            );
+          }).toList(),
         ),
         InputTitle(
           'Selected: ${selected.where((s) => s).length} / ${tournaments.length}',

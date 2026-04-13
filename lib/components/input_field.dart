@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 class InputField extends StatelessWidget {
   final String label;
+  final String? suffixText;
   final TextEditingController controller;
   final bool autoFocus;
   final bool isOptional;
@@ -12,6 +13,7 @@ class InputField extends StatelessWidget {
     this.label,
     this.controller, {
     super.key,
+    this.suffixText,
     this.autoFocus = false,
     this.isOptional = false,
     this.inputType = TextInputType.text,
@@ -53,6 +55,7 @@ class InputField extends StatelessWidget {
           : [],
       decoration: InputDecoration(
         labelText: label,
+        suffixText: suffixText,
         border: const OutlineInputBorder(),
       ),
       autofocus: autoFocus,

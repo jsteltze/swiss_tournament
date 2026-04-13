@@ -455,36 +455,30 @@ void selectByePlayersDialog(
             ),
           ],
         ),
-        SizedBox(
-          height: 300,
-          width: double.maxFinite,
-          child: ListView.builder(
-            itemCount: filteredPlayers.length,
-            itemBuilder: (context, index) {
-              final player = filteredPlayers[index];
-              final realIndex = tournament.players.indexOf(player);
-              final byesUsed = tournament.rounds
-                  .where(
-                    (r) => r.encounters.any(
-                      (e) => e.playerIdW == realIndex && e.playerIdB == -2,
-                    ),
-                  )
-                  .length;
-              return CheckboxListTile(
-                title: Text(player.name),
-                enabled: byesUsed < tournament.settings.bye,
-                subtitle: Text(
-                  'Byes used: $byesUsed / ${tournament.settings.bye}',
-                ),
-                value: selected[realIndex],
-                onChanged: (val) {
-                  setDialogState(() {
-                    selected[realIndex] = val!;
-                  });
-                },
-              );
-            },
-          ),
+        Column(
+          children: filteredPlayers.map((player) {
+            final realIndex = tournament.players.indexOf(player);
+            final byesUsed = tournament.rounds
+                .where(
+                  (r) => r.encounters.any(
+                    (e) => e.playerIdW == realIndex && e.playerIdB == -2,
+                  ),
+                )
+                .length;
+            return CheckboxListTile(
+              title: Text(player.name),
+              enabled: byesUsed < tournament.settings.bye,
+              subtitle: Text(
+                'Byes used: $byesUsed / ${tournament.settings.bye}',
+              ),
+              value: selected[realIndex],
+              onChanged: (val) {
+                setDialogState(() {
+                  selected[realIndex] = val!;
+                });
+              },
+            );
+          }).toList(),
         ),
         InputTitle(
           'Selected: ${selected.where((s) => s).length} / ${tournament.players.length}',
