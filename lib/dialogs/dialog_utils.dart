@@ -62,10 +62,12 @@ void openDialog(
                   style: TextButton.styleFrom(
                     backgroundColor: mainAction.isDestructive
                         ? Theme.of(context).colorScheme.errorContainer
-                        : Theme.of(context).colorScheme.primaryContainer,
+                        : Theme.of(context).colorScheme.primary.withAlpha(
+                            mainAction.onPressed == null ? 30 : 255,
+                          ),
                     foregroundColor: mainAction.isDestructive
                         ? Theme.of(context).colorScheme.error
-                        : Theme.of(context).colorScheme.primary,
+                        : Theme.of(context).colorScheme.onPrimary,
                   ),
                   label: Text(mainAction.title),
                   icon: mainAction.icon,
