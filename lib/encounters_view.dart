@@ -1,5 +1,6 @@
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
+import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/utils/export_handler.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
@@ -81,74 +82,37 @@ class _EncountersViewState extends State<EncountersView> {
             ),
         const SizedBox(height: 10),
         if (round.acceleratedRoundVirtualPoints > 0.0)
-          Row(
-            children: [
-              SizedBox(
-                width: 80,
-                child: Text(
-                  "Baku Info:",
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.primary.withAlpha(160),
-                  ),
-                ),
-              ),
-              Text(
-                "This is an accelerated round.\nPlayers #1-#${(2 * widget.tournament.players.length) ~/ 4} have received ${round.acceleratedRoundVirtualPoints} virtual points.",
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: Theme.of(context).colorScheme.primary.withAlpha(160),
-                ),
-              ),
-            ],
+          InfoRow(
+            "Baku Info:",
+            "This is an accelerated round.\nPlayers #1-#${(2 * widget.tournament.players.length) ~/ 4} have received ${round.acceleratedRoundVirtualPoints} virtual points.",
+            titleWidth: 80,
           ),
-        Row(
-          children: [
-            SizedBox(
-              width: 80,
-              child: Text(
-                "Started at:",
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: Theme.of(context).colorScheme.primary.withAlpha(160),
-                ),
-              ),
-            ),
-            Text(
-              round.startedAt.toHumanString(),
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                color: Theme.of(context).colorScheme.primary.withAlpha(160),
-              ),
-            ),
-          ],
-        ),
+        InfoRow("Started at:", round.startedAt.toHumanString(), titleWidth: 80),
         if (round.finishedAt != null)
-          Row(
-            children: [
-              SizedBox(
-                width: 80,
-                child: Text(
-                  "Finished at:",
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: Theme.of(context).colorScheme.primary.withAlpha(160),
+          InfoRow(
+            "Finished at:",
+            '',
+            titleWidth: 80,
+            contentWidget: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: "${round.finishedAt!.toHumanString()} ("),
+                  WidgetSpan(
+                    child: Icon(
+                      Icons.access_time,
+                      size: 16,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withAlpha(160),
+                    ),
                   ),
-                ),
+                  TextSpan(
+                    text:
+                        " ${duration?.pretty(upperTersity: DurationTersity.day, tersity: duration.inDays > 0 ? DurationTersity.hour : DurationTersity.minute)})",
+                  ),
+                ],
               ),
-              Text(
-                "${round.finishedAt!.toHumanString()} (",
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: Theme.of(context).colorScheme.primary.withAlpha(160),
-                ),
-              ),
-              Icon(
-                Icons.access_time,
-                size: 16,
-                color: Theme.of(context).colorScheme.primary.withAlpha(160),
-              ),
-              Text(
-                " ${duration?.pretty(tersity: DurationTersity.minute)})",
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: Theme.of(context).colorScheme.primary.withAlpha(160),
-                ),
-              ),
-            ],
+            ),
           ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
