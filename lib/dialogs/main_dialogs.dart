@@ -243,7 +243,7 @@ void showAppInfoDialog(BuildContext context) {
             ),
             InfoRow(
               'Version:',
-              '${Globals.packageInfo.version}, ${DateFormat('MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp))}',
+              '${Globals.packageInfo.version}, ${DateFormat('MMMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp))}',
             ),
             InfoRow('Package:', Globals.packageInfo.packageName),
             InfoRow('DB Path:', TournamentStorage.dbPath ?? '-'),
