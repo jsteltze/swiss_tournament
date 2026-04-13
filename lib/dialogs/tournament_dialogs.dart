@@ -36,6 +36,7 @@ void showEditTournamentDialog(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 5),
           TextFormField(
             controller: titleController,
             validator: (value) {
