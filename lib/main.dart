@@ -70,6 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _loadTournaments();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkFirstTime(context);
+    });
   }
 
   Future<void> _loadTournaments() async {

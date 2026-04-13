@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/components/link.dart';
@@ -384,4 +385,40 @@ void showErrorDialog(BuildContext context, String msg) {
     ),
     closeButtonTitle: 'Close',
   );
+}
+
+void showWelcomeDialog(BuildContext context) {
+  openDialog(
+    context,
+    title: 'Welcome!',
+    titleIcon: Icon(Icons.emoji_events_outlined),
+    child: (ctx, setDialogState) => Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Image(image: AssetImage('assets/rook_new.png'), height: 100),
+        const SizedBox(height: 20),
+        const Text(
+          'Thank you for using the Chess Swiss Tournament App!\n\nThis app helps you manage chess tournaments using the Swiss system. All data is stored locally on your device.\n\nPlease note that this is not FIDE-approved software.',
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+    mainAction: DialogAction(
+      title: 'Get Started',
+      onPressed: () => Navigator.pop(context),
+    ),
+    closeButtonTitle: null,
+  );
+}
+
+Future<void> checkFirstTime(BuildContext context) async {
+  final prefs = await SharedPreferences.getInstance();
+  final bool? isFirstTime = prefs.getBool('first_time');
+
+  if (isFirstTime == null || isFirstTime) {
+    if (context.mounted) {
+      showWelcomeDialog(context);
+    }
+    await prefs.setBool('first_time', false);
+  }
 }
