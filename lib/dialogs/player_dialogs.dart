@@ -103,6 +103,7 @@ void showPlayerDetailsDialog(
           ),
         ),
         const SizedBox(height: 10),
+        InfoRow('Wins - Losses:', r.winsLossesString, titleWidth: rowWidth),
         InfoRow(
           'Tiebreak:',
           '${tournament.settings.tb1.formatScore(r.tiebreak1!)} (${tournament.settings.tb1.shortName})',

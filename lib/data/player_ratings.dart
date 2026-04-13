@@ -248,6 +248,16 @@ class PlayerRatings {
     return draws;
   }
 
+  String get winsLossesString {
+    String winsLosses = '';
+    if (wins != null && losses != null) {
+      winsLosses = (wins! - losses!).toString();
+      if (wins! > losses!) winsLosses = '+$winsLosses';
+      if (wins! == losses!) winsLosses = '±0';
+    }
+    return winsLosses;
+  }
+
   int _getPerformance(List<Round> rounds, List<Player> players) {
     List<Player> opponentsWithRatings = [];
     int ratedWins = 0;
