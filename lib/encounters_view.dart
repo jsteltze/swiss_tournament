@@ -86,13 +86,20 @@ class _EncountersViewState extends State<EncountersView> {
             "Baku Info:",
             "This is an accelerated round.\nPlayers #1-#${(2 * widget.tournament.players.length) ~/ 4} have received ${round.acceleratedRoundVirtualPoints} virtual points.",
             titleWidth: 80,
+            titleAlign: TextAlign.end,
           ),
-        InfoRow("Started at:", round.startedAt.toHumanString(), titleWidth: 80),
+        InfoRow(
+          "Started at:",
+          round.startedAt.toHumanString(),
+          titleWidth: 80,
+          titleAlign: TextAlign.end,
+        ),
         if (round.finishedAt != null)
           InfoRow(
             "Finished at:",
             '',
             titleWidth: 80,
+            titleAlign: TextAlign.end,
             contentWidget: Text.rich(
               TextSpan(
                 children: [
