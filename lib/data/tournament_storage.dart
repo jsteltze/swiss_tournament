@@ -63,6 +63,16 @@ class TournamentStorage {
           : TournamentSettings(),
     );
     t.update = () => updateTournament(t);
+
+    if (t.settings.baku > 0) {
+      for (var r in t.rounds) {
+        r.acceleratedRoundVirtualPoints = Round.calculateVirtualPoints(
+          t.numberOfRounds,
+          t.rounds.indexOf(r),
+        );
+      }
+    }
+
     return t;
   }
 
@@ -106,7 +116,9 @@ class TournamentStorage {
   }
 
   Future<void> updateTournament(Tournament tournament) async {
-    FileLogger.log('Updating tournament: ${tournament.title} (ID: ${tournament.id})');
+    FileLogger.log(
+      'Updating tournament: ${tournament.title} (ID: ${tournament.id})',
+    );
     final db = await database;
     final values = {
       'title': tournament.title,

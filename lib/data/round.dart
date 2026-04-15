@@ -4,7 +4,7 @@ class Round {
   final DateTime startedAt;
   DateTime? finishedAt;
   final List<Encounter> encounters;
-  final double acceleratedRoundVirtualPoints;
+  double acceleratedRoundVirtualPoints;
 
   Round({
     List<Encounter>? encounters,
@@ -31,5 +31,17 @@ class Round {
           ? DateTime.parse(json['finishedAt'])
           : null,
     );
+  }
+
+  static double calculateVirtualPoints(int numberOfRounds, int roundIndex) {
+    double virtualPointsForThisRound = 0.0;
+    int numberOfAcceleratedRounds = (numberOfRounds + 1) ~/ 2;
+    int numberOfVirtualPointsFull = (numberOfAcceleratedRounds + 1) ~/ 2;
+    if (roundIndex < numberOfVirtualPointsFull) {
+      virtualPointsForThisRound = 1.0;
+    } else if (roundIndex < numberOfAcceleratedRounds) {
+      virtualPointsForThisRound = 0.5;
+    }
+    return virtualPointsForThisRound;
   }
 }

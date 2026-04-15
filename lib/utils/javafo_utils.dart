@@ -102,11 +102,10 @@ Round callJavaFo(Tournament tournament, List<int>? byes) {
     int numberOfVirtualPointsFull = (numberOfAcceleratedRounds + 1) ~/ 2;
     int numberOfVirtualPointsHalf =
         numberOfAcceleratedRounds - numberOfVirtualPointsFull;
-    if (tournament.rounds.length < numberOfVirtualPointsFull) {
-      virtualPointsForThisRound = 1.0;
-    } else if (tournament.rounds.length < numberOfAcceleratedRounds) {
-      virtualPointsForThisRound = 0.5;
-    }
+    virtualPointsForThisRound = Round.calculateVirtualPoints(
+      tournament.numberOfRounds,
+      tournament.rounds.length,
+    );
     int playersGA = (2 * tournament.players.length) ~/ 4;
     int playerId = 1;
     for (; playerId <= playersGA; playerId++) {
