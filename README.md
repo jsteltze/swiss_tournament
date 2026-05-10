@@ -20,4 +20,4 @@ This project is a Flutter application written in Dart.
 - Datumsformatierung nach Locale
 - Testabdeckung checken
 - Pokale schattieren?
-- Testen: größere Schrift
+- Testen: größere Schriftart vom device 

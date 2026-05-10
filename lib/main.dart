@@ -187,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.all(8),
           child: Image.asset('assets/rook_new.png'),
         ),
-        title: Text(widget.title),
+        title: FittedBox(fit: BoxFit.fitWidth, child: Text(widget.title)),
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
