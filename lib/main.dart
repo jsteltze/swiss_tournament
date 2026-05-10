@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _importTournaments() async {
     try {
       FileLogger.log('Picking file for import...');
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
+      FilePickerResult? result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
