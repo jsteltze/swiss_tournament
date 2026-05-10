@@ -3,6 +3,7 @@ import 'package:swiss_tournament/components/info_panel.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/tournament.dart';
+import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 
 import 'data/player.dart';
 import 'data/player_ratings.dart';
@@ -127,6 +128,8 @@ class SingleEncounterView extends StatelessWidget {
   }
 
   void _showResultDialog(Encounter encounter, BuildContext context) {
+    final possibleResults1 = ["1-0", "0.5-0.5", "0-1"];
+    final possibleResults2 = ["+ -", "- +"];
     if (encounter.playerIdW < 0 || encounter.playerIdB < 0) {
       String reason = encounter.playerIdW == -1 || encounter.playerIdB == -1
           ? 'Reason: The player (currently last place in the standings) is granted a full point due to an odd number of players in this round.'
@@ -148,10 +151,13 @@ class SingleEncounterView extends StatelessWidget {
       return;
     }
 
-    String? selectedResult =
-        ["1-0", "0-1", "0.5-0.5", "+ -", "- +"].contains(encounter.result)
-        ? encounter.result
-        : null;
+    String? selectedResult = encounter.result;
+    final selectedResultsBool1 = possibleResults1
+        .map((p) => p == encounter.result)
+        .toList();
+    final selectedResultsBool2 = possibleResults2
+        .map((p) => p == encounter.result)
+        .toList();
 
     openDialog(
       context,
@@ -161,100 +167,292 @@ class SingleEncounterView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Enter result for:"),
-          InfoPanel(
-            Text(
-              "${tournament.players[encounter.playerIdW].name} vs ${tournament.players[encounter.playerIdB].name}",
+          IntrinsicHeight(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        constraints: BoxConstraints.expand(),
+                        padding: EdgeInsets.only(
+                          left: 10,
+                          top: 10,
+                          bottom: 10,
+                          right: 25,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                          ),
+                          border: Border.all(color: Colors.grey),
+                          color: Theme.of(context).colorScheme.surfaceBright,
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          tournament.players[encounter.playerIdW].name,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        constraints: BoxConstraints.expand(),
+                        padding: EdgeInsets.only(
+                          left: 25,
+                          top: 10,
+                          bottom: 10,
+                          right: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            bottomRight: Radius.circular(10),
+                          ),
+                          border: Border.all(color: Colors.grey),
+                          color: Theme.of(context).colorScheme.surfaceDim,
+                        ),
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          textAlign: TextAlign.end,
+                          tournament.players[encounter.playerIdB].name,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                    color: Theme.of(context).colorScheme.surfaceContainer,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    'vs',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 20),
-          DropdownButton<String>(
-            isExpanded: true,
-            value: selectedResult,
-            hint: const Text("Select result"),
-            items: [
-              DropdownMenuItem(
-                value: "1-0",
-                child: Row(
+
+          Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 1,
                   children: [
-                    Expanded(child: Text("1-0")),
-                    Text(
-                      "(white win)",
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontStyle: FontStyle.italic,
+                    Container(
+                      margin: EdgeInsets.only(top: 1),
+                      width: 80,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(8.0),
+                          bottomLeft: Radius.circular(8.0),
+                        ),
+                        color: Theme.of(context).colorScheme.surfaceBright,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 1),
+                      width: 80,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).colorScheme.surfaceBright,
+                            Theme.of(context).colorScheme.surfaceDim,
+                          ],
+                          begin: const FractionalOffset(0.2, 0.0),
+                          end: const FractionalOffset(0.8, 0.0),
+                          stops: [0.0, 1.0],
+                          tileMode: TileMode.clamp,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 1),
+                      width: 80,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(8.0),
+                          bottomRight: Radius.circular(8.0),
+                        ),
+                        color: Theme.of(context).colorScheme.surfaceDim,
                       ),
                     ),
                   ],
                 ),
-              ),
-              DropdownMenuItem(
-                value: "0-1",
-                child: Row(
+                ToggleButtons(
+                  onPressed: (int? newValue) {
+                    setDialogState(() {
+                      // The button that is tapped is set to true, and the others to false.
+                      for (int i = 0; i < selectedResultsBool1.length; i++) {
+                        selectedResultsBool1[i] = i == newValue;
+                        selectedResult = possibleResults1[i];
+                        selectedResultsBool2.fillRange(
+                          0,
+                          selectedResultsBool2.length,
+                          false,
+                        );
+                      }
+                    });
+                  },
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  selectedBorderColor: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
+                  constraints: const BoxConstraints(
+                    minHeight: 50.0,
+                    minWidth: 80.0,
+                  ),
+                  isSelected: selectedResultsBool1,
                   children: [
-                    Expanded(child: Text("0-1")),
-                    Text(
-                      "(black win)",
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontStyle: FontStyle.italic,
+                    Column(
+                      children: [
+                        Text(
+                          '1-0',
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text('white win'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          '\u{00BD} - \u{00BD}',
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text('draw'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          '0-1',
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text('black win'),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          SizedBox(height: 10),
+
+          Center(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 1,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 1),
+                      width: 120,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(8.0),
+                          bottomLeft: Radius.circular(8.0),
+                        ),
+                        color: Theme.of(context).colorScheme.surfaceBright,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 1),
+                      width: 120,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(8.0),
+                          bottomRight: Radius.circular(8.0),
+                        ),
+                        color: Theme.of(context).colorScheme.surfaceDim,
                       ),
                     ),
                   ],
                 ),
-              ),
-              DropdownMenuItem(
-                value: "0.5-0.5",
-                child: Row(
+                ToggleButtons(
+                  onPressed: (int? newValue) {
+                    setDialogState(() {
+                      // The button that is tapped is set to true, and the others to false.
+                      for (int i = 0; i < selectedResultsBool2.length; i++) {
+                        selectedResultsBool2[i] = i == newValue;
+                        selectedResult = possibleResults2[i];
+                        selectedResultsBool1.fillRange(
+                          0,
+                          selectedResultsBool1.length,
+                          false,
+                        );
+                      }
+                    });
+                  },
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  selectedBorderColor: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
+                  constraints: const BoxConstraints(
+                    minHeight: 50.0,
+                    minWidth: 120.0,
+                  ),
+                  isSelected: selectedResultsBool2,
                   children: [
-                    Expanded(child: Text("\u{00BD}-\u{00BD}")),
-                    Text(
-                      "(draw)",
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
+                    Column(
+                      children: [
+                        Text(
+                          '+ -',
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text('black missing'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          '- +',
+                          style: Theme.of(context).textTheme.bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text('white missing'),
+                      ],
                     ),
                   ],
                 ),
-              ),
-              DropdownMenuItem(
-                value: "+ -",
-                child: Row(
-                  children: [
-                    Expanded(child: Text("+ -")),
-                    Text(
-                      "(uncontested white)",
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: "- +",
-                child: Row(
-                  children: [
-                    Expanded(child: Text("- +")),
-                    Text(
-                      "(uncontested black)",
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            onChanged: (String? newValue) {
-              setDialogState(() {
-                selectedResult = newValue;
-              });
-            },
+              ],
+            ),
           ),
         ],
       ),
       mainAction: DialogAction(
         title: 'Save',
         onPressed: () {
+          if (selectedResult == null || selectedResult!.isEmpty) {
+            showErrorDialog(context, 'No result selected!');
+            return;
+          }
           encounter.result = selectedResult!;
           tournament.update();
           Navigator.of(context).pop();

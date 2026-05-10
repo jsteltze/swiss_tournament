@@ -21,3 +21,5 @@ This project is a Flutter application written in Dart.
 - Testabdeckung checken
 - Pokale schattieren?
 - Testen: größere Schriftart vom device 
+- minimum Players: 4
+- minimum Rounds: 2
