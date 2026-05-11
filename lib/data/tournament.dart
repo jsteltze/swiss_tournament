@@ -5,8 +5,8 @@ import 'player.dart';
 import 'round.dart';
 
 class TournamentSettings {
-  static const DEFAULT_TB1 = Tiebreak.buchholz09;
-  static const DEFAULT_TB2 = Tiebreak.soberg09;
+  static const DEFAULT_TB1 = Tiebreak.buchholz24;
+  static const DEFAULT_TB2 = Tiebreak.soberg24;
   static const DEFAULT_FRP = FirstRoundPairing.random;
   static const DEFAULT_BAKU = 0;
   static const DEFAULT_BYE_COUNT = 0;
