@@ -368,8 +368,9 @@ void showEditPlayerDialog(
           if (player == null) ...[
             const SizedBox(height: 25),
             Description(
-              'The Players form is intended to be as simple as possible. No need for titles or other attributes that have no effect. All that is needed is the player name to identify the player and the rating. The rating is needed for the order. Players are sorted automatically by their rating (descending). The order is very important for the Swiss pairing algorithm. The rating is optional. If left empty a rating of 0 will be used (sorted at the bottom of the list).',
+              'Hint: This Players form is intended to be as simple as possible. No need for titles or other attributes that have no effect. All that is needed is the player name to identify the player and the rating. The rating is needed for the order. Players are sorted automatically by their rating (descending). The order is very important for the Swiss pairing algorithm. The rating is optional. If left empty a rating of 0 will be used (sorted at the bottom of the list).',
               isExpandable: true,
+              expandChars: 4,
             ),
           ],
         ],
