@@ -162,7 +162,7 @@ class _RoundsViewState extends State<RoundsView> {
       context,
       title: 'Missing results',
       titleIcon: Icon(Icons.link_off_sharp),
-      child: (ctx, setDialogState) => ListBody(
+      child: (ctx, setDialogState, toggleMainAction) => ListBody(
         children: <Widget>[
           const Warning(
             'Cannot proceed to the next round because there are missing results:',
@@ -184,7 +184,7 @@ class _RoundsViewState extends State<RoundsView> {
       context,
       title: 'Tournament finished',
       titleIcon: Icon(Icons.emoji_events_outlined),
-      child: (ctx, setDialogState) => const Text(
+      child: (ctx, setDialogState, toggleMainAction) => const Text(
         'Congratulations!\nThe tournament is finished.\n\nYou can now view the ranking.',
       ),
       closeButtonTitle: 'Close',
@@ -203,7 +203,7 @@ class _RoundsViewState extends State<RoundsView> {
       context,
       title: 'Not enough players',
       titleIcon: Icon(Icons.error_outline),
-      child: (ctx, setDialogState) => const Warning(
+      child: (ctx, setDialogState, toggleMainAction) => const Warning(
         'The number of (active) players is less or equal than the number of rounds.\nA Swiss tournament is not advisable for this conditions.\n\nIf the number of players is relatively small think about different tournament modes (like Round-Robin). Otherwise add more players or reduce the number of rounds.',
       ),
       closeButtonTitle: 'Close',
@@ -277,7 +277,7 @@ class _RoundsViewState extends State<RoundsView> {
       context,
       title: 'Delete round',
       titleIcon: Icon(Icons.delete),
-      child: (ctx, setDialogState) =>
+      child: (ctx, setDialogState, toggleMainAction) =>
           roundIndex == widget.tournament.rounds.length - 1
           ? Text('Are you sure you want to delete round ${roundIndex + 1}?')
           : Warning('Only the last round can be deleted!'),

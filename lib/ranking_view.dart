@@ -35,7 +35,7 @@ class RankingView extends StatelessWidget {
       context,
       title: 'Ranking Settings',
       titleIcon: Icon(Icons.settings),
-      child: (ctx, setDialogState) => Column(
+      child: (ctx, setDialogState, toggleMainAction) => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

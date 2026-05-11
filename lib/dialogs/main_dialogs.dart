@@ -35,7 +35,7 @@ void showImportConfirmationDialog(
     context,
     title: 'Confirm Import',
     titleIcon: Icon(Icons.upload),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,6 +78,7 @@ void showImportConfirmationDialog(
               onChanged: (val) {
                 setDialogState(() {
                   selected[index] = val!;
+                  toggleMainAction(selected.contains(true));
                 });
               },
             );
@@ -127,7 +128,7 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
     context,
     title: 'Export Tournaments',
     titleIcon: Icon(Icons.save_alt),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,6 +154,7 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
               onChanged: (val) {
                 setDialogState(() {
                   selected[index] = val!;
+                  toggleMainAction(selected.contains(true));
                 });
               },
             );
@@ -196,7 +198,7 @@ void showAppInfoDialog(BuildContext context) {
     context,
     title: 'App Info',
     titleIcon: Icon(Icons.info_outline),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,7 +322,7 @@ void showLogsDialog(BuildContext context) {
     context,
     title: 'Logs',
     titleIcon: Icon(Icons.list_alt),
-    child: (ctx, setDialogState) => Text(
+    child: (ctx, setDialogState, toggleMainAction) => Text(
       logs,
       style: const TextStyle(fontSize: 10, fontFamily: 'monospace'),
     ),
@@ -362,7 +364,7 @@ void showErrorDialog(BuildContext context, String msg) {
     context,
     title: 'Error',
     titleIcon: Icon(Icons.error_outline),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       children: [const Text('An error occurred:'), Warning(msg)],
     ),
@@ -375,7 +377,7 @@ void showWelcomeDialog(BuildContext context) {
     context,
     title: 'Welcome!',
     titleIcon: Icon(Icons.emoji_events_outlined),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         const Image(image: AssetImage('assets/rook_new.png'), height: 100),

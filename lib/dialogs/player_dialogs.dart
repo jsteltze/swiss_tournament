@@ -41,7 +41,7 @@ void showPlayerDetailsDialog(
     context,
     title: r.player.name,
     titleIcon: Icon(Icons.person),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -251,7 +251,7 @@ void confirmDeletePlayer(
     context,
     title: 'Delete Player',
     titleIcon: Icon(Icons.delete),
-    child: (ctx, setDialogState) => Text(
+    child: (ctx, setDialogState, toggleMainAction) => Text(
       'Are you sure you want to delete "${player.name}"?\n\nYou can also withdraw the player. In this case the player is just disabled and can be re-enabled in future rounds.',
     ),
     mainAction: DialogAction(
@@ -280,7 +280,7 @@ void confirmDisablePlayer(
     context,
     title: 'Withdraw Player',
     titleIcon: Icon(Icons.person_off),
-    child: (ctx, setDialogState) => Text(
+    child: (ctx, setDialogState, toggleMainAction) => Text(
       'Are you sure you want to withdraw (disable) "${player.name}"?\nDisabled players will not be paired in future rounds but can be re-enabled.',
     ),
     mainAction: DialogAction(
@@ -309,7 +309,7 @@ void confirmReenablePlayer(
     context,
     title: 'Re-enable Player',
     titleIcon: Icon(Icons.person),
-    child: (ctx, setDialogState) => Text(
+    child: (ctx, setDialogState, toggleMainAction) => Text(
       'Are you sure you want to re-enable "${player.name}"?\nThis player will be paired again in future rounds.',
     ),
     mainAction: DialogAction(
@@ -345,7 +345,7 @@ void showEditPlayerDialog(
     title:
         '${player == null ? 'New' : 'Edit'} Player${isLateJoin ? ' (Late Join)' : ''}',
     titleIcon: Icon(player == null ? Icons.person_add_alt_1 : Icons.edit),
-    child: (ctx, setDialogState) => Form(
+    child: (ctx, setDialogState, toggleMainAction) => Form(
       key: formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -424,7 +424,7 @@ void selectByePlayersDialog(
     context,
     title: 'Requested byes',
     titleIcon: Icon(Icons.person_off),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

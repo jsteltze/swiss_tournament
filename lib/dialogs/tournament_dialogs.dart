@@ -30,7 +30,7 @@ void showEditTournamentDialog(
     context,
     title: '${tournament == null ? 'New' : 'Edit'} Tournament',
     titleIcon: Icon(tournament == null ? Icons.new_label_outlined : Icons.edit),
-    child: (ctx, setDialogState) => Form(
+    child: (ctx, setDialogState, toggleMainAction) => Form(
       key: formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -113,7 +113,7 @@ void confirmDeleteTournament(
     context,
     title: 'Delete Tournament',
     titleIcon: Icon(Icons.delete),
-    child: (ctx, setDialogState) =>
+    child: (ctx, setDialogState, toggleMainAction) =>
         Text('Are you sure you want to delete "${tournament.title}"?'),
     mainAction: DialogAction(
       title: 'Delete',
@@ -137,7 +137,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
     context,
     title: 'Export Tournament',
     titleIcon: Icon(Icons.save_alt),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -229,7 +229,7 @@ void showDuplicateTournamentDialog(
     context,
     title: 'Duplicate Tournament',
     titleIcon: Icon(Icons.copy),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -312,7 +312,7 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
     context,
     title: 'Advanced Settings',
     titleIcon: Icon(Icons.settings),
-    child: (ctx, setDialogState) => Column(
+    child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

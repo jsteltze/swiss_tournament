@@ -17,12 +17,21 @@ class DialogAction {
 void openDialog(
   BuildContext context, {
   required String title,
-  required Widget Function(BuildContext, void Function(void Function())) child,
+  required Widget Function(
+    BuildContext,
+    void Function(void Function()),
+    void Function(bool x),
+  )
+  child,
   Icon? titleIcon,
   DialogAction? mainAction,
   List<DialogAction>? secondaryActions,
   String? closeButtonTitle = 'Cancel',
+  bool? mainActionEnabled = true,
 }) {
+  bool mainActionIsEnabled = mainActionEnabled!;
+  void toggleMainAction(bool enabled) => mainActionIsEnabled = enabled;
+
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -36,7 +45,7 @@ void openDialog(
               style: TextStyle(color: Theme.of(context).colorScheme.primary),
             ),
             content: SingleChildScrollView(
-              child: child(context, setDialogState),
+              child: child(context, setDialogState, toggleMainAction),
             ),
             actions: <Widget>[
               if (closeButtonTitle != null)
@@ -58,12 +67,14 @@ void openDialog(
               ),
               if (mainAction != null)
                 ElevatedButton.icon(
-                  onPressed: mainAction.onPressed,
+                  onPressed: mainActionIsEnabled ? mainAction.onPressed : null,
                   style: TextButton.styleFrom(
                     backgroundColor: mainAction.isDestructive
                         ? Theme.of(context).colorScheme.errorContainer
                         : Theme.of(context).colorScheme.primary.withAlpha(
-                            mainAction.onPressed == null ? 30 : 255,
+                            mainAction.onPressed == null || !mainActionIsEnabled
+                                ? 30
+                                : 255,
                           ),
                     foregroundColor: mainAction.isDestructive
                         ? Theme.of(context).colorScheme.error
