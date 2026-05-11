@@ -138,7 +138,7 @@ class SingleEncounterView extends StatelessWidget {
         context,
         title: 'Bye information',
         titleIcon: Icon(Icons.safety_divider),
-        child: (ctx, setDialogState) => Column(
+        child: (ctx, setDialogState, toggleMainAction) => Column(
           children: [
             InfoPanel(
               Text('This is an automatic result that cannot be changed.'),
@@ -163,7 +163,7 @@ class SingleEncounterView extends StatelessWidget {
       context,
       title: 'Select Result',
       titleIcon: Icon(Icons.safety_divider),
-      child: (ctx, setDialogState) => Column(
+      child: (ctx, setDialogState, toggleMainAction) => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -187,12 +187,17 @@ class SingleEncounterView extends StatelessWidget {
                             topLeft: Radius.circular(10),
                             bottomLeft: Radius.circular(10),
                           ),
-                          border: Border.all(color: Colors.grey),
+                          border: Border.all(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withAlpha(40),
+                          ),
                           color: Theme.of(context).colorScheme.surfaceBright,
                         ),
                         alignment: Alignment.centerLeft,
                         child: Text(
                           tournament.players[encounter.playerIdW].name,
+                          textAlign: TextAlign.start,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
@@ -211,13 +216,17 @@ class SingleEncounterView extends StatelessWidget {
                             topRight: Radius.circular(10),
                             bottomRight: Radius.circular(10),
                           ),
-                          border: Border.all(color: Colors.grey),
+                          border: Border.all(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withAlpha(40),
+                          ),
                           color: Theme.of(context).colorScheme.surfaceDim,
                         ),
                         alignment: Alignment.centerRight,
                         child: Text(
-                          textAlign: TextAlign.end,
                           tournament.players[encounter.playerIdB].name,
+                          textAlign: TextAlign.end,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
@@ -228,7 +237,11 @@ class SingleEncounterView extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withAlpha(40),
+                    ),
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                     color: Theme.of(context).colorScheme.surfaceContainer,
                   ),
@@ -305,13 +318,14 @@ class SingleEncounterView extends StatelessWidget {
                       // The button that is tapped is set to true, and the others to false.
                       for (int i = 0; i < selectedResultsBool1.length; i++) {
                         selectedResultsBool1[i] = i == newValue;
-                        selectedResult = possibleResults1[i];
-                        selectedResultsBool2.fillRange(
-                          0,
-                          selectedResultsBool2.length,
-                          false,
-                        );
                       }
+                      selectedResult = possibleResults1[newValue!];
+                      selectedResultsBool2.fillRange(
+                        0,
+                        selectedResultsBool2.length,
+                        false,
+                      );
+                      toggleMainAction(true);
                     });
                   },
                   borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -401,13 +415,14 @@ class SingleEncounterView extends StatelessWidget {
                       // The button that is tapped is set to true, and the others to false.
                       for (int i = 0; i < selectedResultsBool2.length; i++) {
                         selectedResultsBool2[i] = i == newValue;
-                        selectedResult = possibleResults2[i];
-                        selectedResultsBool1.fillRange(
-                          0,
-                          selectedResultsBool1.length,
-                          false,
-                        );
                       }
+                      selectedResult = possibleResults2[newValue!];
+                      selectedResultsBool1.fillRange(
+                        0,
+                        selectedResultsBool1.length,
+                        false,
+                      );
+                      toggleMainAction(true);
                     });
                   },
                   borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -446,6 +461,7 @@ class SingleEncounterView extends StatelessWidget {
           ),
         ],
       ),
+      mainActionEnabled: false,
       mainAction: DialogAction(
         title: 'Save',
         onPressed: () {
