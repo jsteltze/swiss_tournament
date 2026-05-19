@@ -355,8 +355,9 @@ void showEditPlayerDialog(
             const Warning(
               'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 20),
           ],
+          const SizedBox(height: 5),
           InputField('Player name', nameController, autoFocus: !isLateJoin),
           const SizedBox(height: 25),
           InputField(
