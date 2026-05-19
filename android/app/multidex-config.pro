@@ -15,4 +15,8 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 -keep class de.jsteltze.chesstournamentapp.** { *; }
+
+# see https://docs.flutter.dev/deployment/android#enable-multidex-support
+-keep class io.flutter.embedding.engine.loader.FlutterLoader.class
+-keep class io.flutter.util.PathUtils.class
 -ignorewarnings
