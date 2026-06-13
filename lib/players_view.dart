@@ -81,14 +81,17 @@ class PlayersView extends StatelessWidget {
                 Stack(
                   alignment: Alignment.centerLeft,
                   children: [
-                    Icon(
-                      Icons.circle_outlined,
-                      size: 14,
-                      color: Theme.of(context).colorScheme.tertiary,
+                    Text(
+                      'o',
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontFamily: 'RobotoMono',
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
                     ),
                     Text(
-                      ' / ',
+                      '/',
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontFamily: 'RobotoMono',
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),

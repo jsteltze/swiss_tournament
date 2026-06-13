@@ -1,3 +1,5 @@
+![Chess Swiss Tournament app preview image](app_preview.png "Chess Swiss Tournament")
+
 # Chess Swiss Tournament App
 
 A tournament management app for Android for Swiss tournaments in chess.
@@ -14,6 +16,7 @@ This project is a Flutter application written in Dart.
   for the first time, or after a `flutter clean`.
 - To generate the app build timestamp, run `dart run build_runner build --delete-conflicting-outputs`
 - To run in release mode: `flutter run --release`
+- To build release appbundle: `flutter build appbundle --release`
 
 ### TODOs:
 
@@ -23,3 +26,4 @@ This project is a Flutter application written in Dart.
 - Testen: größere Schriftart vom device 
 - minimum Players: 4
 - minimum Rounds: 2
+- HTML export, transparenten Hintergrund ersetzen
