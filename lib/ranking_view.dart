@@ -87,6 +87,7 @@ class RankingView extends StatelessWidget {
           InputTitle('Export:'),
           TextButton(
             onPressed: () async {
+              Navigator.pop(context);
               final String htmlContent = toHtmlRanking(
                 tournament,
                 ratings,
