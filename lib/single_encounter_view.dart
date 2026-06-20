@@ -49,7 +49,6 @@ class SingleEncounterView extends StatelessWidget {
         border: Border.all(
           color: Theme.of(context).colorScheme.primary.withAlpha(40),
         ),
-        borderRadius: BorderRadius.circular(10),
         color: encounter.result.isNotEmpty
             ? Theme.of(context).colorScheme.primary.withAlpha(20)
             : Colors.transparent,
@@ -87,10 +86,14 @@ class SingleEncounterView extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 36,
-                  height: 36,
+                  width: MediaQuery.of(context).textScaler.scale(50.0),
+                  height: MediaQuery.of(context).textScaler.scale(50.0),
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(18.0)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        MediaQuery.of(context).textScaler.scale(50.0),
+                      ),
+                    ),
                     color: encounter.result.isEmpty
                         ? Colors.transparent
                         : Theme.of(context).focusColor,

@@ -39,16 +39,14 @@ class PlayerTile extends StatelessWidget {
       title: Text(player.name, style: style),
       subtitle: index < 0
           ? Text(index == -1 ? '(automatic)' : '(requested)')
-          : Row(
+          : Wrap(
               spacing: 5,
               children: [
-                SizedBox(
-                  width: 30,
-                  child: Text(
-                    '#${index + 1}',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
+                Text(
+                  '#${index + 1}',
+                  style: TextStyle(
+                    fontFamily: 'RobotoMono',
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
                 Text(

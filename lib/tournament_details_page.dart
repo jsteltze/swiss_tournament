@@ -160,6 +160,8 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        selectedFontSize: MediaQuery.of(context).textScaler.scale(14.0),
+        unselectedFontSize: MediaQuery.of(context).textScaler.scale(14.0),
         onTap: _onItemTapped,
       ),
     );

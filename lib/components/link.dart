@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -10,14 +9,12 @@ class Link extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        text: text,
-        recognizer: TapGestureRecognizer()..onTap = () => launchUrlString(url),
+    return InkWell(
+      child: Text(
+        text,
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
       ),
+      onTap: () => launchUrlString(url),
     );
   }
 }

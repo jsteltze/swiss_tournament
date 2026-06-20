@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiss_tournament/components/info_panel.dart';
-import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/components/input_field.dart';
 import 'package:swiss_tournament/components/link.dart';
 import 'package:swiss_tournament/components/styled_text.dart';
@@ -226,35 +225,102 @@ void showAppInfoDialog(BuildContext context) {
               Globals.packageInfo.appName,
               style: TextStyle(color: Theme.of(context).colorScheme.secondary),
             ),
-            InfoRow(
-              'Version:',
-              '${Globals.packageInfo.version}, ${DateFormat('MMMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp))}',
-            ),
-            InfoRow('Package:', Globals.packageInfo.packageName),
-            InfoRow('DB Path:', TournamentStorage.dbPath ?? '-'),
-            InfoRow(
-              'Installed:',
-              Globals.packageInfo.installTime?.toHumanString() ?? '-',
-            ),
-            InfoRow(
-              'Updated:',
-              Globals.packageInfo.updateTime?.toHumanString() ?? '-',
-            ),
-            InfoRow(
-              'Sources:',
-              '',
-              contentWidget: const Link(
-                'Github',
-                'https://github.com/jsteltze/swiss_tournament.git',
-              ),
-            ),
-            InfoRow(
-              'Author:',
-              '',
-              contentWidget: const Link(
-                'Johannes Steltzer',
-                'https://github.com/jsteltze',
-              ),
+            Table(
+              columnWidths: const <int, TableColumnWidth>{
+                0: IntrinsicColumnWidth(),
+                1: FlexColumnWidth(),
+              },
+              children: [
+                TableRow(
+                  children: [
+                    Text(
+                      'Version: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text(
+                      '${Globals.packageInfo.version}, ${DateFormat('MMMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp))}',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Package: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text(Globals.packageInfo.packageName),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'DB Path: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text(TournamentStorage.dbPath ?? '-'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Installed: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text(
+                      Globals.packageInfo.installTime?.toHumanString() ?? '-',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Updated: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text(
+                      Globals.packageInfo.updateTime?.toHumanString() ?? '-',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Sources: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    const Link(
+                      'Github',
+                      'https://github.com/jsteltze/swiss_tournament.git',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Author: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    const Link(
+                      'Johannes Steltzer',
+                      'https://github.com/jsteltze',
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
@@ -265,21 +331,84 @@ void showAppInfoDialog(BuildContext context) {
               'This is my first programming with Flutter/Dart. Initially I did not intend to restrict the platform to Android. But I\'m using the pairing engine "JaVaFo", which is a Java library. I was only able to get this Java program running on Android.',
               style: TextStyle(color: Theme.of(context).colorScheme.secondary),
             ),
-            const InfoRow('Language:', 'Flutter 3 / Dart SDK 3'),
-            const InfoRow('Database:', 'sqflite'),
-            const InfoRow(
-              'Packages:',
-              'package_info_plus, expandable_search_bar_plus, url_launcher',
-            ),
-            const InfoRow('Design:', 'Material v3'),
-            const InfoRow('Icons:', 'Cupertino Icons'),
-            InfoRow(
-              'Pairing:',
-              '',
-              contentWidget: const Link(
-                'JaVaFo (main.jar v2.2)',
-                'https://www.rrweb.org/javafo/JaVaFo.htm',
-              ),
+            Table(
+              columnWidths: const <int, TableColumnWidth>{
+                0: IntrinsicColumnWidth(),
+                1: FlexColumnWidth(),
+              },
+              children: [
+                TableRow(
+                  children: [
+                    Text(
+                      'Language: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text('Flutter 3 / Dart SDK 3'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Database: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text('sqflite'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Packages: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text(
+                      'package_info_plus, expandable_search_bar_plus, url_launcher',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Design: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text('Material v3'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Icons: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    Text('Cupertino Icons'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Pairing: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    const Link(
+                      'JaVaFo (main.jar v2.2)',
+                      'https://www.rrweb.org/javafo/JaVaFo.htm',
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
@@ -290,23 +419,41 @@ void showAppInfoDialog(BuildContext context) {
               'I want this App to remain open-source (copyleft). Thus this program and all of its sourcecode is licensed under **GPL v3**\nFeel free to use, modify and redistribute it under the terms of this license.',
               style: TextStyle(color: Theme.of(context).colorScheme.secondary),
             ),
-            InfoRow(
-              'License text:',
-              '',
-              titleWidth: 90,
-              contentWidget: const Link(
-                'gnu.org/licenses/gpl-3.0',
-                'https://www.gnu.org/licenses/gpl-3.0.html',
-              ),
-            ),
-            InfoRow(
-              'Rook Icon:',
-              '',
-              titleWidth: 90,
-              contentWidget: const Link(
-                'Icon by Freepik',
-                'https://www.freepik.com/icon/rook_562880#fromView=search&page=1&position=36&uuid=c1e0d777-66db-4757-98d6-8a870ff59f43',
-              ),
+            Table(
+              columnWidths: const <int, TableColumnWidth>{
+                0: IntrinsicColumnWidth(),
+                1: FlexColumnWidth(),
+              },
+              children: [
+                TableRow(
+                  children: [
+                    Text(
+                      'License text: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    const Link(
+                      'gnu.org/licenses/gpl-3.0',
+                      'https://www.gnu.org/licenses/gpl-3.0.html',
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(
+                      'Rook Icon: ',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                    const Link(
+                      'Icon by Freepik',
+                      'https://www.freepik.com/icon/rook_562880#fromView=search&page=1&position=36&uuid=c1e0d777-66db-4757-98d6-8a870ff59f43',
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
