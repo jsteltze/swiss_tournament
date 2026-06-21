@@ -4,7 +4,6 @@ import 'package:swiss_tournament/utils/logger.dart';
 
 import '../components/description.dart';
 import '../components/info_panel.dart';
-import '../components/info_table_row.dart';
 import '../components/input_field.dart';
 import '../components/input_title.dart';
 import '../components/search_field.dart';
@@ -94,10 +93,24 @@ void showPlayerDetailsDialog(
                 ],
               ),
               const SizedBox(height: 10),
-              InfoRow(
-                '${tournament.isFinished() ? 'Final' : 'Current'} Rank:',
-                '#${r.rank} ${r.sharedPlace.isNotEmpty ? '(shared)' : ''}',
-                titleWidth: rowWidth,
+              Row(
+                spacing: 5,
+                children: [
+                  SizedBox(
+                    width: rowWidth,
+                    child: Text(
+                      '${tournament.isFinished() ? 'Final' : 'Current'} Rank:',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '#${r.rank} ${r.sharedPlace.isNotEmpty ? '(shared)' : ''}',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
