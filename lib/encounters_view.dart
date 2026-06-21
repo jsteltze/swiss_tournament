@@ -1,5 +1,6 @@
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
+import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/utils/export_handler.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
@@ -87,63 +88,39 @@ class _EncountersViewState extends State<EncountersView> {
           },
           children: [
             if (round.acceleratedRoundVirtualPoints > 0.0)
-              TableRow(
-                children: [
-                  Text(
-                    "Baku Info: ",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ),
-                  Text(
-                    "This is an accelerated round.\nPlayers #1-#${(2 * widget.tournament.players.length) ~/ 4} have received ${round.acceleratedRoundVirtualPoints} virtual points.",
-                  ),
-                ],
-              ),
-            TableRow(
-              children: [
-                Text(
-                  "Started at: ",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
+              InfoRow(
+                "Baku Info: ",
+                "This is an accelerated round.\nPlayers #1-#${(2 * widget.tournament.players.length) ~/ 4} have received ${round.acceleratedRoundVirtualPoints} virtual points.",
+              ).build(context),
+            InfoRow(
+              "Started at: ",
+              round.startedAt.toHumanString(),
+            ).build(context),
+            if (round.finishedAt != null)
+              InfoRow(
+                "Finished at: ",
+                '',
+                contentWidget: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(text: "${round.finishedAt!.toHumanString()} ("),
+                      WidgetSpan(
+                        child: Icon(
+                          Icons.access_time,
+                          size: 16,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withAlpha(160),
+                        ),
+                      ),
+                      TextSpan(
+                        text:
+                            " ${duration?.pretty(upperTersity: DurationTersity.day, tersity: duration.inDays > 0 ? DurationTersity.hour : DurationTersity.minute)})",
+                      ),
+                    ],
                   ),
                 ),
-                Text(round.startedAt.toHumanString()),
-              ],
-            ),
-            if (round.finishedAt != null)
-              TableRow(
-                children: [
-                  Text(
-                    "Finished at: ",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "${round.finishedAt!.toHumanString()} (",
-                        ),
-                        WidgetSpan(
-                          child: Icon(
-                            Icons.access_time,
-                            size: 16,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primary.withAlpha(160),
-                          ),
-                        ),
-                        TextSpan(
-                          text:
-                              " ${duration?.pretty(upperTersity: DurationTersity.day, tersity: duration.inDays > 0 ? DurationTersity.hour : DurationTersity.minute)})",
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              ).build(context),
           ],
         ),
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swiss_tournament/components/info_table_row.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/utils/logger.dart';
 
@@ -122,121 +123,59 @@ void showPlayerDetailsDialog(
             1: FlexColumnWidth(),
           },
           children: [
-            TableRow(
-              children: [
-                Text(
-                  'Wins - Losses: ',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                Text(
-                  r.winsLossesString,
-                  style: r.winsLossesString.startsWith(RegExp(r'\+|-'))
-                      ? TextStyle(
-                          color: r.winsLossesString.startsWith('+')
-                              ? Colors.green
-                              : Colors.red,
-                        )
-                      : null,
-                ),
-              ],
-            ),
-            TableRow(
-              children: [
-                Text(
-                  'Tiebreak: ',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                Text(
-                  '${tournament.settings.tb1.formatScore(r.tiebreak1!)} (${tournament.settings.tb1.shortName})',
-                ),
-              ],
-            ),
-            TableRow(
-              children: [
-                Text(
-                  'Start Rank: ',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                Text('#${index + 1}'),
-              ],
-            ),
-            TableRow(
-              children: [
-                Text(
-                  'Rating: ',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                Text(r.player.rating > 0 ? r.player.rating.toString() : 'N/A'),
-              ],
-            ),
-            TableRow(
-              children: [
-                Text(
-                  'Performance: ',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                Row(
-                  children: [
-                    if (r.player.rating > 0 && r.performance! > 0)
-                      Transform.rotate(
-                        angle: (r.player.rating - r.performance!).sign * 0.8,
-                        child: Icon(
-                          Icons.arrow_forward,
-                          color: r.performance! > r.player.rating
-                              ? Colors.green
-                              : Colors.red,
-                        ),
+            InfoRow(
+              'Wins - Losses: ',
+              '',
+              contentWidget: Text(
+                r.winsLossesString,
+                style: r.winsLossesString.startsWith(RegExp(r'\+|-'))
+                    ? TextStyle(
+                        color: r.winsLossesString.startsWith('+')
+                            ? Colors.green
+                            : Colors.red,
+                      )
+                    : null,
+              ),
+            ).build(context),
+            InfoRow(
+              'Tiebreak: ',
+              '${tournament.settings.tb1.formatScore(r.tiebreak1!)} (${tournament.settings.tb1.shortName})',
+            ).build(context),
+            InfoRow('Start Rank: ', '#${index + 1}').build(context),
+            InfoRow(
+              'Rating: ',
+              r.player.rating > 0 ? r.player.rating.toString() : 'N/A',
+            ).build(context),
+            InfoRow(
+              'Performance: ',
+              '',
+              contentWidget: Row(
+                children: [
+                  if (r.player.rating > 0 && r.performance! > 0)
+                    Transform.rotate(
+                      angle: (r.player.rating - r.performance!).sign * 0.8,
+                      child: Icon(
+                        Icons.arrow_forward,
+                        color: r.performance! > r.player.rating
+                            ? Colors.green
+                            : Colors.red,
                       ),
-                    Text(r.performance == 0 ? '-' : r.performance.toString()),
-                  ],
-                ),
-              ],
-            ),
-            TableRow(
-              children: [
-                Text(
-                  'Status: ',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                Text(r.player.leftAt == null ? 'Active' : 'Withdrawn'),
-              ],
-            ),
+                    ),
+                  Text(r.performance == 0 ? '-' : r.performance.toString()),
+                ],
+              ),
+            ).build(context),
+            InfoRow(
+              'Status: ',
+              r.player.leftAt == null ? 'Active' : 'Withdrawn',
+            ).build(context),
             if (r.player.joinedAt > 0)
-              TableRow(
-                children: [
-                  Text(
-                    'Joined at: ',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ),
-                  Text('Round ${r.player.joinedAt}'),
-                ],
-              ),
+              InfoRow(
+                'Joined at: ',
+                'Round ${r.player.joinedAt}',
+              ).build(context),
             if (r.player.leftAt != null)
-              TableRow(
-                children: [
-                  Text(
-                    'Left at: ',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ),
-                  Text('Round ${r.player.leftAt}'),
-                ],
-              ),
+              InfoRow('Left at: ', 'Round ${r.player.leftAt}').build(context),
           ],
         ),
         if (tournament.rounds.isNotEmpty) ...[
