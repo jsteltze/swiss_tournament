@@ -59,10 +59,6 @@ class SingleEncounterView extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10.0),
-                  topRight: Radius.circular(10.0),
-                ),
                 color: Theme.of(context).colorScheme.primary.withAlpha(
                   encounter.result.isEmpty ? 20 : 0,
                 ),
@@ -274,8 +270,11 @@ class SingleEncounterView extends StatelessWidget {
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 1),
-                      width: 80,
-                      height: 50,
+                      padding: EdgeInsets.all(5),
+                      constraints: const BoxConstraints(
+                        minHeight: 50.0,
+                        minWidth: 80.0,
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(8.0),
@@ -283,11 +282,30 @@ class SingleEncounterView extends StatelessWidget {
                         ),
                         color: Theme.of(context).colorScheme.surfaceBright,
                       ),
+                      child: Column(
+                        children: [
+                          Text(
+                            '1-0',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.transparent,
+                                ),
+                          ),
+                          Text(
+                            'white win',
+                            style: TextStyle(color: Colors.transparent),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 1),
-                      width: 80,
-                      height: 50,
+                      padding: EdgeInsets.all(5),
+                      constraints: const BoxConstraints(
+                        minHeight: 50.0,
+                        minWidth: 80.0,
+                      ),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
@@ -300,17 +318,52 @@ class SingleEncounterView extends StatelessWidget {
                           tileMode: TileMode.clamp,
                         ),
                       ),
+                      child: Column(
+                        children: [
+                          Text(
+                            '\u{00BD} - \u{00BD}',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.transparent,
+                                ),
+                          ),
+                          Text(
+                            'draw',
+                            style: TextStyle(color: Colors.transparent),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 1),
-                      width: 80,
-                      height: 50,
+                      padding: EdgeInsets.all(5),
+                      constraints: const BoxConstraints(
+                        minHeight: 50.0,
+                        minWidth: 80.0,
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(8.0),
                           bottomRight: Radius.circular(8.0),
                         ),
                         color: Theme.of(context).colorScheme.surfaceDim,
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            '0-1',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.transparent,
+                                ),
+                          ),
+                          Text(
+                            'black win',
+                            style: TextStyle(color: Colors.transparent),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -340,35 +393,44 @@ class SingleEncounterView extends StatelessWidget {
                   ),
                   isSelected: selectedResultsBool1,
                   children: [
-                    Column(
-                      children: [
-                        Text(
-                          '1-0',
-                          style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text('white win'),
-                      ],
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        children: [
+                          Text(
+                            '1-0',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Text('white win'),
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          '\u{00BD} - \u{00BD}',
-                          style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text('draw'),
-                      ],
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        children: [
+                          Text(
+                            '\u{00BD} - \u{00BD}',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Text('draw'),
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          '0-1',
-                          style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text('black win'),
-                      ],
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        children: [
+                          Text(
+                            '0-1',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Text('black win'),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -388,8 +450,11 @@ class SingleEncounterView extends StatelessWidget {
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 1),
-                      width: 120,
-                      height: 50,
+                      padding: EdgeInsets.all(5),
+                      constraints: const BoxConstraints(
+                        minHeight: 50.0,
+                        minWidth: 120.0,
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(8.0),
@@ -397,17 +462,52 @@ class SingleEncounterView extends StatelessWidget {
                         ),
                         color: Theme.of(context).colorScheme.surfaceBright,
                       ),
+                      child: Column(
+                        children: [
+                          Text(
+                            '+ -',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.transparent,
+                                ),
+                          ),
+                          Text(
+                            'black missing',
+                            style: TextStyle(color: Colors.transparent),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 1),
-                      width: 120,
-                      height: 50,
+                      padding: EdgeInsets.all(5),
+                      constraints: const BoxConstraints(
+                        minHeight: 50.0,
+                        minWidth: 120.0,
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(8.0),
                           bottomRight: Radius.circular(8.0),
                         ),
                         color: Theme.of(context).colorScheme.surfaceDim,
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            '- +',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.transparent,
+                                ),
+                          ),
+                          Text(
+                            'white missing',
+                            style: TextStyle(color: Colors.transparent),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -437,25 +537,31 @@ class SingleEncounterView extends StatelessWidget {
                   ),
                   isSelected: selectedResultsBool2,
                   children: [
-                    Column(
-                      children: [
-                        Text(
-                          '+ -',
-                          style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text('black missing'),
-                      ],
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        children: [
+                          Text(
+                            '+ -',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Text('black missing'),
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          '- +',
-                          style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text('white missing'),
-                      ],
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        children: [
+                          Text(
+                            '- +',
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Text('white missing'),
+                        ],
+                      ),
                     ),
                   ],
                 ),

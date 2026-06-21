@@ -103,111 +103,185 @@ void showPlayerDetailsDialog(
           ),
         ),
         const SizedBox(height: 10),
-        InfoRow(
-          'Wins - Losses:',
-          '',
-          titleWidth: rowWidth,
-          contentWidget: Text(
-            r.winsLossesString,
-            style: r.winsLossesString.startsWith(RegExp(r'\+|-'))
-                ? TextStyle(
-                    color: r.winsLossesString.startsWith('+')
-                        ? Colors.green
-                        : Colors.red,
-                  )
-                : null,
-          ),
-        ),
-        InfoRow(
-          'Tiebreak:',
-          '${tournament.settings.tb1.formatScore(r.tiebreak1!)} (${tournament.settings.tb1.shortName})',
-          titleWidth: rowWidth,
-        ),
-        InfoRow('Start Rank:', '#${index + 1}', titleWidth: rowWidth),
-        InfoRow(
-          'Rating:',
-          r.player.rating > 0 ? r.player.rating.toString() : 'N/A',
-          titleWidth: rowWidth,
-        ),
-        InfoRow(
-          'Performance:',
-          '',
-          titleWidth: rowWidth,
-          contentWidget: Row(
-            children: [
-              if (r.player.rating > 0 && r.performance! > 0)
-                Transform.rotate(
-                  angle: (r.player.rating - r.performance!).sign * 0.8,
-                  child: Icon(
-                    size: 12,
-                    Icons.arrow_forward,
-                    color: r.performance! > r.player.rating
-                        ? Colors.green
-                        : Colors.red,
+        Table(
+          columnWidths: const <int, TableColumnWidth>{
+            0: IntrinsicColumnWidth(),
+            1: FlexColumnWidth(),
+          },
+          children: [
+            TableRow(
+              children: [
+                Text(
+                  'Wins - Losses: ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
                   ),
                 ),
-              Text(r.performance == 0 ? '-' : r.performance.toString()),
-            ],
-          ),
+                Text(
+                  r.winsLossesString,
+                  style: r.winsLossesString.startsWith(RegExp(r'\+|-'))
+                      ? TextStyle(
+                          color: r.winsLossesString.startsWith('+')
+                              ? Colors.green
+                              : Colors.red,
+                        )
+                      : null,
+                ),
+              ],
+            ),
+            TableRow(
+              children: [
+                Text(
+                  'Tiebreak: ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
+                Text(
+                  '${tournament.settings.tb1.formatScore(r.tiebreak1!)} (${tournament.settings.tb1.shortName})',
+                ),
+              ],
+            ),
+            TableRow(
+              children: [
+                Text(
+                  'Start Rank: ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
+                Text('#${index + 1}'),
+              ],
+            ),
+            TableRow(
+              children: [
+                Text(
+                  'Rating: ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
+                Text(r.player.rating > 0 ? r.player.rating.toString() : 'N/A'),
+              ],
+            ),
+            TableRow(
+              children: [
+                Text(
+                  'Performance: ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
+                Row(
+                  children: [
+                    if (r.player.rating > 0 && r.performance! > 0)
+                      Transform.rotate(
+                        angle: (r.player.rating - r.performance!).sign * 0.8,
+                        child: Icon(
+                          Icons.arrow_forward,
+                          color: r.performance! > r.player.rating
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                      ),
+                    Text(r.performance == 0 ? '-' : r.performance.toString()),
+                  ],
+                ),
+              ],
+            ),
+            TableRow(
+              children: [
+                Text(
+                  'Status: ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
+                Text(r.player.leftAt == null ? 'Active' : 'Withdrawn'),
+              ],
+            ),
+            if (r.player.joinedAt > 0)
+              TableRow(
+                children: [
+                  Text(
+                    'Joined at: ',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  ),
+                  Text('Round ${r.player.joinedAt}'),
+                ],
+              ),
+            if (r.player.leftAt != null)
+              TableRow(
+                children: [
+                  Text(
+                    'Left at: ',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
+                  ),
+                  Text('Round ${r.player.leftAt}'),
+                ],
+              ),
+          ],
         ),
-        InfoRow(
-          'Status:',
-          r.player.leftAt == null ? 'Active' : 'Withdrawn',
-          titleWidth: rowWidth,
-        ),
-        if (r.player.joinedAt > 0)
-          InfoRow(
-            'Joined at:',
-            'Round ${r.player.joinedAt}',
-            titleWidth: rowWidth,
-          ),
-        if (r.player.leftAt != null)
-          InfoRow('Left at:', 'Round ${r.player.leftAt}', titleWidth: rowWidth),
         if (tournament.rounds.isNotEmpty) ...[
           SizedBox(height: 10),
-          InfoRow('Results:', ''),
-          ...tournament.rounds.map((r) {
-            final encounter = r.encounters.firstWhere(
-              (e) => e.playerIdB == index || e.playerIdW == index,
-              orElse: () => Encounter(playerIdW: -1, playerIdB: -1),
-            );
-            String opponentName = '-';
-            String opponentRating = '';
-            String result = encounter.result;
-            if (encounter.playerIdW >= 0 || encounter.playerIdB >= 0) {
-              final isWhite = encounter.playerIdW == index;
-              if (isWhite) {
-                if (result == '0.5-0.5') result = '½ (w)';
-                if (result == '1-0') result = '1 (w)';
-                if (result == '0-1') result = '0 (w)';
-                if (result == '+ -') result = '+ (w)';
-                if (result == '- +') result = '- (w)';
-              } else {
-                if (result == '0.5-0.5') result = '½ (b)';
-                if (result == '1-0') result = '0 (b)';
-                if (result == '0-1') result = '1 (b)';
-                if (result == '+ -') result = '- (b)';
-                if (result == '- +') result = '+ (b)';
-              }
+          Text(
+            'Results: ',
+            style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
+          ),
+          Table(
+            defaultVerticalAlignment:
+                TableCellVerticalAlignment.intrinsicHeight,
+            columnWidths: const <int, TableColumnWidth>{
+              0: FlexColumnWidth(),
+              1: IntrinsicColumnWidth(),
+              2: IntrinsicColumnWidth(),
+            },
+            children: tournament.rounds.map((r) {
+              final encounter = r.encounters.firstWhere(
+                (e) => e.playerIdB == index || e.playerIdW == index,
+                orElse: () => Encounter(playerIdW: -1, playerIdB: -1),
+              );
+              String opponentName = '-';
+              String opponentRating = '';
+              String result = encounter.result;
+              if (encounter.playerIdW >= 0 || encounter.playerIdB >= 0) {
+                final isWhite = encounter.playerIdW == index;
+                if (isWhite) {
+                  if (result == '0.5-0.5') result = '½ (w)';
+                  if (result == '1-0') result = '1 (w)';
+                  if (result == '0-1') result = '0 (w)';
+                  if (result == '+ -') result = '+ (w)';
+                  if (result == '- +') result = '- (w)';
+                } else {
+                  if (result == '0.5-0.5') result = '½ (b)';
+                  if (result == '1-0') result = '0 (b)';
+                  if (result == '0-1') result = '1 (b)';
+                  if (result == '+ -') result = '- (b)';
+                  if (result == '- +') result = '+ (b)';
+                }
 
-              final opponentId = isWhite
-                  ? encounter.playerIdB
-                  : encounter.playerIdW;
-              opponentName = opponentId < 0
-                  ? 'Bye'
-                  : tournament.players[opponentId].name;
-              opponentRating = opponentId < 0
-                  ? ''
-                  : tournament.players[opponentId].rating.toString();
-              if (opponentRating == '0') {
-                opponentRating = 'N/A';
+                final opponentId = isWhite
+                    ? encounter.playerIdB
+                    : encounter.playerIdW;
+                opponentName = opponentId < 0
+                    ? 'Bye'
+                    : tournament.players[opponentId].name;
+                opponentRating = opponentId < 0
+                    ? ''
+                    : tournament.players[opponentId].rating.toString();
+                if (opponentRating == '0') {
+                  opponentRating = 'N/A';
+                }
               }
-            }
-            return Row(
-              children: [
-                Expanded(
-                  child: Container(
+              return TableRow(
+                children: [
+                  Container(
                     decoration: tableDeco,
+                    padding: EdgeInsets.symmetric(horizontal: 5),
                     child: Text(
                       opponentName,
                       style: TextStyle(
@@ -215,25 +289,25 @@ void showPlayerDetailsDialog(
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  width: 50,
-                  decoration: tableDeco,
-                  child: Text(
-                    opponentRating,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  Container(
+                    decoration: tableDeco,
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(
+                      opponentRating,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  width: 50,
-                  decoration: tableDeco,
-                  child: Text(result),
-                ),
-              ],
-            );
-          }),
+                  Container(
+                    decoration: tableDeco,
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(result),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
         ],
       ],
     ),

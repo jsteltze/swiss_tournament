@@ -344,7 +344,6 @@ class RankingView extends StatelessWidget {
                                             .sign *
                                         0.8,
                                     child: Icon(
-                                      size: 12,
                                       Icons.arrow_forward,
                                       color: r.performance! > r.player.rating
                                           ? Colors.green
