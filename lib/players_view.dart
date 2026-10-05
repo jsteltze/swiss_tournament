@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
+import 'package:js_flutter/components/popup_menu.dart';
+import 'package:js_flutter/icons.dart';
+import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 
 import 'data/tournament.dart';
@@ -127,105 +130,60 @@ class PlayersView extends StatelessWidget {
                   itemCount: filteredPlayers.length,
                   itemBuilder: (context, index) {
                     final player = filteredPlayers[index];
-                    var popup = PopupMenuButton<String>(
-                      onSelected: (value) {
-                        if (value == 'edit') {
-                          showEditPlayerDialog(
+                    final popupItems = [
+                      DialogAction(
+                        title: 'Edit',
+                        icon: editIcon,
+                        onPressed: () => showEditPlayerDialog(
+                          context,
+                          tournament,
+                          player,
+                          onPlayersChanged,
+                        ),
+                      ),
+                      if (player.leftAt == null)
+                        DialogAction(
+                          title: 'Withdraw',
+                          icon: Icons.person_off,
+                          onPressed: () => confirmDisablePlayer(
                             context,
                             tournament,
                             player,
                             onPlayersChanged,
-                          );
-                        } else if (value == 'delete') {
-                          confirmDeletePlayer(
-                            context,
-                            tournament,
-                            player,
-                            onPlayersChanged,
-                          );
-                        } else if (value == 'disable') {
-                          confirmDisablePlayer(
-                            context,
-                            tournament,
-                            player,
-                            onPlayersChanged,
-                          );
-                        } else if (value == 're-enable') {
-                          confirmReenablePlayer(
-                            context,
-                            tournament,
-                            player,
-                            onPlayersChanged,
-                          );
-                        }
-                      },
-                      itemBuilder: (BuildContext context) {
-                        return [
-                          const PopupMenuItem(
-                            value: 'edit',
-                            child: Row(
-                              children: [
-                                Icon(Icons.edit, size: 20),
-                                SizedBox(width: 8),
-                                Text('Edit'),
-                              ],
-                            ),
                           ),
-                          if (player.leftAt == null)
-                            PopupMenuItem(
-                              value: 'disable',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.person_off, size: 20),
-                                  SizedBox(width: 8),
-                                  Text('Withdraw'),
-                                ],
-                              ),
-                            ),
-                          if (player.leftAt != null)
-                            PopupMenuItem(
-                              value: 're-enable',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.person, size: 20),
-                                  SizedBox(width: 8),
-                                  Text('Re-enable'),
-                                ],
-                              ),
-                            ),
-                          PopupMenuItem(
-                            value: 'delete',
-                            enabled: tournament.rounds.isEmpty,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.delete,
-                                  size: 20,
-                                  color: Theme.of(context).colorScheme.error,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error
-                                        .withAlpha(
-                                          tournament.rounds.isEmpty ? 255 : 150,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                        )
+                      else
+                        DialogAction(
+                          title: 'Re-enable',
+                          icon: Icons.person,
+                          onPressed: () => confirmReenablePlayer(
+                            context,
+                            tournament,
+                            player,
+                            onPlayersChanged,
                           ),
-                        ];
-                      },
-                    );
+                        ),
+                      DialogAction(
+                        title: 'Delete',
+                        icon: deleteIcon,
+                        isDestructive: true,
+                        onPressed: tournament.rounds.isEmpty
+                            ? () => confirmDeletePlayer(
+                                context,
+                                tournament,
+                                player,
+                                onPlayersChanged,
+                              )
+                            : null,
+                      ),
+                    ];
                     final playerIndex = tournament.players.indexOf(player);
 
                     return PlayerTile(
                       player: player,
                       index: playerIndex,
                       detailed: true,
-                      popup: popup,
+                      popup: createPopupMenu(popupItems),
                       onTap: () => showPlayerDetailsDialog(
                         context,
                         playerIndex,

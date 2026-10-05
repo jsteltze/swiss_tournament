@@ -1,6 +1,9 @@
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:js_flutter/components/info_table_row.dart';
+import 'package:js_flutter/components/popup_menu.dart';
+import 'package:js_flutter/icons.dart';
+import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/timestampx.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/utils/export_handler.dart';
@@ -127,49 +130,20 @@ class _EncountersViewState extends State<EncountersView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'delete') {
-                  widget.deleteRound?.call();
-                } else if (value == 'export') {
-                  _exportRound();
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                return [
-                  PopupMenuItem<String>(
-                    value: 'export',
-                    child: Row(
-                      children: [
-                        const Icon(Icons.save_alt, size: 20),
-                        const SizedBox(width: 8),
-                        Text('Export Round ${widget.roundIndex + 1} (HTML)'),
-                      ],
-                    ),
-                  ),
-                  if (widget.roundIndex == widget.tournament.rounds.length - 1)
-                    PopupMenuItem<String>(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.delete_outline,
-                            size: 20,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Delete Round ${widget.roundIndex + 1}',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ];
-              },
-            ),
+            createPopupMenu([
+              DialogAction(
+                title: 'Export Round ${widget.roundIndex + 1} (HTML)',
+                icon: exportIcon,
+                onPressed: _exportRound,
+              ),
+              if (widget.roundIndex == widget.tournament.rounds.length - 1)
+                DialogAction(
+                  title: 'Delete Round ${widget.roundIndex + 1}',
+                  icon: deleteIcon,
+                  isDestructive: true,
+                  onPressed: widget.deleteRound,
+                ),
+            ]),
           ],
         ),
         const SizedBox(height: 10),

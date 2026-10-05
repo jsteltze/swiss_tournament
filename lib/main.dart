@@ -3,7 +3,11 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/floating_action_button.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
+import 'package:js_flutter/components/popup_menu.dart';
+import 'package:js_flutter/icons.dart';
+import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -189,65 +193,28 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         title: FittedBox(fit: BoxFit.fitWidth, child: Text(widget.title)),
         actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'export') {
-                FileLogger.log('Export triggered');
-                showExportDialog(context, _tournaments);
-              } else if (value == 'import') {
-                _importTournaments();
-              } else if (value == 'info') {
-                FileLogger.log('App info dialog requested');
-                showAppInfoDialog(context);
-              } else if (value == 'logs') {
-                showLogsDialog(context);
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem<String>(
-                  value: 'import',
-                  child: Row(
-                    children: [
-                      Icon(Icons.file_upload),
-                      SizedBox(width: 8),
-                      Text('Import'),
-                    ],
-                  ),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'export',
-                  child: Row(
-                    children: [
-                      Icon(Icons.save_alt),
-                      SizedBox(width: 8),
-                      Text('Export'),
-                    ],
-                  ),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'logs',
-                  child: Row(
-                    children: [
-                      Icon(Icons.list_alt),
-                      SizedBox(width: 8),
-                      Text('View Logs'),
-                    ],
-                  ),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'info',
-                  child: Row(
-                    children: [
-                      Icon(Icons.info_outline),
-                      SizedBox(width: 8),
-                      Text('App Info'),
-                    ],
-                  ),
-                ),
-              ];
-            },
-          ),
+          createPopupMenu([
+            DialogAction(
+              title: 'Import',
+              icon: Icons.file_upload,
+              onPressed: _importTournaments,
+            ),
+            DialogAction(
+              title: 'Export',
+              icon: exportIcon,
+              onPressed: () => showExportDialog(context, _tournaments),
+            ),
+            DialogAction(
+              title: 'View Logs',
+              icon: Icons.list_alt,
+              onPressed: () => showLogsDialog(context),
+            ),
+            DialogAction(
+              title: 'App Info',
+              icon: Icons.info_outline,
+              onPressed: () => showAppInfoDialog(context),
+            ),
+          ]),
         ],
       ),
       body: _isLoading
@@ -313,11 +280,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addTournament,
-        tooltip: 'Add Tournament',
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
+      floatingActionButton: createFAB(
+        context,
+        'Add Tournament',
+        addIcon,
+        _addTournament,
       ),
     );
   }

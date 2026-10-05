@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/floating_action_button.dart';
 import 'package:js_flutter/components/search_field.dart';
+import 'package:js_flutter/icons.dart';
 import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 import 'package:swiss_tournament/ranking_view.dart';
 
@@ -135,15 +137,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                     });
                   },
                 ),
-                FloatingActionButton(
-                  onPressed: _addPlayer,
-                  tooltip: 'Add Player',
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  child: Icon(
-                    Icons.add,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
+                createFAB(context, 'Add Player', addIcon, _addPlayer),
               ],
             )
           : null,

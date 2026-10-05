@@ -6,6 +6,7 @@ import 'package:js_flutter/components/input_field.dart';
 import 'package:js_flutter/components/input_title.dart';
 import 'package:js_flutter/components/search_field.dart';
 import 'package:js_flutter/components/warning.dart';
+import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
@@ -40,7 +41,7 @@ void showPlayerDetailsDialog(
   openDialog(
     context,
     title: r.player.name,
-    titleIcon: Icon(Icons.person),
+    titleIcon: Icons.person,
     child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,7 +277,7 @@ void confirmDeletePlayer(
   openDialog(
     context,
     title: 'Delete Player',
-    titleIcon: Icon(Icons.delete),
+    titleIcon: deleteIcon,
     child: (ctx, setDialogState, toggleMainAction) => Text(
       'Are you sure you want to delete "${player.name}"?\n\nYou can also withdraw the player. In this case the player is just disabled and can be re-enabled in future rounds.',
     ),
@@ -305,7 +306,7 @@ void confirmDisablePlayer(
   openDialog(
     context,
     title: 'Withdraw Player',
-    titleIcon: Icon(Icons.person_off),
+    titleIcon: Icons.person_off,
     child: (ctx, setDialogState, toggleMainAction) => Text(
       'Are you sure you want to withdraw (disable) "${player.name}"?\nDisabled players will not be paired in future rounds but can be re-enabled.',
     ),
@@ -334,7 +335,7 @@ void confirmReenablePlayer(
   openDialog(
     context,
     title: 'Re-enable Player',
-    titleIcon: Icon(Icons.person),
+    titleIcon: Icons.person,
     child: (ctx, setDialogState, toggleMainAction) => Text(
       'Are you sure you want to re-enable "${player.name}"?\nThis player will be paired again in future rounds.',
     ),
@@ -370,7 +371,7 @@ void showEditPlayerDialog(
     context,
     title:
         '${player == null ? 'New' : 'Edit'} Player${isLateJoin ? ' (Late Join)' : ''}',
-    titleIcon: Icon(player == null ? Icons.person_add_alt_1 : Icons.edit),
+    titleIcon: player == null ? Icons.person_add_alt_1 : editIcon,
     child: (ctx, setDialogState, toggleMainAction) => Form(
       key: formKey,
       child: Column(
@@ -450,7 +451,7 @@ void selectByePlayersDialog(
   openDialog(
     context,
     title: 'Requested byes',
-    titleIcon: Icon(Icons.person_off),
+    titleIcon: Icons.person_off,
     child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,

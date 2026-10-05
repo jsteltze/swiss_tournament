@@ -136,7 +136,7 @@ class SingleEncounterView extends StatelessWidget {
       openDialog(
         context,
         title: 'Bye information',
-        titleIcon: Icon(Icons.safety_divider),
+        titleIcon: Icons.safety_divider,
         child: (ctx, setDialogState, toggleMainAction) => Column(
           children: [
             InfoPanel(
@@ -161,7 +161,7 @@ class SingleEncounterView extends StatelessWidget {
     openDialog(
       context,
       title: 'Select Result',
-      titleIcon: Icon(Icons.safety_divider),
+      titleIcon: Icons.safety_divider,
       child: (ctx, setDialogState, toggleMainAction) => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

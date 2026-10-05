@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/warning.dart';
+import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
@@ -161,7 +162,7 @@ class _RoundsViewState extends State<RoundsView> {
     openDialog(
       context,
       title: 'Missing results',
-      titleIcon: Icon(Icons.link_off_sharp),
+      titleIcon: Icons.link_off_sharp,
       child: (ctx, setDialogState, toggleMainAction) => ListBody(
         children: <Widget>[
           const Warning(
@@ -183,7 +184,7 @@ class _RoundsViewState extends State<RoundsView> {
     openDialog(
       context,
       title: 'Tournament finished',
-      titleIcon: Icon(Icons.emoji_events_outlined),
+      titleIcon: Icons.emoji_events_outlined,
       child: (ctx, setDialogState, toggleMainAction) => const Text(
         'Congratulations!\nThe tournament is finished.\n\nYou can now view the ranking.',
       ),
@@ -202,7 +203,7 @@ class _RoundsViewState extends State<RoundsView> {
     openDialog(
       context,
       title: 'Not enough players',
-      titleIcon: Icon(Icons.error_outline),
+      titleIcon: Icons.error_outline,
       child: (ctx, setDialogState, toggleMainAction) => const Warning(
         'The number of (active) players is less or equal than the number of rounds.\nA Swiss tournament is not advisable for this conditions.\n\nIf the number of players is relatively small think about different tournament modes (like Round-Robin). Otherwise add more players or reduce the number of rounds.',
       ),
@@ -276,7 +277,7 @@ class _RoundsViewState extends State<RoundsView> {
     openDialog(
       context,
       title: 'Delete round',
-      titleIcon: Icon(Icons.delete),
+      titleIcon: deleteIcon,
       child: (ctx, setDialogState, toggleMainAction) =>
           roundIndex == widget.tournament.rounds.length - 1
           ? Text('Are you sure you want to delete round ${roundIndex + 1}?')

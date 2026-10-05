@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:js_flutter/components/description.dart';
 import 'package:js_flutter/components/input_title.dart';
 import 'package:js_flutter/components/warning.dart';
+import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
 
@@ -29,7 +30,7 @@ void showEditTournamentDialog(
   openDialog(
     context,
     title: '${tournament == null ? 'New' : 'Edit'} Tournament',
-    titleIcon: Icon(tournament == null ? Icons.new_label_outlined : Icons.edit),
+    titleIcon: tournament == null ? Icons.new_label_outlined : editIcon,
     child: (ctx, setDialogState, toggleMainAction) => Form(
       key: formKey,
       child: Column(
@@ -112,7 +113,7 @@ void confirmDeleteTournament(
   openDialog(
     context,
     title: 'Delete Tournament',
-    titleIcon: Icon(Icons.delete),
+    titleIcon: deleteIcon,
     child: (ctx, setDialogState, toggleMainAction) =>
         Text('Are you sure you want to delete "${tournament.title}"?'),
     mainAction: DialogAction(
@@ -136,7 +137,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
   openDialog(
     context,
     title: 'Export Tournament',
-    titleIcon: Icon(Icons.save_alt),
+    titleIcon: exportIcon,
     child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +229,7 @@ void showDuplicateTournamentDialog(
   openDialog(
     context,
     title: 'Duplicate Tournament',
-    titleIcon: Icon(Icons.copy),
+    titleIcon: Icons.copy,
     child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,7 +312,7 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
   openDialog(
     context,
     title: 'Advanced Settings',
-    titleIcon: Icon(Icons.settings),
+    titleIcon: Icons.settings,
     child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
