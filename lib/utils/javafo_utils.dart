@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:jni/jni.dart';
 import 'package:swiss_tournament/data/tournament.dart';
-import 'package:swiss_tournament/utils/logger.dart';
+import 'package:js_flutter/utils/logger.dart';
 
 import '../data/encounter.dart';
 import '../data/round.dart';

@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:swiss_tournament/components/warning.dart';
+import 'package:js_flutter/components/description.dart';
+import 'package:js_flutter/components/input_title.dart';
+import 'package:js_flutter/components/warning.dart';
+import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:js_flutter/utils/snackbar_utils.dart';
 
-import '../components/description.dart';
-import '../components/input_title.dart';
 import '../data/first_round_pairing.dart';
 import '../data/tournament.dart';
 import '../data/tournament_storage.dart';
 import '../utils/export_handler.dart';
-import '../utils/snackbar_utils.dart';
-import 'dialog_utils.dart';
 
 void showEditTournamentDialog(
   BuildContext context,

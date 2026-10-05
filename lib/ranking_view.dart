@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:swiss_tournament/components/description.dart';
-import 'package:swiss_tournament/components/input_title.dart';
+import 'package:js_flutter/components/description.dart';
+import 'package:js_flutter/components/input_title.dart';
+import 'package:js_flutter/components/no_data_tile.dart';
+import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:js_flutter/utils/logger.dart';
+import 'package:js_flutter/utils/snackbar_utils.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
 import 'package:swiss_tournament/utils/export_handler.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
-import 'package:swiss_tournament/utils/logger.dart';
-import 'package:swiss_tournament/utils/snackbar_utils.dart';
 
-import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
-import 'dialogs/dialog_utils.dart';
 
 class RankingView extends StatelessWidget {
   final Tournament tournament;

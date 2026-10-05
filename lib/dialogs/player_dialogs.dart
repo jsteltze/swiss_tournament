@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:swiss_tournament/components/info_table_row.dart';
+import 'package:js_flutter/components/description.dart';
+import 'package:js_flutter/components/info_panel.dart';
+import 'package:js_flutter/components/info_table_row.dart';
+import 'package:js_flutter/components/input_field.dart';
+import 'package:js_flutter/components/input_title.dart';
+import 'package:js_flutter/components/search_field.dart';
+import 'package:js_flutter/components/warning.dart';
+import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:js_flutter/utils/logger.dart';
+import 'package:js_flutter/utils/snackbar_utils.dart';
 import 'package:swiss_tournament/data/tournament.dart';
-import 'package:swiss_tournament/utils/logger.dart';
 
-import '../components/description.dart';
-import '../components/info_panel.dart';
-import '../components/input_field.dart';
-import '../components/input_title.dart';
-import '../components/search_field.dart';
-import '../components/warning.dart';
 import '../data/encounter.dart';
 import '../data/player.dart';
 import '../data/player_ratings.dart';
-import '../utils/snackbar_utils.dart';
-import 'dialog_utils.dart';
 
 void showPlayerDetailsDialog(
   BuildContext context,
@@ -467,6 +467,7 @@ void selectByePlayersDialog(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             SearchField(
+              placeholder: 'Search Player',
               onSearch: (value) {
                 setDialogState(() {
                   filteredPlayers = value.isEmpty

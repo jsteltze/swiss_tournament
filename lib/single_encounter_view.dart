@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:swiss_tournament/components/info_panel.dart';
+import 'package:js_flutter/components/info_panel.dart';
+import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/tournament.dart';
@@ -8,7 +9,6 @@ import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'data/player.dart';
 import 'data/player_ratings.dart';
 import 'data/round.dart';
-import 'dialogs/dialog_utils.dart';
 
 class SingleEncounterView extends StatelessWidget {
   final Round round;

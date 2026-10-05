@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 
-import 'components/no_data_tile.dart';
 import 'data/tournament.dart';
 import 'dialogs/player_dialogs.dart';
 

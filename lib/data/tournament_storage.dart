@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:js_flutter/utils/logger.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:swiss_tournament/utils/logger.dart';
 
 import 'player.dart';
 import 'round.dart';
@@ -55,8 +55,8 @@ class TournamentStorage {
           .toList(),
       rounds: json['rounds'] != null
           ? (jsonDecode(json['rounds']) as List)
-                .map((e) => Round.fromJson(e))
-                .toList()
+          .map((e) => Round.fromJson(e))
+          .toList()
           : [],
       settings: json['settings'] != null
           ? (TournamentSettings.fromJson(jsonDecode(json['settings'])))

@@ -2,10 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:jni/jni.dart';
-import 'package:logger/logger.dart';
-import 'package:swiss_tournament/utils/logger.dart';
-import 'package:swiss_tournament/utils/permission_handler.dart';
-import 'package:swiss_tournament/utils/snackbar_utils.dart';
+import 'package:js_flutter/android/permission_handler.dart';
+import 'package:js_flutter/utils/logger.dart';
+import 'package:js_flutter/utils/snackbar_utils.dart';
 
 import '../dialogs/main_dialogs.dart';
 import '../generated/java.g.dart';
@@ -24,9 +23,8 @@ class ExportHandler {
       JString.fromString(filename),
     );
     if (result != null && result.toDartString().startsWith('ERROR: ')) {
-      FileLogger.log(
+      FileLogger.error(
         'Error while exporting $filename: ${result.toDartString().substring(7)}',
-        Level.error,
       );
       if (context.mounted) {
         showErrorDialog(context, result.toDartString().substring(7));

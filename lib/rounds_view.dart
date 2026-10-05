@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:swiss_tournament/components/warning.dart';
+import 'package:js_flutter/components/no_data_tile.dart';
+import 'package:js_flutter/components/warning.dart';
+import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:js_flutter/utils/logger.dart';
+import 'package:js_flutter/utils/snackbar_utils.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/dialogs/player_dialogs.dart';
 import 'package:swiss_tournament/encounters_view.dart';
-import 'package:swiss_tournament/utils/logger.dart';
-import 'package:swiss_tournament/utils/snackbar_utils.dart';
 
-import 'components/no_data_tile.dart';
 import 'data/encounter.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
-import 'dialogs/dialog_utils.dart';
 import 'utils/javafo_utils.dart';
 
 // stores ExpansionPanel state information
