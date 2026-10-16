@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:js_flutter/utils/colorx.dart';
+import 'package:js_flutter/utils/package_info_global.dart';
 import 'package:js_flutter/utils/timestampx.dart';
-import 'package:swiss_tournament/utils/globals.dart';
 
 import '../data/player.dart';
 import '../data/player_ratings.dart';

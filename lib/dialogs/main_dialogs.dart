@@ -12,13 +12,13 @@ import 'package:js_flutter/components/warning.dart';
 import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/logger.dart';
+import 'package:js_flutter/utils/package_info_global.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
 import 'package:js_flutter/utils/timestampx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/data/tournament_storage.dart';
 import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
-import 'package:swiss_tournament/utils/globals.dart';
 
 import '../utils/export_handler.dart';
 

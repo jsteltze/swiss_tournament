@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/popup_menu.dart';
+import 'package:js_flutter/components/view_header.dart';
 import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
@@ -51,10 +52,8 @@ class PlayersView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (tournament.players.isNotEmpty)
-          Container(
-            color: Theme.of(context).colorScheme.secondaryContainer,
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
+          ViewHeader(
+            Row(
               spacing: 15,
               children: [
                 Icon(

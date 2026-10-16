@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/app_layout.dart';
 import 'package:js_flutter/components/floating_action_button.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/popup_menu.dart';
@@ -10,56 +11,20 @@ import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
-import 'package:swiss_tournament/utils/globals.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
 import 'tournament_details_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await FileLogger.init();
-  final packageInfo = await PackageInfo.fromPlatform();
-  Globals.packageInfo = packageInfo;
-  FileLogger.log('Starting application...');
-
-  //Jni.spawn(dylibDir: 'build/jni', classPath: ['java']);
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: Globals.packageInfo.appName,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
-      themeMode: ThemeMode.system,
-      home: MyHomePage(title: Globals.packageInfo.appName),
-    );
-  }
+  initApp(MyHomePage());
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -184,42 +149,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          child: Image.asset('assets/rook_new.png'),
-        ),
-        title: FittedBox(fit: BoxFit.fitWidth, child: Text(widget.title)),
-        actions: [
-          createPopupMenu([
-            DialogAction(
-              title: 'Import',
-              icon: Icons.file_upload,
-              onPressed: _importTournaments,
-            ),
-            DialogAction(
-              title: 'Export',
-              icon: exportIcon,
-              onPressed: () => showExportDialog(context, _tournaments),
-            ),
-            DialogAction(
-              title: 'View Logs',
-              icon: Icons.list_alt,
-              onPressed: () => showLogsDialog(context),
-            ),
-            DialogAction(
-              title: 'App Info',
-              icon: Icons.info_outline,
-              onPressed: () => showAppInfoDialog(context),
-            ),
-          ]),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _tournaments.isEmpty
+    return createScaffold(
+      context: context,
+      actions: [
+        createPopupMenu([
+          DialogAction(
+            title: 'Import',
+            icon: Icons.file_upload,
+            onPressed: _importTournaments,
+          ),
+          DialogAction(
+            title: 'Export',
+            icon: exportIcon,
+            onPressed: () => showExportDialog(context, _tournaments),
+          ),
+          DialogAction(
+            title: 'View Logs',
+            icon: Icons.list_alt,
+            onPressed: () => showLogsDialog(context),
+          ),
+          DialogAction(
+            title: 'App Info',
+            icon: Icons.info_outline,
+            onPressed: () => showAppInfoDialog(context),
+          ),
+        ]),
+      ],
+      child: _tournaments.isEmpty
           ? NoDataTile(
               text: 'No tournaments added yet.',
               icon: Icons.emoji_events_outlined,
@@ -286,6 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
         addIcon,
         _addTournament,
       ),
+      isLoading: _isLoading,
     );
   }
 }
