@@ -8,23 +8,93 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:js_flutter/components/app_layout.dart';
+import 'package:js_flutter/utils/logger.dart';
+import 'package:js_flutter/utils/package_info_global.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:swiss_tournament/main.dart';
 
+/// Helper function to configure the test database resource file path.
+Future<void> configureTestDatabasePath(String path) async {
+  if (path.isNotEmpty) {
+    await databaseFactoryFfi.setDatabasesPath(path);
+    databaseFactory = databaseFactoryFfi;
+  }
+}
+
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(JsFlutterApp(MyHomePage()));
+  setUpAll(() async {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfiNoIsolate;
+    databaseFactory.setDatabasesPath('resources');
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await FileLogger.init();
+    Globals.packageInfo = PackageInfo(
+      appName: 'Chess Swiss Tournament',
+      packageName: 'de.jsteltze.chesstournamentapp',
+      version: '1.0.0',
+      buildNumber: '1',
+    );
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  group('Welcome Dialog Tests', () {
+    testWidgets(
+      'Welcome dialog shows up and app logo is visible on first launch',
+      (WidgetTester tester) async {
+        SharedPreferences.setMockInitialValues({});
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+        await tester.pumpWidget(JsFlutterApp(ChessTournamentApp()));
+        await tester.pump();
+        await tester.pump(const Duration(seconds: 1));
+
+        // Verify that the welcome dialog title is displayed
+        expect(find.text('Welcome!'), findsOneWidget);
+
+        // Verify welcome dialog message text
+        expect(
+          find.textContaining(
+            'Thank you for using the Chess Swiss Tournament App!',
+          ),
+          findsOneWidget,
+        );
+
+        // Verify the app logo is displayed inside the welcome dialog
+        final dialogLogoFinder = find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.byWidgetPredicate(
+            (widget) =>
+                widget is Image &&
+                widget.image == const AssetImage('assets/app_logo.png'),
+          ),
+        );
+        expect(dialogLogoFinder, findsOneWidget);
+
+        // Verify "Get Started" button is visible
+        final getStartedButton = find.text('Get Started');
+        expect(getStartedButton, findsOneWidget);
+
+        // Dismiss dialog
+        await tester.tap(getStartedButton);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+
+        // Verify dialog is dismissed
+        expect(find.text('Welcome!'), findsNothing);
+      },
+    );
+
+    testWidgets('Welcome dialog does not show up on subsequent launches', (
+      WidgetTester tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({'first_time': false});
+
+      await tester.pumpWidget(JsFlutterApp(ChessTournamentApp()));
+      await tester.pump(const Duration(seconds: 5));
+
+      //tester.allWidgets.forEach((w) => print(w.toString()));
+      // Verify welcome dialog does not show up
+      expect(find.text('Welcome!'), findsNothing);
+    });
   });
 }
