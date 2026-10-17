@@ -409,7 +409,7 @@ void showWelcomeDialog(BuildContext context) {
     child: (ctx, setDialogState, toggleMainAction) => Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Image(image: AssetImage('assets/rook_new.png'), height: 100),
+        const Image(image: AssetImage('assets/app_logo.png'), height: 100),
         const SizedBox(height: 20),
         const Text(
           'Thank you for using the Chess Swiss Tournament App!\n\nThis app helps you manage chess tournaments using the Swiss system. All data is stored locally on your device.\n\nPlease note that this is not FIDE-approved software.',
