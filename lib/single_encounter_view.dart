@@ -44,24 +44,20 @@ class SingleEncounterView extends StatelessWidget {
       tournament.rounds.indexOf(round),
     );
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Theme.of(context).colorScheme.primary.withAlpha(40),
-        ),
-        color: encounter.result.isNotEmpty
-            ? Theme.of(context).colorScheme.primary.withAlpha(20)
-            : Colors.transparent,
-      ),
+    return Card(
+      elevation: 2,
+      surfaceTintColor: encounter.result.isNotEmpty
+          ? Theme.of(context).colorScheme.primary.withAlpha(20)
+          : Colors.transparent,
       child: InkWell(
         onTap: () => _showResultDialog(encounter, context),
         child: Column(
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withAlpha(
-                  encounter.result.isEmpty ? 20 : 0,
-                ),
+                color: Theme.of(context).colorScheme.primary
+                    .withAlpha(encounter.result.isEmpty ? 20 : 0),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               width: double.infinity,
               alignment: Alignment.center,
@@ -101,9 +97,10 @@ class SingleEncounterView extends StatelessWidget {
                           ? 'vs'
                           : encounter.result.replaceAll('0.5', '\u{00BD}'),
                       style: TextStyle(
-                        fontSize: Theme.of(
-                          context,
-                        ).textTheme.bodyLarge!.fontSize,
+                        fontSize: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .fontSize,
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold,
                       ),
@@ -187,9 +184,8 @@ class SingleEncounterView extends StatelessWidget {
                             bottomLeft: Radius.circular(10),
                           ),
                           border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primary.withAlpha(40),
+                            color: Theme.of(context).colorScheme.primary
+                                .withAlpha(40),
                           ),
                           color: Theme.of(context).colorScheme.surfaceBright,
                         ),
@@ -216,9 +212,8 @@ class SingleEncounterView extends StatelessWidget {
                             bottomRight: Radius.circular(10),
                           ),
                           border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primary.withAlpha(40),
+                            color: Theme.of(context).colorScheme.primary
+                                .withAlpha(40),
                           ),
                           color: Theme.of(context).colorScheme.surfaceDim,
                         ),
@@ -237,9 +232,8 @@ class SingleEncounterView extends StatelessWidget {
                   height: 48,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withAlpha(40),
+                      color: Theme.of(context).colorScheme.primary
+                          .withAlpha(40),
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                     color: Theme.of(context).colorScheme.surfaceContainer,
