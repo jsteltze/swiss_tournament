@@ -325,10 +325,10 @@ void showAppInfoDialog(BuildContext context, TournamentStorage storage) {
                   ),
                 ).build(context),
                 InfoRow(
-                  'Rook Icon: ',
+                  'App Icon: ',
                   '',
                   contentWidget: const Link(
-                    'Icon by Freepik',
+                    'AI generated (based on Freepik)',
                     'https://www.freepik.com/icon/rook_562880#fromView=search&page=1&position=36&uuid=c1e0d777-66db-4757-98d6-8a870ff59f43',
                   ),
                 ).build(context),
