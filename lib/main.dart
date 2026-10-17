@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -99,16 +98,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _importTournaments() async {
     try {
       FileLogger.log('Picking file for import...');
-      FilePickerResult? result = await FilePicker.pickFiles(
+      PlatformFile? result = await FilePicker.pickFile(
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
 
-      if (result != null && result.files.single.path != null) {
-        final path = result.files.single.path!;
-        FileLogger.log('Importing from file: $path');
-        final file = File(path);
-        final content = await file.readAsString();
+      if (result != null && result.path != null) {
+        FileLogger.log('Importing from file: ${result.path}');
+        final uint8List = await result.readAsBytes();
+        final content = String.fromCharCodes(uint8List);
         final dynamic decoded = jsonDecode(content);
 
         List<Tournament> parsedTournaments = [];
@@ -130,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
         if (parsedTournaments.isNotEmpty && mounted) {
           showImportConfirmationDialog(
             context,
-            file.path.split('/').last,
+            result.path!.split('/').last,
             parsedTournaments,
             _storage,
             _loadTournaments,
