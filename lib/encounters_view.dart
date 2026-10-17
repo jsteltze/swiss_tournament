@@ -56,10 +56,9 @@ class _EncountersViewState extends State<EncountersView> {
     return Column(
       children: [
         Text(
-          "Pairings: ${pairings - open}/$pairings",
-          style: Theme.of(context).textTheme.titleSmall!.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          "Finished: ${pairings - open}/$pairings",
+          style: Theme.of(context).textTheme.titleSmall!
+              .copyWith(color: Theme.of(context).colorScheme.primary),
         ),
         LinearProgressIndicator(value: 1.0 - open / pairings, minHeight: 5),
         const SizedBox(height: 10),
@@ -111,9 +110,8 @@ class _EncountersViewState extends State<EncountersView> {
                         child: Icon(
                           Icons.access_time,
                           size: 16,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.primary.withAlpha(160),
+                          color: Theme.of(context).colorScheme.primary
+                              .withAlpha(160),
                         ),
                       ),
                       TextSpan(
