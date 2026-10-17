@@ -16,6 +16,7 @@ import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
+import 'data/tournament_storage_db.dart';
 import 'tournament_details_page.dart';
 
 void main() async {
@@ -32,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Tournament> _tournaments = [];
   bool _isLoading = true;
-  final TournamentStorage _storage = TournamentStorage();
+  final TournamentStorage _storage = TournamentDB();
 
   @override
   void initState() {
@@ -88,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
       MaterialPageRoute(
         builder: (context) => TournamentDetailsPage(
           tournament: tournament,
+          storage: _storage,
           onDeleteTournament: () => _deleteTournament(tournament),
           onUpdate: _loadTournaments,
         ),
@@ -169,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
           DialogAction(
             title: 'App Info',
             icon: Icons.info_outline,
-            onPressed: () => showAppInfoDialog(context),
+            onPressed: () => showAppInfoDialog(context, _storage),
           ),
         ]),
       ],

@@ -13,11 +13,13 @@ import 'rounds_view.dart';
 
 class TournamentDetailsPage extends StatefulWidget {
   final Tournament tournament;
+  final TournamentStorage storage;
   final VoidCallback? onDeleteTournament;
   final VoidCallback? onUpdate;
 
   const TournamentDetailsPage({
     super.key,
+    required this.storage,
     required this.tournament,
     this.onDeleteTournament,
     this.onUpdate,
@@ -30,7 +32,6 @@ class TournamentDetailsPage extends StatefulWidget {
 class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
   int _selectedIndex = 0;
   String _playerSearch = '';
-  final TournamentStorage _storage = TournamentStorage();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -68,6 +69,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
       case 1:
         bodyContent = RoundsView(
           tournament: widget.tournament,
+          storage: widget.storage,
           onTournamentFinished: () => setState(() {
             _selectedIndex = 2;
           }),
@@ -97,9 +99,8 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
             Text(widget.tournament.title),
             Text(
               'Rounds: ${widget.tournament.numberOfRounds}',
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+              style: Theme.of(context).textTheme.titleSmall!
+                  .copyWith(color: Theme.of(context).colorScheme.secondary),
             ),
           ],
         ),
@@ -107,7 +108,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         actions: [
           TournamentPopupMenu(
             tournament: widget.tournament,
-            storage: _storage,
+            storage: widget.storage,
             onEdit: (tournament) {
               setState(() {});
               widget.onUpdate?.call();

@@ -55,11 +55,13 @@ RoundsPanel generateItem(
 
 class RoundsView extends StatefulWidget {
   final Tournament tournament;
+  final TournamentStorage storage;
   final VoidCallback? onTournamentFinished;
   final VoidCallback? onRoundUpdate;
 
   const RoundsView({
     super.key,
+    required this.storage,
     required this.tournament,
     this.onTournamentFinished,
     this.onRoundUpdate,
@@ -71,7 +73,6 @@ class RoundsView extends StatefulWidget {
 
 class _RoundsViewState extends State<RoundsView> {
   final List<RoundsPanel> _data = [];
-  final TournamentStorage _storage = TournamentStorage();
   bool _isLoadingNewRound = false;
 
   @override
@@ -145,9 +146,8 @@ class _RoundsViewState extends State<RoundsView> {
               ),
               label: Text(
                 'Start Round ${widget.tournament.rounds.length + 1}',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
+                style: Theme.of(context).textTheme.titleMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
               ),
               onPressed: _isLoadingNewRound ? null : _startNewRound,
             ),
@@ -212,7 +212,9 @@ class _RoundsViewState extends State<RoundsView> {
   }
 
   void _startNewRound() async {
-    var currentDbState = await _storage.getTournament(widget.tournament.id!);
+    var currentDbState = await widget.storage.getTournament(
+      widget.tournament.id!,
+    );
     if (currentDbState == null) {
       FileLogger.log('Error: Tournament not found in database!');
       return;

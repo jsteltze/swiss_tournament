@@ -17,9 +17,9 @@ import 'package:js_flutter/utils/snackbar_utils.dart';
 import 'package:js_flutter/utils/timestampx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiss_tournament/data/tournament.dart';
-import 'package:swiss_tournament/data/tournament_storage.dart';
 import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
 
+import '../data/tournament_storage.dart';
 import '../utils/export_handler.dart';
 
 void showImportConfirmationDialog(
@@ -193,7 +193,7 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
   );
 }
 
-void showAppInfoDialog(BuildContext context) {
+void showAppInfoDialog(BuildContext context, TournamentStorage storage) {
   if (!context.mounted) return;
   openDialog(
     context,
@@ -241,10 +241,7 @@ void showAppInfoDialog(BuildContext context) {
                   'Package: ',
                   Globals.packageInfo.packageName,
                 ).build(context),
-                InfoRow(
-                  'DB Path: ',
-                  TournamentStorage.dbPath ?? '-',
-                ).build(context),
+                InfoRow('DB Path: ', storage.storagePath).build(context),
                 InfoRow(
                   'Installed: ',
                   Globals.packageInfo.installTime?.toHumanString() ?? '-',
