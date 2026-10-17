@@ -20,20 +20,22 @@ import 'data/tournament_storage_db.dart';
 import 'tournament_details_page.dart';
 
 void main() async {
-  initApp(MyHomePage());
+  initApp(ChessTournamentApp());
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class ChessTournamentApp extends StatefulWidget {
+  final TournamentStorage _storage;
+
+  ChessTournamentApp({TournamentStorage? storage, super.key})
+    : _storage = storage ?? TournamentDB();
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ChessTournamentApp> createState() => _ChessTournamentAppState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ChessTournamentAppState extends State<ChessTournamentApp> {
   List<Tournament> _tournaments = [];
   bool _isLoading = true;
-  final TournamentStorage _storage = TournamentDB();
 
   @override
   void initState() {
@@ -49,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _isLoading = true;
     });
     FileLogger.log('Loading tournaments...');
-    final tournaments = await _storage.loadTournaments();
+    final tournaments = await widget._storage.loadTournaments();
     setState(() {
       _tournaments = tournaments;
       _isLoading = false;
@@ -59,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _saveTournaments() async {
     FileLogger.log('Saving all tournaments...');
-    await _storage.saveTournaments(_tournaments);
+    await widget._storage.saveTournaments(_tournaments);
   }
 
   void _addTournament() {
@@ -68,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _tournaments.add(tournament);
       });
-      tournament.update = () => _storage.updateTournament(tournament);
+      tournament.update = () => widget._storage.updateTournament(tournament);
       tournament.update();
       _navigateToTournamentDetails(tournament);
     });
@@ -89,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
       MaterialPageRoute(
         builder: (context) => TournamentDetailsPage(
           tournament: tournament,
-          storage: _storage,
+          storage: widget._storage,
           onDeleteTournament: () => _deleteTournament(tournament),
           onUpdate: _loadTournaments,
         ),
@@ -132,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
             context,
             result.path!.split('/').last,
             parsedTournaments,
-            _storage,
+            widget._storage,
             _loadTournaments,
           );
         }
@@ -171,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
           DialogAction(
             title: 'App Info',
             icon: Icons.info_outline,
-            onPressed: () => showAppInfoDialog(context, _storage),
+            onPressed: () => showAppInfoDialog(context, widget._storage),
           ),
         ]),
       ],
@@ -196,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
                 return TournamentPopupMenu(
                   tournament: tournament,
-                  storage: _storage,
+                  storage: widget._storage,
                   onEdit: (tournament) => setState(() {}),
                   onDelete: () => _deleteTournament(tournament),
                   onUpdate: _loadTournaments,
