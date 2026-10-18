@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/description.dart';
 import 'package:js_flutter/components/input_title.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
+import 'package:js_flutter/components/view_header.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/export_handler.dart';
 import 'package:js_flutter/utils/logger.dart';
@@ -183,10 +185,9 @@ class RankingView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Container(
-          color: Theme.of(context).colorScheme.secondaryContainer,
+        ViewHeader(
           padding: const EdgeInsets.all(16.0),
-          child: Row(
+          Row(
             spacing: 15,
             children: [
               Icon(
@@ -204,11 +205,8 @@ class RankingView extends StatelessWidget {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    Text(
-                      '(${lastRoundFinished ? 'after' : 'currently running'} round $lastRoundNum)',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
+                    MyBadge(
+                      '${lastRoundFinished ? 'after' : 'currently running'} round $lastRoundNum',
                     ),
                   ],
                 ),
@@ -334,34 +332,7 @@ class RankingView extends StatelessWidget {
                         DataCell(
                           Container(
                             padding: const EdgeInsets.only(right: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                if (r.player.rating > 0 && r.performance! > 0)
-                                  Transform.rotate(
-                                    angle:
-                                        (r.player.rating - r.performance!)
-                                            .sign *
-                                        0.8,
-                                    child: Icon(
-                                      Icons.arrow_forward,
-                                      color: r.performance! > r.player.rating
-                                          ? Colors.green
-                                          : Colors.red,
-                                    ),
-                                  ),
-                                Text(
-                                  r.performance == 0
-                                      ? '-'
-                                      : r.performance.toString(),
-                                  style: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.secondary,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            child: r.getPerformanceWidget(),
                           ),
                         ),
                         DataCell(
@@ -386,7 +357,7 @@ class RankingView extends StatelessWidget {
                                   text: r.winsLossesString,
                                   style:
                                       r.winsLossesString.startsWith(
-                                        RegExp(r'\+|-'),
+                                        RegExp(r'[+\-]'),
                                       )
                                       ? TextStyle(
                                           color:
@@ -422,9 +393,9 @@ class RankingView extends StatelessWidget {
                                   r.tiebreak1!,
                                 ),
                                 style: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.secondary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondary,
                                 ),
                               ),
                             ),
@@ -438,9 +409,9 @@ class RankingView extends StatelessWidget {
                                   r.tiebreak2!,
                                 ),
                                 style: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.secondary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondary,
                                 ),
                               ),
                             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/popup_menu.dart';
 import 'package:js_flutter/components/view_header.dart';
@@ -53,6 +54,7 @@ class PlayersView extends StatelessWidget {
       children: [
         if (tournament.players.isNotEmpty)
           ViewHeader(
+            padding: EdgeInsets.all(16),
             Row(
               spacing: 15,
               children: [
@@ -71,39 +73,42 @@ class PlayersView extends StatelessWidget {
                           color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                      Text(
-                        '(active: ${tournament.players.where((p) => p.leftAt == null).length})',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
+                      MyBadge(
+                        'active: ${tournament.players.where((p) => p.leftAt == null).length}',
                       ),
                     ],
                   ),
                 ),
-                Stack(
-                  alignment: Alignment.centerLeft,
-                  children: [
-                    Text(
-                      'o',
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        fontFamily: 'RobotoMono',
-                        color: Theme.of(context).colorScheme.tertiary,
+                MyBadge(
+                  '',
+                  variant: BadgeVariant.tertiary,
+                  child: Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      Text(
+                        'o',
+                        style: Theme.of(context).textTheme.titleMedium!
+                            .copyWith(
+                              fontFamily: 'RobotoMono',
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
                       ),
-                    ),
-                    Text(
-                      '/',
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        fontFamily: 'RobotoMono',
-                        color: Theme.of(context).colorScheme.tertiary,
+                      Text(
+                        '/',
+                        style: Theme.of(context).textTheme.titleMedium!
+                            .copyWith(
+                              fontFamily: 'RobotoMono',
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
                       ),
-                    ),
-                    Text(
-                      '     ${averageRating.toStringAsFixed(0)}',
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.tertiary,
+                      Text(
+                        '     ${averageRating.toStringAsFixed(0)}',
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -121,9 +126,8 @@ class PlayersView extends StatelessWidget {
                   separatorBuilder: (context, index) =>
                       index == firstLateJoiner - 1
                       ? Divider(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.primary.withAlpha(100),
+                          color: Theme.of(context).colorScheme.primary
+                              .withAlpha(100),
                         )
                       : const Divider(color: Colors.transparent),
                   itemCount: filteredPlayers.length,

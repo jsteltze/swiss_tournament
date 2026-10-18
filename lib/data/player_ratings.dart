@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/player.dart';
 import 'package:swiss_tournament/data/round.dart';
@@ -467,5 +468,24 @@ class PlayerRatings {
         }
       }
     }
+  }
+
+  Widget getPerformanceWidget() {
+    return Row(
+      children: [
+        if (player.rating > 0 && performance! > 0)
+          Transform.rotate(
+            angle: (player.rating - performance!).sign * 0.8,
+            child: Icon(
+              Icons.arrow_forward,
+              color: performance! > player.rating
+                  ? Colors.green.withAlpha(150)
+                  : Colors.red.withAlpha(150),
+              applyTextScaling: true,
+            ),
+          ),
+        Text(performance == 0 ? '-' : performance.toString()),
+      ],
+    );
   }
 }

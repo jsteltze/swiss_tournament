@@ -97,10 +97,16 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.tournament.title),
-            Text(
-              'Rounds: ${widget.tournament.numberOfRounds}',
-              style: Theme.of(context).textTheme.titleSmall!
-                  .copyWith(color: Theme.of(context).colorScheme.secondary),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Rounds: ${widget.tournament.numberOfRounds}',
+                  style: Theme.of(context).textTheme.titleSmall!
+                      .copyWith(color: Theme.of(context).colorScheme.secondary),
+                ),
+                widget.tournament.getStateBadge(),
+              ],
             ),
           ],
         ),

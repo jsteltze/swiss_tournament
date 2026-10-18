@@ -193,16 +193,6 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
               itemCount: _tournaments.length,
               itemBuilder: (context, index) {
                 final tournament = _tournaments[index];
-                var state = 'not started';
-                if (tournament.rounds.isNotEmpty) {
-                  if (tournament.isFinished()) {
-                    state =
-                        'finished (${tournament.rounds.length}/${tournament.numberOfRounds})';
-                  } else {
-                    state =
-                        'in Progress (${tournament.rounds.length}/${tournament.numberOfRounds})';
-                  }
-                }
                 return TournamentPopupMenu(
                   tournament: tournament,
                   storage: widget._storage,
@@ -226,14 +216,7 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
                             ),
                           ),
                         ),
-                        Text(
-                          state,
-                          style: Theme.of(context).textTheme.bodyMedium!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.tertiary,
-                                fontStyle: FontStyle.italic,
-                              ),
-                        ),
+                        tournament.getStateBadge(),
                       ],
                     ),
                     leading: Icon(

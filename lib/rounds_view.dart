@@ -5,7 +5,6 @@ import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
-import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/dialogs/player_dialogs.dart';
 import 'package:swiss_tournament/encounters_view.dart';
 
@@ -41,8 +40,16 @@ RoundsPanel generateItem(
     headerIcon:
         index == numberOfItems - 1 &&
             tournament.rounds[index].encounters.any((e) => e.result.isEmpty)
-        ? const Icon(Icons.change_circle)
-        : const Icon(Icons.check_circle),
+        ? Icon(
+            Icons.change_circle,
+            applyTextScaling: true,
+            color: Colors.grey.withAlpha(200),
+          )
+        : Icon(
+            Icons.check_circle,
+            applyTextScaling: true,
+            color: Colors.green.withAlpha(150),
+          ),
     expandedValue: EncountersView(
       tournament: tournament,
       roundIndex: index,

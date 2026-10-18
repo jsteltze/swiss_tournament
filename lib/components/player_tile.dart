@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/badge.dart';
 
 import '../data/player.dart';
 
@@ -41,6 +42,7 @@ class PlayerTile extends StatelessWidget {
           ? Text(index == -1 ? '(automatic)' : '(requested)')
           : Wrap(
               spacing: 5,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(
                   '#${index + 1}',
@@ -49,34 +51,16 @@ class PlayerTile extends StatelessWidget {
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
-                Text(
-                  '${detailed ? '| Rating: ' : '('}${player.rating > 0 ? player.rating : 'N/A'}${detailed ? '' : ')'}',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
+                MyBadge(
+                  '${detailed ? 'Rating: ' : ''}${player.rating > 0 ? player.rating : 'N/A'}',
+                  variant: BadgeVariant.tertiary,
                 ),
                 if (detailed && player.leftAt != null)
-                  Expanded(
-                    child: Text(
-                      'withdrawn ${player.leftAt == 0 ? '' : '(round ${player.leftAt})'}',
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
+                  MyBadge(
+                    'withdrawn ${player.leftAt == 0 ? '' : '(round ${player.leftAt})'}',
                   ),
                 if (detailed && player.joinedAt > 0 && player.leftAt == null)
-                  Expanded(
-                    child: Text(
-                      'joined after round ${player.joinedAt}',
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ),
+                  MyBadge('joined after round ${player.joinedAt}'),
               ],
             ),
       leading: alignLeft && index >= 0 ? PlayerIcon(points: points) : null,
@@ -100,9 +84,8 @@ class PlayerIcon extends StatelessWidget {
         if (points != null)
           Text(
             points!.toStringAsFixed(1),
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: Theme.of(context).textTheme.labelSmall!
+                .copyWith(color: Theme.of(context).colorScheme.primary),
           ),
       ],
     );

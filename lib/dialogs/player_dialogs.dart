@@ -129,7 +129,7 @@ void showPlayerDetailsDialog(
               '',
               contentWidget: Text(
                 r.winsLossesString,
-                style: r.winsLossesString.startsWith(RegExp(r'\+|-'))
+                style: r.winsLossesString.startsWith(RegExp(r'[+\-]'))
                     ? TextStyle(
                         color: r.winsLossesString.startsWith('+')
                             ? Colors.green
@@ -150,25 +150,11 @@ void showPlayerDetailsDialog(
             InfoRow(
               'Performance: ',
               '',
-              contentWidget: Row(
-                children: [
-                  if (r.player.rating > 0 && r.performance! > 0)
-                    Transform.rotate(
-                      angle: (r.player.rating - r.performance!).sign * 0.8,
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: r.performance! > r.player.rating
-                            ? Colors.green
-                            : Colors.red,
-                      ),
-                    ),
-                  Text(r.performance == 0 ? '-' : r.performance.toString()),
-                ],
-              ),
+              contentWidget: r.getPerformanceWidget(),
             ).build(context),
             InfoRow(
               'Status: ',
-              r.player.leftAt == null ? 'Active' : 'Withdrawn',
+              r.player.leftAt == null ? 'active' : 'withdrawn',
             ).build(context),
             if (r.player.joinedAt > 0)
               InfoRow(

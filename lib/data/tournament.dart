@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:js_flutter/components/badge.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
 
 import 'first_round_pairing.dart';
@@ -120,5 +122,19 @@ class Tournament {
           ? TournamentSettings.fromJson(json['settings'])
           : TournamentSettings(),
     );
+  }
+
+  Widget getStateBadge() {
+    var state = 'not started';
+    Icon? icon;
+    if (rounds.isNotEmpty) {
+      if (isFinished()) {
+        state = 'finished (${rounds.length}/$numberOfRounds)';
+        icon = Icon(Icons.check, applyTextScaling: true, color: Colors.green);
+      } else {
+        state = 'in Progress (${rounds.length}/$numberOfRounds)';
+      }
+    }
+    return MyBadge(state, icon: icon);
   }
 }
