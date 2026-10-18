@@ -7,12 +7,12 @@ import 'package:js_flutter/components/input_title.dart';
 import 'package:js_flutter/components/warning.dart';
 import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:js_flutter/utils/export_handler.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
 
 import '../data/first_round_pairing.dart';
 import '../data/tournament.dart';
 import '../data/tournament_storage.dart';
-import '../utils/export_handler.dart';
 
 void showEditTournamentDialog(
   BuildContext context,

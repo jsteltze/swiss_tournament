@@ -4,9 +4,9 @@ import 'package:js_flutter/components/info_table_row.dart';
 import 'package:js_flutter/components/popup_menu.dart';
 import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:js_flutter/utils/export_handler.dart';
 import 'package:js_flutter/utils/timestampx.dart';
 import 'package:swiss_tournament/data/tournament.dart';
-import 'package:swiss_tournament/utils/export_handler.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';
 
 import 'single_encounter_view.dart';
