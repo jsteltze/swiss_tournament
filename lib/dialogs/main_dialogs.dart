@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:js_flutter/components/info_panel.dart';
 import 'package:js_flutter/components/info_table_row.dart';
 import 'package:js_flutter/components/input_field.dart';
 import 'package:js_flutter/components/input_title.dart';
 import 'package:js_flutter/components/link.dart';
 import 'package:js_flutter/components/styled_text.dart';
-import 'package:js_flutter/components/warning.dart';
 import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/export_handler.dart';
@@ -16,7 +14,6 @@ import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/package_info_global.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
 import 'package:js_flutter/utils/timestampx.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
 
@@ -235,7 +232,7 @@ void showAppInfoDialog(BuildContext context, TournamentStorage storage) {
               children: [
                 InfoRow(
                   'Version: ',
-                  '${Globals.packageInfo.version}, ${DateFormat('MMMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp))}',
+                  '${Globals.packageInfo.version}, ${DateTime.fromMillisecondsSinceEpoch(lastAppBuildTimestamp).toMMMMYYYY()}',
                 ).build(context),
                 InfoRow(
                   'Package: ',
@@ -340,96 +337,4 @@ void showAppInfoDialog(BuildContext context, TournamentStorage storage) {
     ),
     closeButtonTitle: 'Close',
   );
-}
-
-void showLogsDialog(BuildContext context) {
-  final logs = FileLogger.getLogs();
-  openDialog(
-    context,
-    title: 'Logs',
-    titleIcon: Icons.list_alt,
-    child: (ctx, setDialogState, toggleMainAction) => Text(
-      logs,
-      style: const TextStyle(fontSize: 10, fontFamily: 'monospace'),
-    ),
-    closeButtonTitle: null,
-    mainAction: DialogAction(
-      title: 'Close',
-      onPressed: () => Navigator.pop(context),
-    ),
-    secondaryActions: [
-      DialogAction(
-        title: 'Export',
-        onPressed: () {
-          final filename = 'logs-${DateTime.now().toTechString()}.txt';
-          ExportHandler.exportToDownloads(
-            context,
-            filename,
-            logs,
-            () => Navigator.pop(context),
-          );
-        },
-        icon: exportIcon,
-      ),
-      DialogAction(
-        title: 'Clear',
-        onPressed: () {
-          FileLogger.clearLogs();
-          showSnackbar(context, 'Logs removed');
-          Navigator.pop(context);
-        },
-        isDestructive: true,
-        icon: deleteIcon,
-      ),
-    ],
-  );
-}
-
-void showErrorDialog(BuildContext context, String msg) {
-  openDialog(
-    context,
-    title: 'Error',
-    titleIcon: Icons.error_outline,
-    child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [const Text('An error occurred:'), Warning(msg)],
-    ),
-    closeButtonTitle: 'Close',
-  );
-}
-
-void showWelcomeDialog(BuildContext context) {
-  openDialog(
-    context,
-    title: 'Welcome!',
-    titleIcon: Icons.emoji_events_outlined,
-    child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Image(image: AssetImage('assets/app_logo.png'), height: 100),
-        const SizedBox(height: 20),
-        const Text(
-          'Thank you for using the Chess Swiss Tournament App!\n\nThis app helps you manage chess tournaments using the Swiss system. All data is stored locally on your device.\n\nPlease note that this is not FIDE-approved software.',
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-    mainAction: DialogAction(
-      title: 'Get Started',
-      onPressed: () => Navigator.pop(context),
-    ),
-    closeButtonTitle: null,
-  );
-}
-
-Future<void> checkFirstTime(BuildContext context) async {
-  final prefs = await SharedPreferences.getInstance();
-  final bool? isFirstTime = prefs.getBool('first_time');
-
-  if (isFirstTime == null || isFirstTime) {
-    if (context.mounted) {
-      showWelcomeDialog(context);
-    }
-    await prefs.setBool('first_time', false);
-  }
 }

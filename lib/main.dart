@@ -8,6 +8,7 @@ import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/popup_menu.dart';
 import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:js_flutter/utils/first_time.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
@@ -42,7 +43,13 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
     super.initState();
     _loadTournaments();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkFirstTime(context);
+      checkFirstTime(
+        () => showWelcomeDialog(
+          context,
+          Icons.emoji_events_outlined,
+          'Thank you for using the Chess Swiss Tournament App!\n\nThis app helps you manage chess tournaments using the Swiss system. All data is stored locally on your device.\n\nPlease note that this is not FIDE-approved software.',
+        ),
+      );
     });
   }
 
