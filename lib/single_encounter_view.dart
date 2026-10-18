@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/info_panel.dart';
+import 'package:js_flutter/components/input_title.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/data/encounter.dart';
 import 'package:swiss_tournament/data/tournament.dart';
-import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 
 import 'data/player.dart';
 import 'data/player_ratings.dart';
@@ -59,8 +60,8 @@ class SingleEncounterView extends StatelessWidget {
                     .withAlpha(encounter.result.isEmpty ? 20 : 0),
                 borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              width: double.infinity,
-              alignment: Alignment.center,
+              width: .infinity,
+              alignment: .center,
               child: Text(
                 '#${index + 1}',
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
@@ -102,7 +103,7 @@ class SingleEncounterView extends StatelessWidget {
                             .bodyLarge!
                             .fontSize,
                         color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ),
@@ -157,15 +158,14 @@ class SingleEncounterView extends StatelessWidget {
 
     openDialog(
       context,
-      title: 'Select Result',
       titleIcon: Icons.safety_divider,
       child: (ctx, setDialogState, toggleMainAction) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           IntrinsicHeight(
             child: Stack(
-              alignment: Alignment.center,
+              alignment: .center,
               children: [
                 Row(
                   children: [
@@ -189,11 +189,21 @@ class SingleEncounterView extends StatelessWidget {
                           ),
                           color: Theme.of(context).colorScheme.surfaceBright,
                         ),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          tournament.players[encounter.playerIdW].name,
-                          textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.titleLarge,
+                        alignment: .centerLeft,
+                        child: Column(
+                          crossAxisAlignment: .start,
+                          children: [
+                            Text(
+                              tournament.players[encounter.playerIdW].name,
+                              textAlign: .start,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            MyBadge(
+                              tournament.players[encounter.playerIdW].rating
+                                  .toString(),
+                              variant: .tertiary,
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -217,11 +227,21 @@ class SingleEncounterView extends StatelessWidget {
                           ),
                           color: Theme.of(context).colorScheme.surfaceDim,
                         ),
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          tournament.players[encounter.playerIdB].name,
-                          textAlign: TextAlign.end,
-                          style: Theme.of(context).textTheme.titleLarge,
+                        alignment: .centerRight,
+                        child: Column(
+                          crossAxisAlignment: .end,
+                          children: [
+                            Text(
+                              tournament.players[encounter.playerIdB].name,
+                              textAlign: .end,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            MyBadge(
+                              tournament.players[encounter.playerIdW].rating
+                                  .toString(),
+                              variant: .tertiary,
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -238,14 +258,14 @@ class SingleEncounterView extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                     color: Theme.of(context).colorScheme.surfaceContainer,
                   ),
-                  alignment: Alignment.center,
+                  alignment: .center,
                   child: Text(
                     'vs',
-                    textAlign: TextAlign.center,
+                    textAlign: .center,
                     style: TextStyle(
                       fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                       color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: .bold,
                     ),
                   ),
                 ),
@@ -254,12 +274,13 @@ class SingleEncounterView extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
+          Center(child: InputTitle('Select Result:')),
           Center(
             child: Stack(
-              alignment: Alignment.center,
+              alignment: .center,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: .center,
                   spacing: 1,
                   children: [
                     Container(
@@ -282,7 +303,7 @@ class SingleEncounterView extends StatelessWidget {
                             '1-0',
                             style: Theme.of(context).textTheme.bodyLarge!
                                 .copyWith(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: .bold,
                                   color: Colors.transparent,
                                 ),
                           ),
@@ -318,7 +339,7 @@ class SingleEncounterView extends StatelessWidget {
                             '\u{00BD} - \u{00BD}',
                             style: Theme.of(context).textTheme.bodyLarge!
                                 .copyWith(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: .bold,
                                   color: Colors.transparent,
                                 ),
                           ),
@@ -349,7 +370,7 @@ class SingleEncounterView extends StatelessWidget {
                             '0-1',
                             style: Theme.of(context).textTheme.bodyLarge!
                                 .copyWith(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: .bold,
                                   color: Colors.transparent,
                                 ),
                           ),
@@ -394,7 +415,7 @@ class SingleEncounterView extends StatelessWidget {
                           Text(
                             '1-0',
                             style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
+                                .copyWith(fontWeight: .bold),
                           ),
                           Text('white win'),
                         ],
@@ -407,7 +428,7 @@ class SingleEncounterView extends StatelessWidget {
                           Text(
                             '\u{00BD} - \u{00BD}',
                             style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
+                                .copyWith(fontWeight: .bold),
                           ),
                           Text('draw'),
                         ],
@@ -420,7 +441,7 @@ class SingleEncounterView extends StatelessWidget {
                           Text(
                             '0-1',
                             style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
+                                .copyWith(fontWeight: .bold),
                           ),
                           Text('black win'),
                         ],
@@ -435,129 +456,151 @@ class SingleEncounterView extends StatelessWidget {
           SizedBox(height: 10),
 
           Center(
-            child: Stack(
-              alignment: Alignment.center,
+            child: ExpansionTile(
+              title: InputTitle(
+                '          more result options:',
+                textAlign: .center,
+              ),
+              initiallyExpanded: ['+ -', '- +'].contains(encounter.result),
+              shape: BoxBorder.all(color: Colors.transparent),
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 1,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 1),
-                      padding: EdgeInsets.all(5),
-                      constraints: const BoxConstraints(
-                        minHeight: 50.0,
-                        minWidth: 120.0,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(8.0),
-                          bottomLeft: Radius.circular(8.0),
-                        ),
-                        color: Theme.of(context).colorScheme.surfaceBright,
-                      ),
-                      child: Column(
+                Center(
+                  child: Stack(
+                    alignment: .center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: .center,
+                        spacing: 1,
                         children: [
-                          Text(
-                            '+ -',
-                            style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.transparent,
+                          Container(
+                            margin: EdgeInsets.only(top: 1),
+                            padding: EdgeInsets.all(5),
+                            constraints: const BoxConstraints(
+                              minHeight: 50.0,
+                              minWidth: 120.0,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(8.0),
+                                bottomLeft: Radius.circular(8.0),
+                              ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceBright,
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  '+ -',
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(
+                                        fontWeight: .bold,
+                                        color: Colors.transparent,
+                                      ),
                                 ),
+                                Text(
+                                  'black missing',
+                                  style: TextStyle(color: Colors.transparent),
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            'black missing',
-                            style: TextStyle(color: Colors.transparent),
+                          Container(
+                            margin: EdgeInsets.only(top: 1),
+                            padding: EdgeInsets.all(5),
+                            constraints: const BoxConstraints(
+                              minHeight: 50.0,
+                              minWidth: 120.0,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                topRight: Radius.circular(8.0),
+                                bottomRight: Radius.circular(8.0),
+                              ),
+                              color: Theme.of(context).colorScheme.surfaceDim,
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  '- +',
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.transparent,
+                                      ),
+                                ),
+                                Text(
+                                  'white missing',
+                                  style: TextStyle(color: Colors.transparent),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 1),
-                      padding: EdgeInsets.all(5),
-                      constraints: const BoxConstraints(
-                        minHeight: 50.0,
-                        minWidth: 120.0,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(8.0),
-                          bottomRight: Radius.circular(8.0),
+                      ToggleButtons(
+                        onPressed: (int? newValue) {
+                          setDialogState(() {
+                            // The button that is tapped is set to true, and the others to false.
+                            for (
+                              int i = 0;
+                              i < selectedResultsBool2.length;
+                              i++
+                            ) {
+                              selectedResultsBool2[i] = i == newValue;
+                            }
+                            selectedResult = possibleResults2[newValue!];
+                            selectedResultsBool1.fillRange(
+                              0,
+                              selectedResultsBool1.length,
+                              false,
+                            );
+                            toggleMainAction(true);
+                          });
+                        },
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8),
                         ),
-                        color: Theme.of(context).colorScheme.surfaceDim,
-                      ),
-                      child: Column(
+                        selectedBorderColor: Theme.of(context)
+                            .colorScheme
+                            .primary,
+                        color: Theme.of(context).colorScheme.primary,
+                        constraints: const BoxConstraints(
+                          minHeight: 50.0,
+                          minWidth: 120.0,
+                        ),
+                        isSelected: selectedResultsBool2,
                         children: [
-                          Text(
-                            '- +',
-                            style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.transparent,
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            child: Column(
+                              children: [
+                                Text(
+                                  '+ -',
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(fontWeight: .bold),
                                 ),
+                                Text('black missing'),
+                              ],
+                            ),
                           ),
-                          Text(
-                            'white missing',
-                            style: TextStyle(color: Colors.transparent),
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            child: Column(
+                              children: [
+                                Text(
+                                  '- +',
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(fontWeight: .bold),
+                                ),
+                                Text('white missing'),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                ToggleButtons(
-                  onPressed: (int? newValue) {
-                    setDialogState(() {
-                      // The button that is tapped is set to true, and the others to false.
-                      for (int i = 0; i < selectedResultsBool2.length; i++) {
-                        selectedResultsBool2[i] = i == newValue;
-                      }
-                      selectedResult = possibleResults2[newValue!];
-                      selectedResultsBool1.fillRange(
-                        0,
-                        selectedResultsBool1.length,
-                        false,
-                      );
-                      toggleMainAction(true);
-                    });
-                  },
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  selectedBorderColor: Theme.of(context).colorScheme.primary,
-                  color: Theme.of(context).colorScheme.primary,
-                  constraints: const BoxConstraints(
-                    minHeight: 50.0,
-                    minWidth: 120.0,
+                    ],
                   ),
-                  isSelected: selectedResultsBool2,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          Text(
-                            '+ -',
-                            style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          Text('black missing'),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      child: Column(
-                        children: [
-                          Text(
-                            '- +',
-                            style: Theme.of(context).textTheme.bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          Text('white missing'),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
