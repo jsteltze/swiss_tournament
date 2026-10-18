@@ -27,7 +27,7 @@ class PlayerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var style = detailed && player.leftAt != null
-        ? TextStyle(decoration: TextDecoration.lineThrough)
+        ? TextStyle(decoration: .lineThrough)
         : null;
     if (index < 0) {
       style = TextStyle(
@@ -42,7 +42,7 @@ class PlayerTile extends StatelessWidget {
           ? Text(index == -1 ? '(automatic)' : '(requested)')
           : Wrap(
               spacing: 5,
-              crossAxisAlignment: WrapCrossAlignment.center,
+              crossAxisAlignment: .center,
               children: [
                 Text(
                   '#${index + 1}',
@@ -53,7 +53,7 @@ class PlayerTile extends StatelessWidget {
                 ),
                 MyBadge(
                   '${detailed ? 'Rating: ' : ''}${player.rating > 0 ? player.rating : 'N/A'}',
-                  variant: BadgeVariant.tertiary,
+                  variant: .tertiary,
                 ),
                 if (detailed && player.leftAt != null)
                   MyBadge(
@@ -78,7 +78,7 @@ class PlayerIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: .min,
       children: [
         Icon(Icons.person, color: Theme.of(context).colorScheme.secondary),
         if (points != null)

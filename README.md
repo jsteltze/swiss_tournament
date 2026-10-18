@@ -33,3 +33,4 @@ This project is a Flutter application written in Dart.
 - Testen: größere Schriftart vom device 
 - minimum Players: 4
 - minimum Rounds: 2
+- Turniertyp Roundrobin

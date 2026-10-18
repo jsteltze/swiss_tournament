@@ -34,8 +34,8 @@ void showEditTournamentDialog(
     child: (ctx, setDialogState, toggleMainAction) => Form(
       key: formKey,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           const SizedBox(height: 5),
           TextFormField(
@@ -139,8 +139,8 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
     title: 'Export Tournament',
     titleIcon: exportIcon,
     child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: [
         const Description(
           'Export to Downloads folder. The saved file can serve as a backup or can be shared and imported on other devices.',
@@ -231,8 +231,8 @@ void showDuplicateTournamentDialog(
     title: 'Duplicate Tournament',
     titleIcon: Icons.copy,
     child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: [
         const InputTitle('Type:'),
         DropdownButton<String>(
@@ -314,8 +314,8 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
     title: 'Advanced Settings',
     titleIcon: Icons.settings,
     child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: [
         if (tournament.rounds.isNotEmpty) ...[
           Warning(

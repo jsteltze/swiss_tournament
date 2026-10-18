@@ -95,11 +95,11 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             Text(widget.tournament.title),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 MyBadge(
                   'Rounds: ${widget.tournament.numberOfRounds}',
@@ -135,7 +135,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
       floatingActionButton:
           _selectedIndex == 0 && !widget.tournament.isFinished()
           ? Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
               spacing: 10,
               children: [
                 SearchField(
@@ -161,7 +161,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        selectedLabelStyle: TextStyle(fontWeight: .bold),
         selectedFontSize: MediaQuery.of(context).textScaler.scale(14.0),
         unselectedFontSize: MediaQuery.of(context).textScaler.scale(14.0),
         onTap: _onItemTapped,

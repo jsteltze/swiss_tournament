@@ -57,10 +57,10 @@ class _EncountersViewState extends State<EncountersView> {
     return Column(
       children: [
         CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
+          controlAffinity: .leading,
           value: _filterOpen,
           title: Row(
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: .max,
             spacing: 20,
             children: [
               Text('filter open ($open)'),
@@ -145,7 +145,7 @@ class _EncountersViewState extends State<EncountersView> {
         ),
 
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: .end,
           children: [
             createPopupMenu([
               DialogAction(

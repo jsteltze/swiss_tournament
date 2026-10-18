@@ -38,8 +38,8 @@ class RankingView extends StatelessWidget {
       title: 'Ranking Settings',
       titleIcon: Icons.settings,
       child: (ctx, setDialogState, toggleMainAction) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           InputTitle('Tiebreak 1:'),
           DropdownButton<Tiebreak>(
@@ -105,7 +105,7 @@ class RankingView extends StatelessWidget {
               );
             },
             child: const Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 Icon(Icons.file_download_outlined),
                 Text('Export current ranking as HTML'),
@@ -163,14 +163,14 @@ class RankingView extends StatelessWidget {
           child: RotatedBox(
             quarterTurns: 3,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 if (headline != null)
                   Text(
                     headline,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: .normal,
                     ),
                   ),
                 Text(title),
@@ -182,8 +182,8 @@ class RankingView extends StatelessWidget {
     );
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: .start,
+      mainAxisSize: .max,
       children: [
         ViewHeader(
           padding: const EdgeInsets.all(16.0),
@@ -197,7 +197,7 @@ class RankingView extends StatelessWidget {
               ),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
                     Text(
                       'Ranking',
@@ -230,15 +230,15 @@ class RankingView extends StatelessWidget {
                 DataColumn(
                   label: Container(
                     height: headerHeight,
-                    alignment: Alignment.bottomRight,
+                    alignment: .bottomRight,
                     child: Text('#'),
                   ),
-                  headingRowAlignment: MainAxisAlignment.end,
+                  headingRowAlignment: .end,
                 ),
                 DataColumn(
                   label: Container(
                     height: headerHeight,
-                    alignment: Alignment.bottomLeft,
+                    alignment: .bottomLeft,
                     child: Text('Name'),
                   ),
                 ),
@@ -249,10 +249,10 @@ class RankingView extends StatelessWidget {
                 DataColumn(
                   label: Container(
                     height: headerHeight,
-                    alignment: Alignment.bottomCenter,
+                    alignment: .bottomCenter,
                     child: Text('W/D/L'),
                   ),
-                  headingRowAlignment: MainAxisAlignment.start,
+                  headingRowAlignment: .start,
                 ),
                 rotatedNumericHeader('Score'),
                 if (selectedTiebreak1 != Tiebreak.no)
@@ -291,8 +291,8 @@ class RankingView extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   r.rank.toString(),
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  textAlign: .end,
+                                  style: TextStyle(fontWeight: .bold),
                                 ),
                               ),
                             ],
@@ -301,7 +301,7 @@ class RankingView extends StatelessWidget {
                         DataCell(
                           Text(
                             r.player.name,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: .bold),
                           ),
                         ),
                         DataCell(
@@ -309,7 +309,7 @@ class RankingView extends StatelessWidget {
                             padding: const EdgeInsets.only(right: 5),
                             child: Text(
                               '${r.playerId + 1}',
-                              textAlign: TextAlign.end,
+                              textAlign: .end,
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.secondary,
                               ),
@@ -380,7 +380,7 @@ class RankingView extends StatelessWidget {
                             padding: const EdgeInsets.only(right: 5),
                             child: Text(
                               r.points!.toStringAsFixed(1),
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(fontWeight: .bold),
                             ),
                           ),
                         ),

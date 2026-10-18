@@ -50,7 +50,7 @@ class PlayersView extends StatelessWidget {
     // FileLogger.log('firstLateJoiner=$firstLateJoiner');
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         if (tournament.players.isNotEmpty)
           ViewHeader(
@@ -65,7 +65,7 @@ class PlayersView extends StatelessWidget {
                 ),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
                     children: [
                       Text(
                         'Players: $playerCount',
@@ -81,9 +81,9 @@ class PlayersView extends StatelessWidget {
                 ),
                 MyBadge(
                   '',
-                  variant: BadgeVariant.tertiary,
+                  variant: .tertiary,
                   child: Stack(
-                    alignment: Alignment.centerLeft,
+                    alignment: .centerLeft,
                     children: [
                       Text(
                         'o',

@@ -34,9 +34,9 @@ void showImportConfirmationDialog(
     title: 'Confirm Import',
     titleIcon: Icons.upload,
     child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: .center,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: <Widget>[
         InfoPanel(
           Text(
@@ -127,9 +127,9 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
     title: 'Export Tournaments',
     titleIcon: exportIcon,
     child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: .center,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: <Widget>[
         InfoPanel(
           Text(
@@ -197,9 +197,9 @@ void showAppInfoDialog(BuildContext context, TournamentStorage storage) {
     title: 'App Info',
     titleIcon: Icons.info_outline,
     child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: .center,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: <Widget>[
         InfoPanel(
           Text(
@@ -217,8 +217,8 @@ void showAppInfoDialog(BuildContext context, TournamentStorage storage) {
         ),
         ExpansionTile(
           title: const Text('Version'),
-          expandedAlignment: Alignment.topLeft,
-          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+          expandedAlignment: .topLeft,
+          expandedCrossAxisAlignment: .start,
           children: [
             Text(
               Globals.packageInfo.appName,

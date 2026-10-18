@@ -43,8 +43,8 @@ void showPlayerDetailsDialog(
     title: r.player.name,
     titleIcon: Icons.person,
     child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: [
         InfoPanel(
           Column(
@@ -79,7 +79,7 @@ void showPlayerDetailsDialog(
                       style: Theme.of(context).textTheme.headlineLarge!
                           .copyWith(
                             color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                     ),
                   ),
@@ -172,8 +172,7 @@ void showPlayerDetailsDialog(
             style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
           ),
           Table(
-            defaultVerticalAlignment:
-                TableCellVerticalAlignment.intrinsicHeight,
+            defaultVerticalAlignment: .intrinsicHeight,
             columnWidths: const <int, TableColumnWidth>{
               0: FlexColumnWidth(),
               1: IntrinsicColumnWidth(),
@@ -361,8 +360,8 @@ void showEditPlayerDialog(
     child: (ctx, setDialogState, toggleMainAction) => Form(
       key: formKey,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
           if (isLateJoin) ...[
             const Warning(
@@ -439,8 +438,8 @@ void selectByePlayersDialog(
     title: 'Requested byes',
     titleIcon: Icons.person_off,
     child: (ctx, setDialogState, toggleMainAction) => Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: .min,
+      crossAxisAlignment: .start,
       children: [
         InfoPanel(
           Text(
@@ -451,7 +450,7 @@ void selectByePlayersDialog(
           'Players using a bye get half a point and will not be paired in the next round.',
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: .end,
           children: [
             SearchField(
               placeholder: 'Search Player',
