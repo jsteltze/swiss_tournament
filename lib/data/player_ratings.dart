@@ -470,7 +470,7 @@ class PlayerRatings {
     }
   }
 
-  Widget getPerformanceWidget() {
+  Widget getPerformanceWidget(BuildContext ctx) {
     return Row(
       children: [
         if (player.rating > 0 && performance! > 0)
@@ -482,6 +482,7 @@ class PlayerRatings {
                   ? Colors.green.withAlpha(150)
                   : Colors.red.withAlpha(150),
               applyTextScaling: true,
+              size: Theme.of(ctx).textTheme.bodyMedium!.fontSize,
             ),
           ),
         Text(performance == 0 ? '-' : performance.toString()),

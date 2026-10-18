@@ -54,7 +54,7 @@ class PlayersView extends StatelessWidget {
       children: [
         if (tournament.players.isNotEmpty)
           ViewHeader(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             Row(
               spacing: 15,
               children: [

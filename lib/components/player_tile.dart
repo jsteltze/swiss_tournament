@@ -51,10 +51,7 @@ class PlayerTile extends StatelessWidget {
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
-                MyBadge(
-                  '${detailed ? 'Rating: ' : ''}${player.rating > 0 ? player.rating : 'N/A'}',
-                  variant: .tertiary,
-                ),
+                MyBadge(player.getRatingText(detailed), variant: .tertiary),
                 if (detailed && player.leftAt != null)
                   MyBadge(
                     'withdrawn ${player.leftAt == 0 ? '' : '(round ${player.leftAt})'}',

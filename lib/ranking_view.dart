@@ -186,7 +186,7 @@ class RankingView extends StatelessWidget {
       mainAxisSize: .max,
       children: [
         ViewHeader(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           Row(
             spacing: 15,
             children: [
@@ -332,7 +332,7 @@ class RankingView extends StatelessWidget {
                         DataCell(
                           Container(
                             padding: const EdgeInsets.only(right: 5),
-                            child: r.getPerformanceWidget(),
+                            child: r.getPerformanceWidget(context),
                           ),
                         ),
                         DataCell(

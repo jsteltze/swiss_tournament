@@ -34,3 +34,4 @@ This project is a Flutter application written in Dart.
 - minimum Players: 4
 - minimum Rounds: 2
 - Turniertyp Roundrobin
+- Reihenfolge der Spieler wenn Rating geändert wird und Turnier schon läuft

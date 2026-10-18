@@ -192,6 +192,7 @@ class SingleEncounterView extends StatelessWidget {
                         alignment: .centerLeft,
                         child: Column(
                           crossAxisAlignment: .start,
+                          mainAxisAlignment: .center,
                           children: [
                             Text(
                               tournament.players[encounter.playerIdW].name,
@@ -199,8 +200,8 @@ class SingleEncounterView extends StatelessWidget {
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                             MyBadge(
-                              tournament.players[encounter.playerIdW].rating
-                                  .toString(),
+                              tournament.players[encounter.playerIdW]
+                                  .getRatingText(false),
                               variant: .tertiary,
                             ),
                           ],
@@ -230,6 +231,7 @@ class SingleEncounterView extends StatelessWidget {
                         alignment: .centerRight,
                         child: Column(
                           crossAxisAlignment: .end,
+                          mainAxisAlignment: .center,
                           children: [
                             Text(
                               tournament.players[encounter.playerIdB].name,
@@ -237,8 +239,8 @@ class SingleEncounterView extends StatelessWidget {
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                             MyBadge(
-                              tournament.players[encounter.playerIdW].rating
-                                  .toString(),
+                              tournament.players[encounter.playerIdB]
+                                  .getRatingText(false),
                               variant: .tertiary,
                             ),
                           ],

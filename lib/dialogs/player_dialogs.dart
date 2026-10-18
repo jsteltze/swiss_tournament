@@ -150,7 +150,7 @@ void showPlayerDetailsDialog(
             InfoRow(
               'Performance: ',
               '',
-              contentWidget: r.getPerformanceWidget(),
+              contentWidget: r.getPerformanceWidget(context),
             ).build(context),
             InfoRow(
               'Status: ',

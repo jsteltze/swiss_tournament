@@ -29,4 +29,8 @@ class Player {
     }
     return p;
   }
+
+  String getRatingText(bool addPrefix) {
+    return '${addPrefix ? 'Rating: ' : ''}${rating > 0 ? rating : 'N/A'}';
+  }
 }
