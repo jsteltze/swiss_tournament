@@ -48,9 +48,11 @@ class TournamentDB extends TournamentStorage {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(_tableName);
 
-    return List.generate(maps.length, (i) {
+    final list = List.generate(maps.length, (i) {
       return parseTournament(maps[i]);
     });
+    list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return list;
   }
 
   @override

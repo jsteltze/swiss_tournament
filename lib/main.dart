@@ -75,7 +75,7 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
     showEditTournamentDialog(context, null, (tournament) {
       FileLogger.log('Adding tournament: ${tournament.title}');
       setState(() {
-        _tournaments.add(tournament);
+        _tournaments.insert(0, tournament);
       });
       tournament.update = () => widget._storage.updateTournament(tournament);
       tournament.update();
