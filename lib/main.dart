@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:js_flutter/components/app_layout.dart';
+import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/floating_action_button.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/popup_menu.dart';
@@ -207,14 +208,11 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
                       ),
                     ),
                     subtitle: Row(
+                      mainAxisAlignment: .spaceBetween,
                       children: [
-                        Expanded(
-                          child: Text(
-                            'Rounds: ${tournament.numberOfRounds}',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
+                        MyBadge(
+                          'Rounds: ${tournament.numberOfRounds}',
+                          variant: .outline,
                         ),
                         tournament.getStateBadge(),
                       ],

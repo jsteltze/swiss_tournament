@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/floating_action_button.dart';
 import 'package:js_flutter/components/search_field.dart';
 import 'package:js_flutter/icons.dart';
@@ -100,14 +101,14 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                MyBadge(
                   'Rounds: ${widget.tournament.numberOfRounds}',
-                  style: Theme.of(context).textTheme.titleSmall!
-                      .copyWith(color: Theme.of(context).colorScheme.secondary),
+                  variant: .outline,
                 ),
                 widget.tournament.getStateBadge(),
               ],
             ),
+            SizedBox(height: 4),
           ],
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
