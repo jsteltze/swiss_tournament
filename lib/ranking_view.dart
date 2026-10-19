@@ -186,7 +186,6 @@ class RankingView extends StatelessWidget {
       mainAxisSize: .max,
       children: [
         ViewHeader(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           Row(
             spacing: 15,
             children: [
