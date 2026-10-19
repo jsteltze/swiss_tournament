@@ -351,6 +351,7 @@ void showEditPlayerDialog(
   );
   final formKey = GlobalKey<FormState>();
   final isLateJoin = player == null && tournament.rounds.isNotEmpty;
+  final isEditingAfterStart = player != null && tournament.rounds.isNotEmpty;
 
   openDialog(
     context,
@@ -366,6 +367,12 @@ void showEditPlayerDialog(
           if (isLateJoin) ...[
             const Warning(
               'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
+            ),
+            const SizedBox(height: 20),
+          ],
+          if (isEditingAfterStart) ...[
+            const Warning(
+              'Changing the players rating after the tournament has started does not change the initial ranking, nor does it affect past rounds.\nChanging the players name is uncritical.',
             ),
             const SizedBox(height: 20),
           ],
@@ -408,7 +415,9 @@ void showEditPlayerDialog(
             FileLogger.log(
               'Edited player: ${player!.name} (Rating: ${player!.rating})',
             );
-            tournament.sortPlayers();
+            if (!isEditingAfterStart) {
+              tournament.sortPlayers();
+            }
           }
           onPlayersChanged?.call();
           Navigator.pop(context);
