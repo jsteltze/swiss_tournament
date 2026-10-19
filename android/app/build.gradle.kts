@@ -49,6 +49,9 @@ android {
 
             signingConfig = signingConfigs.getByName("release")
             multiDexKeepProguard = file("multidex-config.pro")
+            optimization {
+                enable = true
+            }
         }
     }
 }
