@@ -140,11 +140,11 @@ class Tournament {
         );
       } else {
         state = 'in Progress (${rounds.length}/$numberOfRounds)';
-        background = Colors.greenAccent.withAlpha(100);
+        background = Colors.greenAccent.withAlpha(50);
         icon = Icon(
           Icons.change_circle,
           applyTextScaling: true,
-          color: Colors.grey.withAlpha(150),
+          color: Colors.green.withAlpha(150),
           size: 20,
         );
       }
