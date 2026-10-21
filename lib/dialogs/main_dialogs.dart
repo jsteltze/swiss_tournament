@@ -284,7 +284,7 @@ void showAppInfoDialog(BuildContext context, TournamentStorage storage) {
                 InfoRow('Database: ', 'sqflite').build(context),
                 InfoRow(
                   'Packages: ',
-                  'package_info_plus, expandable_search_bar_plus, url_launcher',
+                  'package_info_plus, expandable_search_bar_plus, url_launcher, file_picker, file_saver',
                 ).build(context),
                 InfoRow('Design: ', 'Material v3').build(context),
                 InfoRow('Icons: ', 'Cupertino Icons').build(context),
