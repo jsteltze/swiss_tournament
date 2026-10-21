@@ -1,6 +1,5 @@
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
-import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/info_table_row.dart';
 import 'package:js_flutter/components/popup_menu.dart';
 import 'package:js_flutter/icons.dart';
@@ -65,22 +64,19 @@ class _EncountersViewState extends State<EncountersView> {
             children: [
               Text('filter open ($open)'),
               Expanded(
-                child: MyBadge(
-                  '',
-                  child: Column(
-                    children: [
-                      Text(
-                        "Finished: ${pairings - open}/$pairings",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                child: Column(
+                  children: [
+                    Text(
+                      "Finished: ${pairings - open}/$pairings",
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
                       ),
-                      LinearProgressIndicator(
-                        value: 1.0 - open / pairings,
-                        minHeight: 5,
-                      ),
-                    ],
-                  ),
+                    ),
+                    LinearProgressIndicator(
+                      value: 1.0 - open / pairings,
+                      minHeight: 5,
+                    ),
+                  ],
                 ),
               ),
             ],
