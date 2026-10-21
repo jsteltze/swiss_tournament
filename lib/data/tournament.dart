@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:js_flutter/components/badge.dart';
+import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
 
 import 'first_round_pairing.dart';
@@ -126,15 +127,44 @@ class Tournament {
 
   Widget getStateBadge() {
     var state = 'not started';
-    Icon? icon;
+    Icon? icon = Icon(null, applyTextScaling: true, size: 20);
+    Color? background;
     if (rounds.isNotEmpty) {
       if (isFinished()) {
         state = 'finished (${rounds.length}/$numberOfRounds)';
-        icon = Icon(Icons.check, applyTextScaling: true, color: Colors.green);
+        icon = Icon(
+          Icons.check,
+          applyTextScaling: true,
+          color: Colors.green,
+          size: 20,
+        );
       } else {
         state = 'in Progress (${rounds.length}/$numberOfRounds)';
+        background = Colors.greenAccent.withAlpha(100);
+        icon = Icon(
+          Icons.change_circle,
+          applyTextScaling: true,
+          color: Colors.grey.withAlpha(150),
+          size: 20,
+        );
       }
     }
-    return MyBadge(state, icon: icon);
+    return MyBadge(state, icon: icon, background: background);
+  }
+
+  List<PlayerRatings> calculateRatings() {
+    List<PlayerRatings> ratings = players
+        .map((p) => PlayerRatings(player: p, playerId: players.indexOf(p)))
+        .toList();
+    PlayerRatings.calculateRanks(ratings, this);
+    return ratings;
+  }
+
+  String getWinner() {
+    if (!isFinished()) {
+      return "";
+    }
+    final ratings = calculateRatings();
+    return ratings.first.player.name;
   }
 }

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:js_flutter/components/app_layout.dart';
-import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/floating_action_button.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/popup_menu.dart';
@@ -15,8 +14,8 @@ import 'package:js_flutter/utils/snackbar_utils.dart';
 import 'package:swiss_tournament/components/tournaments_view_header.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_dialogs.dart';
-import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 
+import 'components/tournament_card.dart';
 import 'data/tournament.dart';
 import 'data/tournament_storage.dart';
 import 'data/tournament_storage_db.dart';
@@ -225,44 +224,10 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
                         )
                       : ListView.builder(
                           itemCount: _filteredTournaments.length,
-                          itemBuilder: (context, index) {
-                            final tournament = _filteredTournaments[index];
-                            return TournamentPopupMenu(
-                              tournament: tournament,
-                              storage: widget._storage,
-                              onEdit: (tournament) => setState(() {}),
-                              onDelete: () => _deleteTournament(tournament),
-                              onUpdate: _loadTournaments,
-                              child: ListTile(
-                                title: Text(
-                                  tournament.title,
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary,
-                                  ),
-                                ),
-                                subtitle: Row(
-                                  mainAxisAlignment: .spaceBetween,
-                                  children: [
-                                    MyBadge(
-                                      'Rounds: ${tournament.numberOfRounds}',
-                                      variant: .outline,
-                                    ),
-                                    tournament.getStateBadge(),
-                                  ],
-                                ),
-                                leading: Icon(
-                                  Icons.emoji_events,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .secondary,
-                                ),
-                                onTap: () =>
-                                    _navigateToTournamentDetails(tournament),
-                              ),
-                            );
-                          },
+                          itemBuilder: (context, index) => TournamentCard(
+                            tournament: _filteredTournaments[index],
+                            onTap: _navigateToTournamentDetails,
+                          ),
                         ),
                 ),
               ],

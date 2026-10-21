@@ -145,14 +145,8 @@ class RankingView extends StatelessWidget {
       (e) => e.result.isNotEmpty,
     );
 
-    // map to PlayerRatings class
-    final ratings = tournament.players
-        .map(
-          (p) =>
-              PlayerRatings(player: p, playerId: tournament.players.indexOf(p)),
-        )
-        .toList();
-    PlayerRatings.calculateRanks(ratings, tournament);
+    // calculate ranks
+    final ratings = tournament.calculateRatings();
 
     DataColumn rotatedNumericHeader(title, {String? headline}) => DataColumn(
       numeric: true,
