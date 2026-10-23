@@ -318,7 +318,11 @@ class _RoundsViewState extends State<RoundsView> {
       'Finishing last round of tournament ${widget.tournament.id}',
     );
     setState(() {
-      _data.last.headerIcon = Icon(Icons.check_circle);
+      _data.last.headerIcon = Icon(
+        Icons.check_circle,
+        applyTextScaling: true,
+        color: Colors.green.withAlpha(150),
+      );
       widget.tournament.rounds.last.finishedAt = DateTime.now();
       widget.tournament.update();
     });
