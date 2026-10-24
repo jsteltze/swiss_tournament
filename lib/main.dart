@@ -226,6 +226,14 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
                           itemCount: _filteredTournaments.length,
                           itemBuilder: (context, index) => TournamentCard(
                             tournament: _filteredTournaments[index],
+                            storage: widget._storage,
+                            onEdit: (tournament) {
+                              _loadTournaments();
+                            },
+                            onDelete: () {
+                              _deleteTournament(_filteredTournaments[index]);
+                            },
+                            onUpdate: _loadTournaments,
                             onTap: _navigateToTournamentDetails,
                           ),
                         ),

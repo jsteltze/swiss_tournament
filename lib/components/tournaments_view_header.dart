@@ -134,6 +134,7 @@ class _TournamentsViewHeaderState extends State<TournamentsViewHeader> {
                 ],
               ),
             ),
+          if (countNotFinished == 0 && _isExpanded) SizedBox(height: 10),
         ],
       ),
     );

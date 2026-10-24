@@ -35,6 +35,5 @@ This project is a Flutter application written in Dart.
 - minimum Rounds: 2
 - Turniertyp Roundrobin
 - Spieler Namen in rounds view nicht unkontrolliert umbrechen (maxLines?)
-- long tap auf die Tournament card
 - Rating Verteilung in einem Diagramm
 - In ranking view die Header-Höhe flexibel machen
