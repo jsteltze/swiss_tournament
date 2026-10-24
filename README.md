@@ -36,7 +36,6 @@ This project is a Flutter application written in Dart.
 - Turniertyp Roundrobin
 - Spieler Namen in rounds view nicht unkontrolliert umbrechen (maxLines?)
 - Turnier abgeschlossen -> main View aktualisiert nicht (Badges und header muss auch aktualisieren)
-- Average Rating NaN
 - Adding players aktualisiert nicht die Turnament Card
 - long tap auf die Tournament card
 - Rating Verteilung in einem Diagramm

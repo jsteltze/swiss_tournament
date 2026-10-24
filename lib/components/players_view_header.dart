@@ -10,12 +10,11 @@ class PlayersViewHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int playerCount = tournament.players.length;
     final int playersWithRating = tournament.players
         .where((p) => p.rating > 0)
         .length;
     double averageRating = 0;
-    if (playerCount > 0) {
+    if (playersWithRating > 1) {
       averageRating =
           tournament.players
               .where((p) => p.rating > 0)
@@ -48,34 +47,48 @@ class PlayersViewHeader extends StatelessWidget {
               ],
             ),
           ),
-          MyBadge(
-            '',
-            variant: .tertiary,
-            child: Stack(
-              alignment: .centerLeft,
+          if (playersWithRating > 1)
+            Column(
+              crossAxisAlignment: .end,
               children: [
                 Text(
-                  'o',
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontFamily: 'RobotoMono',
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                Text(
-                  '/',
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontFamily: 'RobotoMono',
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                Text(
-                  '     ${averageRating.toStringAsFixed(0)}',
-                  style: Theme.of(context).textTheme.titleSmall!
+                  'Average rating:',
+                  style: Theme.of(context).textTheme.bodySmall!
                       .copyWith(color: Theme.of(context).colorScheme.tertiary),
+                ),
+                MyBadge(
+                  '',
+                  variant: .tertiary,
+                  child: Stack(
+                    alignment: .centerLeft,
+                    children: [
+                      Text(
+                        'o',
+                        style: Theme.of(context).textTheme.titleMedium!
+                            .copyWith(
+                              fontFamily: 'RobotoMono',
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
+                      ),
+                      Text(
+                        '/',
+                        style: Theme.of(context).textTheme.titleMedium!
+                            .copyWith(
+                              fontFamily: 'RobotoMono',
+                              color: Theme.of(context).colorScheme.tertiary,
+                            ),
+                      ),
+                      Text(
+                        '     ${averageRating.toStringAsFixed(0)}',
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
         ],
       ),
     );
