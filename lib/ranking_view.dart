@@ -133,7 +133,7 @@ class RankingView extends StatelessWidget {
     final lastRoundNum = tournament.rounds.length;
     final selectedTiebreak1 = tournament.settings.tb1;
     final selectedTiebreak2 = tournament.settings.tb2;
-    final headerHeight = 90.0;
+    final headerHeight = 100.0;
     if (lastRoundNum == 0) {
       return NoDataTile(
         text: 'Tournament has not started yet.',
@@ -214,6 +214,7 @@ class RankingView extends StatelessWidget {
         ),
         Expanded(
           child: InteractiveViewer(
+            boundaryMargin: .symmetric(horizontal: 10),
             constrained: false,
             child: DataTable(
               columnSpacing: 8.0,
@@ -266,17 +267,17 @@ class RankingView extends StatelessWidget {
                         DataCell(
                           Row(
                             children: [
-                              if (r.rank == 1)
+                              if (r.rank == 1 && tournament.isFinished())
                                 Icon(
                                   Icons.emoji_events,
                                   color: Color.fromARGB(255, 255, 215, 0),
                                 ),
-                              if (r.rank == 2)
+                              if (r.rank == 2 && tournament.isFinished())
                                 Icon(
                                   Icons.emoji_events,
                                   color: Color.fromARGB(255, 192, 192, 192),
                                 ),
-                              if (r.rank == 3)
+                              if (r.rank == 3 && tournament.isFinished())
                                 Icon(
                                   Icons.emoji_events,
                                   color: Color.fromARGB(255, 205, 127, 50),
