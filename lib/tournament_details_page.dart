@@ -44,6 +44,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
       _playerSearch = '';
     });
     widget.tournament.update();
+    widget.onUpdate?.call();
   }
 
   void _addPlayer() {

@@ -35,8 +35,6 @@ This project is a Flutter application written in Dart.
 - minimum Rounds: 2
 - Turniertyp Roundrobin
 - Spieler Namen in rounds view nicht unkontrolliert umbrechen (maxLines?)
-- Turnier abgeschlossen -> main View aktualisiert nicht (Badges und header muss auch aktualisieren)
-- Adding players aktualisiert nicht die Turnament Card
 - long tap auf die Tournament card
 - Rating Verteilung in einem Diagramm
 - In ranking view die Header-Höhe flexibel machen

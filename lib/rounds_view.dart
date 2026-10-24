@@ -273,6 +273,7 @@ class _RoundsViewState extends State<RoundsView> {
         );
       });
       widget.onRoundUpdate?.call();
+      showSnackbar(context, 'Round ${widget.tournament.rounds.length} started');
     } catch (ex) {
       if (mounted) {
         showErrorDialog(context, ex.toString());
@@ -323,6 +324,7 @@ class _RoundsViewState extends State<RoundsView> {
       _data.last.headerIcon = roundFinishedIcon;
       widget.tournament.rounds.last.finishedAt = DateTime.now();
       widget.tournament.update();
+      widget.onRoundUpdate?.call();
     });
     if (widget.tournament.rounds.length == widget.tournament.numberOfRounds) {
       FileLogger.log('Tournament ${widget.tournament.id} finished!');
