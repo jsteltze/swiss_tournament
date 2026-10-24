@@ -129,7 +129,7 @@ class SingleEncounterView extends StatelessWidget {
     final possibleResults2 = ["+ -", "- +"];
     if (encounter.playerIdW < 0 || encounter.playerIdB < 0) {
       String reason = encounter.playerIdW == -1 || encounter.playerIdB == -1
-          ? 'Reason: The player (currently last place in the standings) is granted a full point due to an odd number of players in this round.'
+          ? 'Reason: The player (currently last place in the standings among the players who have not yet sat out a round) is granted a full point due to an odd number of players in this round.'
           : 'Reason: The player has chosen to request a voluntary half-point bye.';
       openDialog(
         context,
