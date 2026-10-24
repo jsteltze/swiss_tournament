@@ -28,6 +28,12 @@ class RoundsPanel {
   bool isExpanded;
 }
 
+final roundFinishedIcon = Icon(
+  Icons.check_circle,
+  applyTextScaling: true,
+  color: Colors.green.withAlpha(150),
+);
+
 RoundsPanel generateItem(
   Tournament tournament,
   int index,
@@ -45,11 +51,7 @@ RoundsPanel generateItem(
             applyTextScaling: true,
             color: Colors.grey.withAlpha(200),
           )
-        : Icon(
-            Icons.check_circle,
-            applyTextScaling: true,
-            color: Colors.green.withAlpha(150),
-          ),
+        : roundFinishedIcon,
     expandedValue: EncountersView(
       tournament: tournament,
       roundIndex: index,
@@ -318,11 +320,7 @@ class _RoundsViewState extends State<RoundsView> {
       'Finishing last round of tournament ${widget.tournament.id}',
     );
     setState(() {
-      _data.last.headerIcon = Icon(
-        Icons.check_circle,
-        applyTextScaling: true,
-        color: Colors.green.withAlpha(150),
-      );
+      _data.last.headerIcon = roundFinishedIcon;
       widget.tournament.rounds.last.finishedAt = DateTime.now();
       widget.tournament.update();
     });
