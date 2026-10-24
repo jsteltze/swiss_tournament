@@ -125,7 +125,7 @@ class Tournament {
     );
   }
 
-  Widget getStateBadge() {
+  Widget getStateBadge(bool colored) {
     var state = 'not started';
     Icon? icon = Icon(null, applyTextScaling: true, size: 20);
     Color? background;
@@ -140,7 +140,7 @@ class Tournament {
         );
       } else {
         state = 'in Progress (${rounds.length}/$numberOfRounds)';
-        background = Colors.greenAccent.withAlpha(50);
+        background = colored ? Colors.greenAccent.withAlpha(50) : null;
         icon = Icon(
           Icons.change_circle,
           applyTextScaling: true,

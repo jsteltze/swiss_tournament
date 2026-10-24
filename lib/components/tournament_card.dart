@@ -45,7 +45,7 @@ class TournamentCard extends StatelessWidget {
                     ),
                     variant: .ghost,
                   ),
-                  tournament.getStateBadge(),
+                  tournament.getStateBadge(true),
                 ],
               ),
             ),

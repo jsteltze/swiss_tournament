@@ -105,7 +105,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                   style: Theme.of(context).textTheme.titleSmall!
                       .copyWith(color: Theme.of(context).colorScheme.secondary),
                 ),
-                widget.tournament.getStateBadge(),
+                widget.tournament.getStateBadge(false),
               ],
             ),
             SizedBox(height: 4),
