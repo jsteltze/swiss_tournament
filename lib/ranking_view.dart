@@ -133,7 +133,6 @@ class RankingView extends StatelessWidget {
     final lastRoundNum = tournament.rounds.length;
     final selectedTiebreak1 = tournament.settings.tb1;
     final selectedTiebreak2 = tournament.settings.tb2;
-    final headerHeight = 100.0;
     if (lastRoundNum == 0) {
       return NoDataTile(
         text: 'Tournament has not started yet.',
@@ -147,6 +146,20 @@ class RankingView extends StatelessWidget {
 
     // calculate ranks
     final ratings = tournament.calculateRatings();
+
+    // determine the header height by the longest column title (which is 'Performance')
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: 'Performance',
+        style: DefaultTextStyle.of(context).style,
+      ),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(minWidth: 0, maxWidth: double.infinity);
+    final size = textPainter.size;
+    FileLogger.log('size=$size');
+    final headerHeight = size.width + 5;
 
     DataColumn rotatedNumericHeader(title, {String? headline}) => DataColumn(
       numeric: true,
