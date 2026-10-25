@@ -325,6 +325,7 @@ class RankingView extends StatelessWidget {
                         ),
                         DataCell(
                           Container(
+                            alignment: .centerEnd,
                             padding: const EdgeInsets.only(right: 5),
                             child: r.getPerformanceWidget(context),
                           ),

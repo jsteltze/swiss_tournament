@@ -472,6 +472,7 @@ class PlayerRatings {
 
   Widget getPerformanceWidget(BuildContext ctx) {
     return Row(
+      mainAxisSize: .min,
       children: [
         if (player.rating > 0 && performance! > 0)
           Transform.rotate(
