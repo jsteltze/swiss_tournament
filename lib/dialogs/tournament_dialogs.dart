@@ -29,6 +29,7 @@ void showEditTournamentDialog(
 
   openDialog(
     context,
+    maxWidth: true,
     title: '${tournament == null ? 'New' : 'Edit'} Tournament',
     titleIcon: tournament == null ? Icons.new_label_outlined : editIcon,
     child: (ctx, setDialogState, toggleMainAction) => Form(
