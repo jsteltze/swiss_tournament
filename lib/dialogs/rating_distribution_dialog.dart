@@ -8,9 +8,11 @@ import 'package:swiss_tournament/data/tournament.dart';
 
 void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
   bool onlyActive = false;
+  final haveWithdrawn = t.players.any((p) => p.leftAt != null);
 
   openDialog(
     ctx,
+    maxWidth: true,
     title: 'Rating distribution',
     closeButtonTitle: 'Close',
     child: (ctx, setDialogState, toggleMainAction) => Column(
@@ -19,19 +21,22 @@ void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
           padding: EdgeInsetsGeometry.only(bottom: 100),
           child: SizedBox(
             height: 400,
-            width: 400,
+            width: .infinity,
             child: BarChart(
+              key: ValueKey<bool>(onlyActive),
+              chartRendererKey: ValueKey<bool>(onlyActive),
               mainData(ctx, t, onlyActive),
               duration: Duration(milliseconds: 300), // Optional
               curve: Curves.bounceIn, // Optional,
             ),
           ),
         ),
-        FilterChip(
-          selected: onlyActive,
-          onSelected: (x) => {setDialogState(() => onlyActive = x)},
-          label: const Text('only active Players '),
-        ),
+        if (haveWithdrawn)
+          FilterChip(
+            selected: onlyActive,
+            onSelected: (x) => {setDialogState(() => onlyActive = x)},
+            label: const Text('only active Players '),
+          ),
       ],
     ),
   );
@@ -73,6 +78,54 @@ BarChartData mainData(BuildContext ctx, Tournament t, bool onlyActive) {
   FileLogger.log('spots: $spots');
   FileLogger.log('avgColumn: $avgColumn');
 
+  Widget? getLabels(double value) {
+    if (value == minColumn || value == maxColumn || value == avgColumn) {
+      var label = '';
+      var number = 0;
+      if (value == maxColumn) {
+        label = 'max. Rating';
+        number = maxRating;
+      } else if (value == minColumn) {
+        label = 'min. Rating';
+        number = minRating;
+      } else if (value == avgColumn) {
+        label = 'avg. Rating';
+        number = avgRating.round();
+      }
+      return Container(
+        width: 90,
+        height: 100,
+        transform: Matrix4.translationValues(0.0, -7.0, 0.0),
+        child: Column(
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(ctx).colorScheme.tertiary,
+              ),
+              textScaler: TextScaler.linear(1.0),
+            ),
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: Theme.of(ctx).colorScheme.tertiary,
+            ),
+            Text(
+              number.toString(),
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(ctx).colorScheme.tertiary,
+              ),
+              textScaler: TextScaler.linear(1.0),
+            ),
+          ],
+        ),
+      );
+    }
+    return null;
+  }
+
   return BarChartData(
     gridData: FlGridData(
       horizontalInterval: 1,
@@ -113,22 +166,21 @@ BarChartData mainData(BuildContext ctx, Tournament t, bool onlyActive) {
       show: true,
       rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      bottomTitles: bottomTitleWidgets(
-        ctx,
-        spots,
-        minRating,
-        maxRating,
-        avgRating.round(),
-        minColumn,
-        maxColumn,
-        avgColumn,
-      ),
+      bottomTitles: bottomTitleWidgets(ctx, spots, getLabels),
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
           interval: 1,
           reservedSize: 42,
           minIncluded: false,
+          getTitlesWidget: (value, meta) => SideTitleWidget(
+            meta: meta,
+            child: Text(
+              value.toStringAsFixed(0),
+              style: Theme.of(ctx).textTheme.titleMedium!
+                  .copyWith(color: Theme.of(ctx).colorScheme.tertiary),
+            ),
+          ),
         ),
       ),
     ),
@@ -174,12 +226,7 @@ BarChartGroupData makeGroupData(
 AxisTitles bottomTitleWidgets(
   BuildContext ctx,
   List<BarChartGroupData> spots,
-  int minRating,
-  int maxRating,
-  int avgRating,
-  int minColumn,
-  int maxColumn,
-  int avgColumn,
+  Function(double) getLabels,
 ) {
   return AxisTitles(
     sideTitleAlignment: .inside,
@@ -192,74 +239,7 @@ AxisTitles bottomTitleWidgets(
         space: 0,
         child: Stack(
           children: [
-            if (value == minColumn || value == maxColumn || value == avgColumn)
-              Container(
-                width: 90,
-                height: 100,
-                transform: Matrix4.translationValues(0.0, -7.0, 0.0),
-                child: Column(
-                  children: [
-                    if (value == minColumn) ...[
-                      Text(
-                        'min. Rating',
-                        style: Theme.of(ctx).textTheme.labelSmall!.copyWith(
-                          color: Theme.of(ctx).colorScheme.tertiary,
-                        ),
-                      ),
-                      Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: Theme.of(ctx).colorScheme.tertiary,
-                      ),
-                      Text(
-                        minRating.toString(),
-                        style: Theme.of(ctx).textTheme.labelSmall!.copyWith(
-                          color: Theme.of(ctx).colorScheme.tertiary,
-                        ),
-                      ),
-                    ],
-                    if (value == maxColumn) ...[
-                      Text(
-                        'max. Rating',
-                        style: Theme.of(ctx).textTheme.labelSmall!.copyWith(
-                          color: Theme.of(ctx).colorScheme.tertiary,
-                        ),
-                      ),
-                      Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: Theme.of(ctx).colorScheme.tertiary,
-                      ),
-                      Text(
-                        maxRating.toString(),
-                        style: Theme.of(ctx).textTheme.labelSmall!.copyWith(
-                          color: Theme.of(ctx).colorScheme.tertiary,
-                        ),
-                      ),
-                    ],
-                    if (value == avgColumn) ...[
-                      Text(
-                        'avg. Rating',
-                        style: Theme.of(ctx).textTheme.labelSmall!.copyWith(
-                          color: Theme.of(ctx).colorScheme.tertiary,
-                        ),
-                      ),
-                      Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: Theme.of(ctx).colorScheme.tertiary,
-                      ),
-                      Text(
-                        avgRating.toString(),
-                        style: Theme.of(ctx).textTheme.labelSmall!.copyWith(
-                          color: Theme.of(ctx).colorScheme.tertiary,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            //Column(children: [Text('Rating'), Text('5')]),
+            ?getLabels(value),
             Padding(
               padding: EdgeInsetsGeometry.only(left: 100, bottom: 0, top: 2),
               child: SizedBox(
@@ -268,9 +248,11 @@ AxisTitles bottomTitleWidgets(
                 child: spots.any((s) => s.x == value && s.barRods.first.toY > 0)
                     ? Text(
                         '${value.toStringAsFixed(0)} - ${(value + 100).toStringAsFixed(0)}',
-                        style: Theme.of(ctx).textTheme.bodySmall!.copyWith(
+                        style: TextStyle(
+                          fontSize: 14,
                           color: Theme.of(ctx).colorScheme.onPrimaryContainer,
                         ),
+                        textScaler: TextScaler.linear(1.0),
                       )
                     : null,
               ),
