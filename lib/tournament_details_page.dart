@@ -94,6 +94,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: MediaQuery.of(context).textScaler.scale(65),
         title: Column(
           crossAxisAlignment: .start,
           children: [

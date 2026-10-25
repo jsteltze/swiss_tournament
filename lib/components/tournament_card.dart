@@ -111,6 +111,7 @@ class TournamentCard extends StatelessWidget {
             color: Theme.of(context).colorScheme.secondary,
             applyTextScaling: true,
           ),
+          contentPadding: .only(left: 10, right: 5),
           trailing: Icon(
             Icons.navigate_next,
             color: Theme.of(context).colorScheme.secondary.withAlpha(100),
