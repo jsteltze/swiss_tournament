@@ -37,7 +37,12 @@ class PlayerTile extends StatelessWidget {
     }
     return ListTile(
       onTap: onTap,
-      title: Text(player.name, style: style),
+      title: Text(
+        player.name,
+        style: style,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      ),
       subtitle: index < 0
           ? Text(index == -1 ? '(automatic)' : '(requested)')
           : Wrap(

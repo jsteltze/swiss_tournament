@@ -34,7 +34,6 @@ This project is a Flutter application written in Dart.
 - minimum Players: 4
 - minimum Rounds: 2
 - Turniertyp Roundrobin
-- Spieler Namen in rounds view nicht unkontrolliert umbrechen (maxLines?)
 - Rating Verteilung in einem Diagramm
 - Screenshots im Playstore aktualisieren
 - Unterscheiden average rating alle und nur aktive
