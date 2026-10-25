@@ -223,6 +223,9 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
                           icon: Icons.filter_alt_outlined,
                         )
                       : ListView.builder(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).textScaler.scale(80),
+                          ),
                           itemCount: _filteredTournaments.length,
                           itemBuilder: (context, index) => TournamentCard(
                             tournament: _filteredTournaments[index],

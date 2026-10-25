@@ -46,7 +46,9 @@ class PlayersView extends StatelessWidget {
                   icon: Icons.people,
                 )
               : ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 80),
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).textScaler.scale(80),
+                  ),
                   separatorBuilder: (context, index) =>
                       index == firstLateJoiner - 1
                       ? Divider(
