@@ -37,3 +37,5 @@ This project is a Flutter application written in Dart.
 - Spieler Namen in rounds view nicht unkontrolliert umbrechen (maxLines?)
 - Rating Verteilung in einem Diagramm
 - In ranking view die Header-Höhe flexibel machen
+- Screenshots im Playstore aktualisieren
+- Unterscheiden average rating alle und nur aktive
