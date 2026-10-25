@@ -3,6 +3,8 @@ import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/view_header.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
+import '../dialogs/rating_distribution_dialog.dart';
+
 class PlayersViewHeader extends StatelessWidget {
   final Tournament tournament;
 
@@ -48,46 +50,52 @@ class PlayersViewHeader extends StatelessWidget {
             ),
           ),
           if (playersWithRating > 1)
-            Column(
-              crossAxisAlignment: .end,
-              children: [
-                Text(
-                  'Average rating:',
-                  style: Theme.of(context).textTheme.bodySmall!
-                      .copyWith(color: Theme.of(context).colorScheme.tertiary),
-                ),
-                MyBadge(
-                  '',
-                  variant: .tertiary,
-                  child: Stack(
-                    alignment: .centerLeft,
-                    children: [
-                      Text(
-                        'o',
-                        style: Theme.of(context).textTheme.titleMedium!
-                            .copyWith(
-                              fontFamily: 'RobotoMono',
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
-                      ),
-                      Text(
-                        '/',
-                        style: Theme.of(context).textTheme.titleMedium!
-                            .copyWith(
-                              fontFamily: 'RobotoMono',
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
-                      ),
-                      Text(
-                        '     ${averageRating.toStringAsFixed(0)}',
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Theme.of(context).colorScheme.tertiary,
-                        ),
-                      ),
-                    ],
+            TextButton(
+              onPressed: () =>
+                  openRatingDistributionDialog(tournament, context),
+              child: Column(
+                crossAxisAlignment: .end,
+                children: [
+                  Text(
+                    'Average rating:',
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ),
                   ),
-                ),
-              ],
+                  MyBadge(
+                    '',
+                    variant: .tertiary,
+                    child: Stack(
+                      alignment: .centerLeft,
+                      children: [
+                        Text(
+                          'o',
+                          style: Theme.of(context).textTheme.titleMedium!
+                              .copyWith(
+                                fontFamily: 'RobotoMono',
+                                color: Theme.of(context).colorScheme.tertiary,
+                              ),
+                        ),
+                        Text(
+                          '/',
+                          style: Theme.of(context).textTheme.titleMedium!
+                              .copyWith(
+                                fontFamily: 'RobotoMono',
+                                color: Theme.of(context).colorScheme.tertiary,
+                              ),
+                        ),
+                        Text(
+                          '     ${averageRating.toStringAsFixed(0)}',
+                          style: Theme.of(context).textTheme.titleSmall!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.tertiary,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
         ],
       ),
