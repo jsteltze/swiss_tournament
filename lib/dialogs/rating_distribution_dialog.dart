@@ -16,98 +16,10 @@ void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
   final haveWithdrawn = t.players.any((p) => p.leftAt != null);
 
   const stepSize = 100;
-  final players = t.players
-      .where((p) => !onlyActive || p.leftAt == null)
-      .toList();
-
-  final int playersWithRating = players.where((p) => p.rating > 0).length;
-  double avgRating =
-      players
-          .where((p) => p.rating > 0)
-          .map((p) => p.rating)
-          .fold(0, (a, b) => a + b) /
-      playersWithRating;
-
-  int minRating = players
-      .where((p) => p.rating > 0)
-      .map((p) => p.rating)
-      .reduce(min);
-  int maxRating = players.map((p) => p.rating).reduce(max);
-  int minColumn = (minRating / stepSize).floor() * stepSize;
-  int maxColumn = (maxRating / stepSize).floor() * stepSize;
-  int avgColumn = -1;
-  int maxY = 0;
-
-  List<BarChartGroupData> spots = [];
-  List<BarChartGroupData> spotsZero = [];
-  for (int i = minColumn; i <= maxColumn; i += stepSize) {
-    int countRatingRange = players
-        .where((p) => p.rating >= i && p.rating < i + stepSize)
-        .length;
-    if (countRatingRange > maxY) {
-      maxY = countRatingRange;
-    }
-    if (avgRating >= i && avgRating < i + stepSize) {
-      avgColumn = i;
-    }
-    spots.add(makeGroupData(ctx, i, countRatingRange.toDouble()));
-    spotsZero.add(makeGroupData(ctx, i, 0));
-  }
-  FileLogger.log('spots: $spots');
-  FileLogger.log('avgColumn: $avgColumn');
-
-  Widget? getLabels(double value) {
-    if (value == minColumn || value == maxColumn || value == avgColumn) {
-      var label = '';
-      var number = 0;
-      if (value == maxColumn) {
-        label = 'max. Rating';
-        number = maxRating;
-      } else if (value == minColumn) {
-        label = 'min. Rating';
-        number = minRating;
-      } else if (value == avgColumn) {
-        label = 'avg. Rating';
-        number = avgRating.round();
-      }
-      return Container(
-        width: 90,
-        height: 150,
-        transform: Matrix4.translationValues(0.0, 3.0, 0.0),
-        child: Column(
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 15,
-                color: Theme.of(ctx).colorScheme.tertiary,
-              ),
-              textScaler: TextScaler.linear(1.0),
-            ),
-            Divider(
-              height: 1,
-              thickness: 1,
-              color: Theme.of(ctx).colorScheme.tertiary,
-            ),
-            Text(
-              number.toString(),
-              style: TextStyle(
-                fontSize: 15,
-                color: Theme.of(ctx).colorScheme.tertiary,
-                fontWeight: .bold,
-              ),
-              textScaler: TextScaler.linear(1.0),
-            ),
-          ],
-        ),
-      );
-    }
-    return null;
-  }
 
   openDialog(
     ctx,
-    maxWidth: true,
+    width: 500,
     title: 'Rating distribution',
     closeButtonTitle: 'Close',
     /*onShowingDelay: 2000,
@@ -133,6 +45,96 @@ void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
           },
         );
       }
+
+      final players = t.players
+          .where((p) => !onlyActive || p.leftAt == null)
+          .toList();
+
+      final int playersWithRating = players.where((p) => p.rating > 0).length;
+      double avgRating =
+          players
+              .where((p) => p.rating > 0)
+              .map((p) => p.rating)
+              .fold(0, (a, b) => a + b) /
+          playersWithRating;
+
+      int minRating = players
+          .where((p) => p.rating > 0)
+          .map((p) => p.rating)
+          .reduce(min);
+      int maxRating = players.map((p) => p.rating).reduce(max);
+      int minColumn = (minRating / stepSize).floor() * stepSize;
+      int maxColumn = (maxRating / stepSize).floor() * stepSize;
+      int avgColumn = -1;
+      int maxY = 0;
+
+      List<BarChartGroupData> spots = [];
+      List<BarChartGroupData> spotsZero = [];
+      for (int i = minColumn; i <= maxColumn; i += stepSize) {
+        int countRatingRange = players
+            .where((p) => p.rating >= i && p.rating < i + stepSize)
+            .length;
+        if (countRatingRange > maxY) {
+          maxY = countRatingRange;
+        }
+        if (avgRating >= i && avgRating < i + stepSize) {
+          avgColumn = i;
+        }
+        spots.add(makeGroupData(ctx, i, countRatingRange.toDouble()));
+        spotsZero.add(makeGroupData(ctx, i, 0));
+      }
+      FileLogger.log('spots: $spots');
+      FileLogger.log('avgColumn: $avgColumn');
+
+      Widget? getLabels(double value) {
+        if (value == minColumn || value == maxColumn || value == avgColumn) {
+          var label = '';
+          var number = 0;
+          if (value == maxColumn) {
+            label = 'max. Rating';
+            number = maxRating;
+          } else if (value == minColumn) {
+            label = 'min. Rating';
+            number = minRating;
+          } else if (value == avgColumn) {
+            label = 'avg. Rating';
+            number = avgRating.round();
+          }
+          return Container(
+            width: 90,
+            height: 150,
+            transform: Matrix4.translationValues(0.0, 3.0, 0.0),
+            child: Column(
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Theme.of(ctx).colorScheme.tertiary,
+                  ),
+                  textScaler: TextScaler.linear(1.0),
+                ),
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Theme.of(ctx).colorScheme.tertiary,
+                ),
+                Text(
+                  number.toString(),
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Theme.of(ctx).colorScheme.tertiary,
+                    fontWeight: .bold,
+                  ),
+                  textScaler: TextScaler.linear(1.0),
+                ),
+              ],
+            ),
+          );
+        }
+        return null;
+      }
+
       return Column(
         children: [
           Padding(
@@ -236,7 +238,7 @@ void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
               onSelected: (bool x) {
                 setDialogState(() {
                   onlyActive = x;
-                  //triggerAnimation = !triggerAnimation;
+                  triggerAnimation = false;
                 });
               },
               label: const Text('only active Players '),
