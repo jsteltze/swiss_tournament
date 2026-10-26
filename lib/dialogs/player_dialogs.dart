@@ -355,7 +355,7 @@ void showEditPlayerDialog(
 
   openDialog(
     context,
-    maxWidth: true,
+    width: defaultFormularDialogWidth,
     title:
         '${player == null ? 'New' : 'Edit'} Player${isLateJoin ? ' (Late Join)' : ''}',
     titleIcon: player == null ? Icons.person_add_alt_1 : editIcon,
