@@ -6,43 +6,15 @@ import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
+final animationDuration = 500;
+final animationDelay = 300;
+
 void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
   bool onlyActive = false;
+  bool triggerAnimation = false;
+  bool triggerLabels = false;
   final haveWithdrawn = t.players.any((p) => p.leftAt != null);
 
-  openDialog(
-    ctx,
-    maxWidth: true,
-    title: 'Rating distribution',
-    closeButtonTitle: 'Close',
-    child: (ctx, setDialogState, toggleMainAction) => Column(
-      children: [
-        Padding(
-          padding: EdgeInsetsGeometry.only(bottom: 100),
-          child: SizedBox(
-            height: 400,
-            width: .infinity,
-            child: BarChart(
-              key: ValueKey<bool>(onlyActive),
-              chartRendererKey: ValueKey<bool>(onlyActive),
-              mainData(ctx, t, onlyActive),
-              duration: Duration(milliseconds: 300), // Optional
-              curve: Curves.bounceIn, // Optional,
-            ),
-          ),
-        ),
-        if (haveWithdrawn)
-          FilterChip(
-            selected: onlyActive,
-            onSelected: (x) => {setDialogState(() => onlyActive = x)},
-            label: const Text('only active Players '),
-          ),
-      ],
-    ),
-  );
-}
-
-BarChartData mainData(BuildContext ctx, Tournament t, bool onlyActive) {
   const stepSize = 100;
   final players = t.players
       .where((p) => !onlyActive || p.leftAt == null)
@@ -64,16 +36,22 @@ BarChartData mainData(BuildContext ctx, Tournament t, bool onlyActive) {
   int minColumn = (minRating / stepSize).floor() * stepSize;
   int maxColumn = (maxRating / stepSize).floor() * stepSize;
   int avgColumn = -1;
+  int maxY = 0;
 
   List<BarChartGroupData> spots = [];
+  List<BarChartGroupData> spotsZero = [];
   for (int i = minColumn; i <= maxColumn; i += stepSize) {
     int countRatingRange = players
         .where((p) => p.rating >= i && p.rating < i + stepSize)
         .length;
+    if (countRatingRange > maxY) {
+      maxY = countRatingRange;
+    }
     if (avgRating >= i && avgRating < i + stepSize) {
       avgColumn = i;
     }
     spots.add(makeGroupData(ctx, i, countRatingRange.toDouble()));
+    spotsZero.add(makeGroupData(ctx, i, 0));
   }
   FileLogger.log('spots: $spots');
   FileLogger.log('avgColumn: $avgColumn');
@@ -94,14 +72,14 @@ BarChartData mainData(BuildContext ctx, Tournament t, bool onlyActive) {
       }
       return Container(
         width: 90,
-        height: 100,
-        transform: Matrix4.translationValues(0.0, -7.0, 0.0),
+        height: 150,
+        transform: Matrix4.translationValues(0.0, 3.0, 0.0),
         child: Column(
           children: [
             Text(
               label,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 15,
                 color: Theme.of(ctx).colorScheme.tertiary,
               ),
               textScaler: TextScaler.linear(1.0),
@@ -114,8 +92,9 @@ BarChartData mainData(BuildContext ctx, Tournament t, bool onlyActive) {
             Text(
               number.toString(),
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 15,
                 color: Theme.of(ctx).colorScheme.tertiary,
+                fontWeight: .bold,
               ),
               textScaler: TextScaler.linear(1.0),
             ),
@@ -126,71 +105,145 @@ BarChartData mainData(BuildContext ctx, Tournament t, bool onlyActive) {
     return null;
   }
 
-  return BarChartData(
-    gridData: FlGridData(
-      horizontalInterval: 1,
-      drawVerticalLine: false,
-      getDrawingHorizontalLine: (value) {
-        return FlLine(
-          color: Theme.of(ctx).colorScheme.secondary,
-          dashArray: const [4, 4],
-          strokeWidth: 0.5,
+  openDialog(
+    ctx,
+    maxWidth: true,
+    title: 'Rating distribution',
+    closeButtonTitle: 'Close',
+    /*onShowingDelay: 2000,
+    onShowingCallback: (setDialogState) {
+      print('onShowingCallback');
+      setDialogState(() {
+        triggerAnimation = true;
+      });
+    },*/
+    child: (ctx, setDialogState, toggleMainAction) {
+      if (!triggerAnimation) {
+        Future.delayed(Duration(milliseconds: animationDelay), () {
+          setDialogState(() {
+            triggerAnimation = true;
+          });
+        });
+        Future.delayed(
+          Duration(milliseconds: animationDelay + animationDuration),
+          () {
+            setDialogState(() {
+              triggerLabels = true;
+            });
+          },
         );
-      },
-    ),
-    minY: 0,
-    extraLinesData: ExtraLinesData(verticalLines: [VerticalLine(x: 1580)]),
-    barTouchData: BarTouchData(
-      touchTooltipData: BarTouchTooltipData(
-        getTooltipColor: (touchedSpot) =>
-            Theme.of(ctx).colorScheme.surfaceTint.withAlpha(200),
-        getTooltipItem: (group, groupIndex, rod, rodIndex) {
-          int numberPlayers = rod.toY.floor();
-          return BarTooltipItem(
-            '$numberPlayers Player${numberPlayers > 1 ? 's' : ''}\n',
-            Theme.of(ctx).textTheme.titleLarge!
-                .copyWith(color: Theme.of(ctx).colorScheme.onInverseSurface),
-            children: <TextSpan>[
-              TextSpan(
-                text: '${group.x} - ${group.x + stepSize}',
-                style: Theme.of(ctx).textTheme.titleMedium!.copyWith(
-                  color: Theme.of(ctx).colorScheme.onInverseSurface,
+      }
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsetsGeometry.only(bottom: 100),
+            child: SizedBox(
+              height: 400,
+              width: .infinity,
+              child: BarChart(
+                BarChartData(
+                  gridData: FlGridData(
+                    horizontalInterval: 1,
+                    drawVerticalLine: false,
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: Theme.of(ctx).colorScheme.secondary,
+                        dashArray: const [4, 4],
+                        strokeWidth: 0.5,
+                      );
+                    },
+                  ),
+                  minY: 0,
+                  maxY: maxY + 0.5,
+                  barTouchData: BarTouchData(
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipColor: (touchedSpot) =>
+                          Theme.of(ctx).colorScheme.surfaceTint.withAlpha(200),
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        int numberPlayers = rod.toY.floor();
+                        return BarTooltipItem(
+                          '$numberPlayers Player${numberPlayers > 1 ? 's' : ''}\n',
+                          Theme.of(ctx).textTheme.titleLarge!.copyWith(
+                            color: Theme.of(ctx).colorScheme.onInverseSurface,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '${group.x} - ${group.x + stepSize}',
+                              style: Theme.of(ctx).textTheme.titleMedium!
+                                  .copyWith(
+                                    color: Theme.of(ctx)
+                                        .colorScheme
+                                        .onInverseSurface,
+                                  ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  titlesData: FlTitlesData(
+                    show: true,
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: bottomTitleWidgets(
+                      ctx,
+                      spots,
+                      triggerLabels,
+                      getLabels,
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        interval: 1,
+                        reservedSize: 42,
+                        minIncluded: false,
+                        maxIncluded: false,
+                        getTitlesWidget: (value, meta) => SideTitleWidget(
+                          meta: meta,
+                          child: Text(
+                            value.toStringAsFixed(0),
+                            style: Theme.of(ctx).textTheme.titleMedium!
+                                .copyWith(
+                                  color: Theme.of(ctx).colorScheme.tertiary,
+                                ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Theme.of(ctx).colorScheme.outline,
+                      ),
+                    ),
+                  ),
+                  barGroups: triggerAnimation ? spots : spotsZero,
                 ),
+                curve: Curves.easeIn,
+                duration: Duration(milliseconds: animationDuration),
               ),
-            ],
-          );
-        },
-      ),
-    ),
-    titlesData: FlTitlesData(
-      show: true,
-      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      bottomTitles: bottomTitleWidgets(ctx, spots, getLabels),
-      leftTitles: AxisTitles(
-        sideTitles: SideTitles(
-          showTitles: true,
-          interval: 1,
-          reservedSize: 42,
-          minIncluded: false,
-          getTitlesWidget: (value, meta) => SideTitleWidget(
-            meta: meta,
-            child: Text(
-              value.toStringAsFixed(0),
-              style: Theme.of(ctx).textTheme.titleMedium!
-                  .copyWith(color: Theme.of(ctx).colorScheme.tertiary),
             ),
           ),
-        ),
-      ),
-    ),
-    borderData: FlBorderData(
-      show: true,
-      border: Border(
-        bottom: BorderSide(color: Theme.of(ctx).colorScheme.outline),
-      ),
-    ),
-    barGroups: spots,
+          if (haveWithdrawn)
+            FilterChip(
+              selected: onlyActive,
+              onSelected: (bool x) {
+                setDialogState(() {
+                  onlyActive = x;
+                  //triggerAnimation = !triggerAnimation;
+                });
+              },
+              label: const Text('only active Players '),
+            ),
+        ],
+      );
+    },
   );
 }
 
@@ -207,13 +260,6 @@ BarChartGroupData makeGroupData(
     barRods: [
       BarChartRodData(
         toY: y,
-        rodStackItems: [
-          BarChartRodStackItem(
-            0,
-            y,
-            Theme.of(ctx).colorScheme.primaryContainer,
-          ),
-        ],
         color: Theme.of(ctx).colorScheme.primaryContainer,
         width: width,
         borderSide: BorderSide(color: Theme.of(ctx).colorScheme.outline),
@@ -226,6 +272,7 @@ BarChartGroupData makeGroupData(
 AxisTitles bottomTitleWidgets(
   BuildContext ctx,
   List<BarChartGroupData> spots,
+  bool triggerLabels,
   Function(double) getLabels,
 ) {
   return AxisTitles(
@@ -233,31 +280,37 @@ AxisTitles bottomTitleWidgets(
     drawBelowEverything: false,
     sideTitles: SideTitles(
       showTitles: true,
+      reservedSize: 50,
       getTitlesWidget: (value, meta) => SideTitleWidget(
         meta: meta,
         angle: -pi / 2.0,
         space: 0,
-        child: Stack(
-          children: [
-            ?getLabels(value),
-            Padding(
-              padding: EdgeInsetsGeometry.only(left: 100, bottom: 0, top: 2),
-              child: SizedBox(
-                width: 110,
-                height: 100,
-                child: spots.any((s) => s.x == value && s.barRods.first.toY > 0)
-                    ? Text(
-                        '${value.toStringAsFixed(0)} - ${(value + 100).toStringAsFixed(0)}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(ctx).colorScheme.onPrimaryContainer,
-                        ),
-                        textScaler: TextScaler.linear(1.0),
-                      )
-                    : null,
+        child: AnimatedOpacity(
+          opacity: triggerLabels ? 1 : 0,
+          duration: Duration(milliseconds: animationDuration),
+          child: Stack(
+            children: [
+              ?getLabels(value),
+              Padding(
+                padding: EdgeInsetsGeometry.only(left: 100, bottom: 0, top: 14),
+                child: SizedBox(
+                  width: 130,
+                  height: 50,
+                  child:
+                      spots.any((s) => s.x == value && s.barRods.first.toY > 0)
+                      ? Text(
+                          '${value.toStringAsFixed(0)} - ${(value + 100).toStringAsFixed(0)}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Theme.of(ctx).colorScheme.onPrimaryContainer,
+                          ),
+                          textScaler: TextScaler.linear(1.0),
+                        )
+                      : null,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ),
