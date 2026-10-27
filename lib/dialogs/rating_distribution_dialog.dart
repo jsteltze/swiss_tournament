@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
-import 'package:js_flutter/utils/logger.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
 final animationDuration = 500;
@@ -22,13 +21,6 @@ void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
     width: 500,
     title: 'Rating distribution',
     closeButtonTitle: 'Close',
-    /*onShowingDelay: 2000,
-    onShowingCallback: (setDialogState) {
-      print('onShowingCallback');
-      setDialogState(() {
-        triggerAnimation = true;
-      });
-    },*/
     child: (ctx, setDialogState, toggleMainAction) {
       if (!triggerAnimation) {
         Future.delayed(Duration(milliseconds: animationDelay), () {
@@ -83,8 +75,6 @@ void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
         spots.add(makeGroupData(ctx, i, countRatingRange.toDouble()));
         spotsZero.add(makeGroupData(ctx, i, 0));
       }
-      FileLogger.log('spots: $spots');
-      FileLogger.log('avgColumn: $avgColumn');
 
       Widget? getLabels(double value) {
         if (value == minColumn || value == maxColumn || value == avgColumn) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/list_view_scroll_indicator.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/warning.dart';
 import 'package:js_flutter/icons.dart';
@@ -106,62 +107,65 @@ class _RoundsViewState extends State<RoundsView> {
             text: 'First add some players to the tournament.',
             icon: Icons.list,
           )
-        : SingleChildScrollView(child: Container(child: _buildPanel()));
+        : _buildPanel();
   }
 
   Widget _buildPanel() {
-    return Column(
-      children: [
-        ExpansionPanelList(
-          expansionCallback: (int index, bool isExpanded) {
-            setState(() {
-              _data[index].isExpanded = isExpanded;
-            });
-          },
-          children: _data.map<ExpansionPanel>((RoundsPanel item) {
-            return ExpansionPanel(
-              headerBuilder: (BuildContext context, bool isExpanded) {
-                return ListTile(
-                  title: Text(item.headerValue),
-                  leading: item.headerIcon,
-                  //tileColor: Theme.of(context).colorScheme.secondaryContainer,
-                );
-              },
-              body: item.expandedValue,
-              isExpanded: item.isExpanded,
-            );
-          }).toList(),
-        ),
-        if (_data.length < widget.tournament.numberOfRounds)
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton.icon(
-              icon: _isLoadingNewRound
-                  ? Container(
-                      width: 24,
-                      height: 24,
-                      padding: const EdgeInsets.all(2.0),
-                      child: const CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 3,
-                      ),
-                    )
-                  : Icon(
-                      Icons.play_arrow,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-              label: Text(
-                'Start Round ${widget.tournament.rounds.length + 1}',
-                style: Theme.of(context).textTheme.titleMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              ),
-              onPressed: _isLoadingNewRound ? null : _startNewRound,
-            ),
+    return ListViewScrollIndicator(
+      child: ListView(
+        children: [
+          ExpansionPanelList(
+            expansionCallback: (int index, bool isExpanded) {
+              setState(() {
+                _data[index].isExpanded = isExpanded;
+              });
+            },
+            children: _data.map<ExpansionPanel>((RoundsPanel item) {
+              return ExpansionPanel(
+                headerBuilder: (BuildContext context, bool isExpanded) {
+                  return ListTile(
+                    title: Text(item.headerValue),
+                    leading: item.headerIcon,
+                    //tileColor: Theme.of(context).colorScheme.secondaryContainer,
+                  );
+                },
+                body: item.expandedValue,
+                isExpanded: item.isExpanded,
+              );
+            }).toList(),
           ),
-      ],
+          if (_data.length < widget.tournament.numberOfRounds)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton.icon(
+                icon: _isLoadingNewRound
+                    ? Container(
+                        width: 24,
+                        height: 24,
+                        padding: const EdgeInsets.all(2.0),
+                        child: const CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 3,
+                        ),
+                      )
+                    : Icon(
+                        Icons.play_arrow,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                label: Text(
+                  'Start Round ${widget.tournament.rounds.length + 1}',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
+                onPressed: _isLoadingNewRound ? null : _startNewRound,
+              ),
+            ),
+        ],
+      ),
     );
   }
 

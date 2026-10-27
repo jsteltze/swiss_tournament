@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:js_flutter/components/list_view_scroll_indicator.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/popup_menu.dart';
 import 'package:js_flutter/icons.dart';
@@ -45,81 +46,83 @@ class PlayersView extends StatelessWidget {
                       : 'No players "$filter".',
                   icon: Icons.people,
                 )
-              : ListView.separated(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).textScaler.scale(80),
-                  ),
-                  separatorBuilder: (context, index) =>
-                      index == firstLateJoiner - 1
-                      ? Divider(
-                          color: Theme.of(context).colorScheme.primary
-                              .withAlpha(100),
-                        )
-                      : const Divider(color: Colors.transparent),
-                  itemCount: filteredPlayers.length,
-                  itemBuilder: (context, index) {
-                    final player = filteredPlayers[index];
-                    final popupItems = [
-                      DialogAction(
-                        title: 'Edit',
-                        icon: editIcon,
-                        onPressed: () => showEditPlayerDialog(
-                          context,
-                          tournament,
-                          player,
-                          onPlayersChanged,
-                        ),
-                      ),
-                      if (player.leftAt == null)
+              : ListViewScrollIndicator(
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).textScaler.scale(80),
+                    ),
+                    separatorBuilder: (context, index) =>
+                        index == firstLateJoiner - 1
+                        ? Divider(
+                            color: Theme.of(context).colorScheme.primary
+                                .withAlpha(100),
+                          )
+                        : const Divider(color: Colors.transparent),
+                    itemCount: filteredPlayers.length,
+                    itemBuilder: (context, index) {
+                      final player = filteredPlayers[index];
+                      final popupItems = [
                         DialogAction(
-                          title: 'Withdraw',
-                          icon: Icons.person_off,
-                          onPressed: () => confirmDisablePlayer(
-                            context,
-                            tournament,
-                            player,
-                            onPlayersChanged,
-                          ),
-                        )
-                      else
-                        DialogAction(
-                          title: 'Re-enable',
-                          icon: Icons.person,
-                          onPressed: () => confirmReenablePlayer(
+                          title: 'Edit',
+                          icon: editIcon,
+                          onPressed: () => showEditPlayerDialog(
                             context,
                             tournament,
                             player,
                             onPlayersChanged,
                           ),
                         ),
-                      DialogAction(
-                        title: 'Delete',
-                        icon: deleteIcon,
-                        isDestructive: true,
-                        onPressed: tournament.rounds.isEmpty
-                            ? () => confirmDeletePlayer(
-                                context,
-                                tournament,
-                                player,
-                                onPlayersChanged,
-                              )
-                            : null,
-                      ),
-                    ];
-                    final playerIndex = tournament.players.indexOf(player);
+                        if (player.leftAt == null)
+                          DialogAction(
+                            title: 'Withdraw',
+                            icon: Icons.person_off,
+                            onPressed: () => confirmDisablePlayer(
+                              context,
+                              tournament,
+                              player,
+                              onPlayersChanged,
+                            ),
+                          )
+                        else
+                          DialogAction(
+                            title: 'Re-enable',
+                            icon: Icons.person,
+                            onPressed: () => confirmReenablePlayer(
+                              context,
+                              tournament,
+                              player,
+                              onPlayersChanged,
+                            ),
+                          ),
+                        DialogAction(
+                          title: 'Delete',
+                          icon: deleteIcon,
+                          isDestructive: true,
+                          onPressed: tournament.rounds.isEmpty
+                              ? () => confirmDeletePlayer(
+                                  context,
+                                  tournament,
+                                  player,
+                                  onPlayersChanged,
+                                )
+                              : null,
+                        ),
+                      ];
+                      final playerIndex = tournament.players.indexOf(player);
 
-                    return PlayerTile(
-                      player: player,
-                      index: playerIndex,
-                      detailed: true,
-                      popup: createPopupMenu(popupItems),
-                      onTap: () => showPlayerDetailsDialog(
-                        context,
-                        playerIndex,
-                        tournament,
-                      ),
-                    );
-                  },
+                      return PlayerTile(
+                        player: player,
+                        index: playerIndex,
+                        detailed: true,
+                        popup: createPopupMenu(popupItems),
+                        onTap: () => showPlayerDetailsDialog(
+                          context,
+                          playerIndex,
+                          tournament,
+                        ),
+                      );
+                    },
+                  ),
                 ),
         ),
       ],
