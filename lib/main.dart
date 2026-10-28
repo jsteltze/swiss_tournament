@@ -181,22 +181,22 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
           DialogAction(
             title: 'Import',
             icon: Icons.file_upload,
-            onPressed: _importTournaments,
+            onPressed: (_) => _importTournaments,
           ),
           DialogAction(
             title: 'Export',
             icon: exportIcon,
-            onPressed: () => showExportDialog(context, _tournaments),
+            onPressed: (_) => showExportDialog(context, _tournaments),
           ),
           DialogAction(
             title: 'View Logs',
             icon: Icons.list_alt,
-            onPressed: () => showLogsDialog(context),
+            onPressed: (_) => showLogsDialog(context),
           ),
           DialogAction(
             title: 'App Info',
             icon: Icons.info_outline,
-            onPressed: () => showAppInfoDialog(context, widget._storage),
+            onPressed: (_) => showAppInfoDialog(context, widget._storage),
           ),
         ]),
       ],

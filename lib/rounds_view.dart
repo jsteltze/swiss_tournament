@@ -204,7 +204,7 @@ class _RoundsViewState extends State<RoundsView> {
       closeButtonTitle: 'Close',
       mainAction: DialogAction(
         title: 'Go to ranking',
-        onPressed: () => {
+        onPressed: (_) => {
           Navigator.pop(context),
           widget.onTournamentFinished?.call(),
         },
@@ -302,7 +302,7 @@ class _RoundsViewState extends State<RoundsView> {
         title: 'Delete',
         isDestructive: true,
         onPressed: roundIndex == widget.tournament.rounds.length - 1
-            ? () {
+            ? (_) {
                 FileLogger.log(
                   'Deleting round ${roundIndex + 1} from tournament ${widget.tournament.id}',
                 );

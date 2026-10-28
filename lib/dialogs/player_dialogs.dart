@@ -269,7 +269,7 @@ void confirmDeletePlayer(
     mainAction: DialogAction(
       title: 'Delete',
       isDestructive: true,
-      onPressed: () {
+      onPressed: (_) {
         FileLogger.log(
           'Deleting player "${player.name}" from tournament ID: ${tournament.id}',
         );
@@ -297,7 +297,7 @@ void confirmDisablePlayer(
     ),
     mainAction: DialogAction(
       title: 'Disable',
-      onPressed: () {
+      onPressed: (_) {
         FileLogger.log(
           'Withdrawing player "${player.name}" (left at round ${tournament.rounds.length})',
         );
@@ -326,7 +326,7 @@ void confirmReenablePlayer(
     ),
     mainAction: DialogAction(
       title: 'Re-enable',
-      onPressed: () {
+      onPressed: (_) {
         FileLogger.log('Re-enabling player "${player.name}"');
         player.leftAt = null;
         onPlayersChanged?.call();
@@ -399,7 +399,7 @@ void showEditPlayerDialog(
     ),
     mainAction: DialogAction(
       title: 'Save',
-      onPressed: () {
+      onPressed: (_) {
         if (formKey.currentState!.validate()) {
           final isAdding = player == null;
           player ??= Player(joinedAt: tournament.rounds.length);
@@ -512,7 +512,7 @@ void selectByePlayersDialog(
     ),
     mainAction: DialogAction(
       title: 'Continue',
-      onPressed: () {
+      onPressed: (_) {
         final List<int> playerIds = [];
         for (final (index, s) in selected.indexed) {
           if (s) playerIds.add(index);

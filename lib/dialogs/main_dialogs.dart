@@ -89,7 +89,7 @@ void showImportConfirmationDialog(
     ),
     mainAction: DialogAction(
       title: 'Import Selected',
-      onPressed: selected.where((s) => s).isEmpty
+      onPressed: (_) => selected.where((s) => s).isEmpty
           ? null
           : () async {
               int count = 0;
@@ -165,7 +165,7 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
     ),
     mainAction: DialogAction(
       title: 'Export Selected',
-      onPressed: selected.where((s) => s).isEmpty
+      onPressed: (_) => selected.where((s) => s).isEmpty
           ? null
           : () async {
               String filename = '${filenameController.text}.json';

@@ -612,7 +612,7 @@ class SingleEncounterView extends StatelessWidget {
       mainActionEnabled: false,
       mainAction: DialogAction(
         title: 'Save',
-        onPressed: () {
+        onPressed: (_) {
           if (selectedResult == null || selectedResult!.isEmpty) {
             showErrorDialog(context, 'No result selected!');
             return;

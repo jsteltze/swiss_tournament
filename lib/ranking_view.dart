@@ -116,7 +116,7 @@ class RankingView extends StatelessWidget {
       ),
       mainAction: DialogAction(
         title: 'Save',
-        onPressed: () {
+        onPressed: (_) {
           FileLogger.log(
             'Applying new tiebreak settings: TB1=$selectedTiebreak1, TB2=$selectedTiebreak2',
           );

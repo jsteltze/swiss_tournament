@@ -32,17 +32,17 @@ class TournamentPopupMenu extends StatelessWidget {
       DialogAction(
         title: 'Edit',
         icon: editIcon,
-        onPressed: () => showEditTournamentDialog(context, tournament, onEdit),
+        onPressed: (_) => showEditTournamentDialog(context, tournament, onEdit),
       ),
       DialogAction(
         title: 'Settings',
         icon: settingsIcon,
-        onPressed: () => showAdvancedSettingsDialog(context, tournament),
+        onPressed: (_) => showAdvancedSettingsDialog(context, tournament),
       ),
       DialogAction(
         title: 'Duplicate',
         icon: copyIcon,
-        onPressed: () => showDuplicateTournamentDialog(
+        onPressed: (_) => showDuplicateTournamentDialog(
           context,
           tournament,
           storage,
@@ -52,13 +52,14 @@ class TournamentPopupMenu extends StatelessWidget {
       DialogAction(
         title: 'Export',
         icon: exportIcon,
-        onPressed: () => showExportTournamentDialog(context, tournament),
+        onPressed: (_) => showExportTournamentDialog(context, tournament),
       ),
       DialogAction(
         title: 'Delete',
         icon: deleteIcon,
         isDestructive: true,
-        onPressed: () => confirmDeleteTournament(context, tournament, onDelete),
+        onPressed: (_) =>
+            confirmDeleteTournament(context, tournament, onDelete),
       ),
     ];
     return child == null

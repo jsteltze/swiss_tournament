@@ -147,14 +147,14 @@ class _EncountersViewState extends State<EncountersView> {
               DialogAction(
                 title: 'Export Round ${widget.roundIndex + 1} (HTML)',
                 icon: exportIcon,
-                onPressed: _exportRound,
+                onPressed: (_) => _exportRound,
               ),
               if (widget.roundIndex == widget.tournament.rounds.length - 1)
                 DialogAction(
                   title: 'Delete Round ${widget.roundIndex + 1}',
                   icon: deleteIcon,
                   isDestructive: true,
-                  onPressed: widget.deleteRound,
+                  onPressed: (_) => widget.deleteRound,
                 ),
             ]),
           ],

@@ -65,7 +65,7 @@ class PlayersView extends StatelessWidget {
                         DialogAction(
                           title: 'Edit',
                           icon: editIcon,
-                          onPressed: () => showEditPlayerDialog(
+                          onPressed: (_) => showEditPlayerDialog(
                             context,
                             tournament,
                             player,
@@ -76,7 +76,7 @@ class PlayersView extends StatelessWidget {
                           DialogAction(
                             title: 'Withdraw',
                             icon: Icons.person_off,
-                            onPressed: () => confirmDisablePlayer(
+                            onPressed: (_) => confirmDisablePlayer(
                               context,
                               tournament,
                               player,
@@ -87,7 +87,7 @@ class PlayersView extends StatelessWidget {
                           DialogAction(
                             title: 'Re-enable',
                             icon: Icons.person,
-                            onPressed: () => confirmReenablePlayer(
+                            onPressed: (_) => confirmReenablePlayer(
                               context,
                               tournament,
                               player,
@@ -99,7 +99,7 @@ class PlayersView extends StatelessWidget {
                           icon: deleteIcon,
                           isDestructive: true,
                           onPressed: tournament.rounds.isEmpty
-                              ? () => confirmDeletePlayer(
+                              ? (_) => confirmDeletePlayer(
                                   context,
                                   tournament,
                                   player,

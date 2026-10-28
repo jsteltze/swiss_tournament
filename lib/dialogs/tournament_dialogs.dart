@@ -87,7 +87,7 @@ void showEditTournamentDialog(
     ),
     mainAction: DialogAction(
       title: 'Save',
-      onPressed: () {
+      onPressed: (_) {
         if (formKey.currentState!.validate()) {
           final isAdding = tournament == null;
           tournament ??= Tournament();
@@ -119,7 +119,7 @@ void confirmDeleteTournament(
         Text('Are you sure you want to delete "${tournament.title}"?'),
     mainAction: DialogAction(
       title: 'Delete',
-      onPressed: () {
+      onPressed: (_) {
         Navigator.pop(context);
         onDelete();
         showSnackbar(context, 'Tournament "${tournament.title}" deleted');
@@ -184,7 +184,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
     ),
     mainAction: DialogAction(
       title: 'Export',
-      onPressed: () async {
+      onPressed: (_) async {
         String filename = filenameController.text;
         if (filename.isEmpty) return;
         if (!filename.toLowerCase().endsWith('.json')) {
@@ -271,7 +271,7 @@ void showDuplicateTournamentDialog(
     ),
     mainAction: DialogAction(
       title: 'Duplicate',
-      onPressed: () async {
+      onPressed: (_) async {
         if (titleController.text.isNotEmpty) {
           Map<String, dynamic> json;
           if (duplicateType == 'Full Tournament') {
@@ -393,7 +393,7 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
       title: 'Save',
       onPressed: tournament.rounds.isNotEmpty
           ? null
-          : () {
+          : (_) {
               tournament.settings.firstRoundPairing = currentPairing;
               tournament.settings.baku = currentBaku;
               tournament.settings.bye = currentBye;
