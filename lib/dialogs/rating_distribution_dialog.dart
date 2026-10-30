@@ -125,13 +125,16 @@ void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
         return null;
       }
 
+      final yAxisLabelWidth = 20.0;
+      final dialogWidth = MediaQuery.sizeOf(ctx).width;
+
       return Column(
         children: [
           Padding(
             padding: EdgeInsetsGeometry.only(bottom: 100),
             child: SizedBox(
-              height: 400,
-              width: .infinity,
+              height: 300,
+              width: dialogWidth - yAxisLabelWidth - 80,
               child: BarChart(
                 BarChartData(
                   gridData: FlGridData(
@@ -191,7 +194,7 @@ void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
                       sideTitles: SideTitles(
                         showTitles: true,
                         interval: 1,
-                        reservedSize: 42,
+                        reservedSize: yAxisLabelWidth,
                         minIncluded: false,
                         maxIncluded: false,
                         getTitlesWidget: (value, meta) => SideTitleWidget(
