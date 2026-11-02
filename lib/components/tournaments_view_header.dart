@@ -28,74 +28,64 @@ class _TournamentsViewHeaderState extends State<TournamentsViewHeader> {
         .where((t) => !t.isFinished())
         .length;
     return ViewHeader(
-      padding: EdgeInsets.only(bottom: _isExpanded ? 0 : 10),
       Column(
         children: [
-          TextButton(
-            style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-            ),
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Text(
+                'Your Tournaments',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              IconButton(
+                icon: _isExpanded
+                    ? Icon(Icons.keyboard_arrow_up)
+                    : Icon(Icons.keyboard_arrow_down),
+                iconSize: 24,
+                onPressed: () {
+                  setState(() {
+                    _isExpanded = !_isExpanded;
+                  });
+                },
+              ),
+            ],
+          ),
+          IntrinsicHeight(
             child: Row(
-              mainAxisAlignment: .spaceBetween,
+              spacing: 8,
               children: [
-                Text(
-                  'Your Tournaments',
-                  style: Theme.of(context).textTheme.titleMedium,
+                NumberCard(
+                  widget.tournaments.length.toString(),
+                  isExpanded: _isExpanded,
+                  label: 'All',
+                  icon: Icon(
+                    Icons.emoji_events_outlined,
+                    applyTextScaling: true,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
-                Icon(
-                  _isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  size: 24,
-                  applyTextScaling: true,
+                NumberCard(
+                  countNotFinished.toString(),
+                  isExpanded: _isExpanded,
+                  label: 'In Progress',
+                  variant: .green,
+                  icon: Icon(
+                    Icons.change_circle,
+                    applyTextScaling: true,
+                    color: Colors.green.withAlpha(150),
+                  ),
+                ),
+                NumberCard(
+                  (widget.tournaments.length - countNotFinished).toString(),
+                  label: 'Finished',
+                  isExpanded: _isExpanded,
+                  icon: Icon(
+                    Icons.check,
+                    applyTextScaling: true,
+                    color: Colors.green,
+                  ),
                 ),
               ],
-            ),
-            onPressed: () {
-              setState(() {
-                _isExpanded = !_isExpanded;
-              });
-            },
-          ),
-          Padding(
-            padding: .symmetric(horizontal: 10),
-            child: IntrinsicHeight(
-              child: Row(
-                spacing: 8,
-                children: [
-                  NumberCard(
-                    widget.tournaments.length.toString(),
-                    isExpanded: _isExpanded,
-                    label: 'All',
-                    icon: Icon(
-                      Icons.emoji_events_outlined,
-                      applyTextScaling: true,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  NumberCard(
-                    countNotFinished.toString(),
-                    isExpanded: _isExpanded,
-                    label: 'In Progress',
-                    variant: .green,
-                    icon: Icon(
-                      Icons.change_circle,
-                      applyTextScaling: true,
-                      color: Colors.green.withAlpha(150),
-                    ),
-                  ),
-                  NumberCard(
-                    (widget.tournaments.length - countNotFinished).toString(),
-                    label: 'Finished',
-                    isExpanded: _isExpanded,
-                    icon: Icon(
-                      Icons.check,
-                      applyTextScaling: true,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
           if (countNotFinished > 0)
@@ -130,11 +120,9 @@ class _TournamentsViewHeaderState extends State<TournamentsViewHeader> {
                     selected: widget.filterNotFinished,
                     onSelected: widget.filterCallback,
                   ),
-                  SizedBox(),
                 ],
               ),
             ),
-          if (countNotFinished == 0 && _isExpanded) SizedBox(height: 10),
         ],
       ),
     );
