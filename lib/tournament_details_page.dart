@@ -134,8 +134,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         ],
       ),
       body: bodyContent,
-      floatingActionButton:
-          _selectedIndex == 0 && !widget.tournament.isFinished()
+      floatingActionButton: _selectedIndex == 0
           ? Row(
               mainAxisAlignment: .end,
               spacing: 10,
@@ -147,7 +146,8 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
                     });
                   },
                 ),
-                createFAB(context, 'Add Player', addIcon, _addPlayer),
+                if (!widget.tournament.isFinished())
+                  createFAB(context, 'Add Player', addIcon, _addPlayer),
               ],
             )
           : null,
