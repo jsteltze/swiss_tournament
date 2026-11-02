@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
-final animationDuration = 500;
-final animationDelay = 300;
+final animationDuration = 300;
+final animationDelay = 200;
 
 void openRatingDistributionDialog(Tournament t, BuildContext ctx) {
   bool onlyActive = false;
