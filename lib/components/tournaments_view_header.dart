@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:js_flutter/components/number_card.dart';
 import 'package:js_flutter/components/view_header.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
 class TournamentsViewHeader extends StatefulWidget {

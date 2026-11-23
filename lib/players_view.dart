@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:js_flutter/components/list_view_scroll_indicator.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/popup_menu.dart';
 import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:swiss_tournament/components/player_tile.dart';
 import 'package:swiss_tournament/components/players_view_header.dart';
 

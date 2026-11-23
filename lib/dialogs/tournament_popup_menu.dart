@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:js_flutter/components/longpress_popup_menu.dart';
 import 'package:js_flutter/components/popup_menu.dart';
 import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../data/tournament.dart';
 import '../data/tournament_storage.dart';

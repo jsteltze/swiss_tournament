@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:js_flutter/components/info_panel.dart';
 import 'package:js_flutter/components/info_table_row.dart';
 import 'package:js_flutter/components/input_field.dart';
@@ -14,6 +13,7 @@ import 'package:js_flutter/utils/export_handler.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/package_info_global.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/generated/app_build_timestamp.g.dart';
 

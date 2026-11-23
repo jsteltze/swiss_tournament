@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:js_flutter/utils/colorx.dart';
 import 'package:js_flutter/utils/datetimex.dart';
 import 'package:js_flutter/utils/package_info_global.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../data/player.dart';
 import '../data/player_ratings.dart';

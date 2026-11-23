@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
 final animationDuration = 300;

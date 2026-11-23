@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/view_header.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
 import '../dialogs/rating_distribution_dialog.dart';

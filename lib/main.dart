@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:js_flutter/components/app_layout.dart';
 import 'package:js_flutter/components/floating_action_button.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
@@ -11,6 +10,7 @@ import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/first_time.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
+import 'package:material_ui/material_ui.dart' hide DismissAction;
 import 'package:swiss_tournament/components/tournaments_view_header.dart';
 import 'package:swiss_tournament/dialogs/main_dialogs.dart';
 import 'package:swiss_tournament/dialogs/tournament_dialogs.dart';

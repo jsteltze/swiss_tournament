@@ -36,3 +36,14 @@ This project is a Flutter application written in Dart.
 - Turniertyp Roundrobin
 - Screenshots im Playstore aktualisieren
 - eigener splash screen
+- Veröffentlichen auf fdroid
+- Beispiel Tournaments.json einchecken
+- Android 16 mit edge-to-edge skin testen
+- Bugfix: Runde exportieren
+- Bugfix: im exportierten Ranking sind die Performance-Pfeile genau anders rum (und Pfeile können dünner sein)
+- Expansion Icon flip animation
+- Import players
+- Zahlen direkt als Toggle Button
+- Hint: Number of Rounds can be changed later
+- Bestätigungs-Dialog bei Dismiss Tournament
+- Player active als FilterChip machen

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/description.dart';
 import 'package:js_flutter/components/input_title.dart';
@@ -8,6 +7,7 @@ import 'package:js_flutter/utils/dialog_utils.dart';
 import 'package:js_flutter/utils/export_handler.dart';
 import 'package:js_flutter/utils/logger.dart';
 import 'package:js_flutter/utils/snackbar_utils.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:swiss_tournament/data/player_ratings.dart';
 import 'package:swiss_tournament/data/tiebreak.dart';
 import 'package:swiss_tournament/utils/html_utils.dart';

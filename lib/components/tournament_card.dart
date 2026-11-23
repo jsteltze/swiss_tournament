@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/utils/datetimex.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:js_flutter/components/floating_action_button.dart';
 import 'package:js_flutter/components/search_field.dart';
 import 'package:js_flutter/icons.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:swiss_tournament/dialogs/tournament_popup_menu.dart';
 import 'package:swiss_tournament/ranking_view.dart';
 
