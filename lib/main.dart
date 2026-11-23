@@ -90,6 +90,7 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
     showEditTournamentDialog(context, null, (tournament) {
       FileLogger.log('Adding tournament: ${tournament.title}');
       setState(() {
+        list.currentState?.insert(tournament);
         _tournaments.insert(0, tournament);
       });
       tournament.update = () => widget._storage.updateTournament(tournament);
@@ -250,6 +251,8 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
                       title: 'delete',
                       isDestructive: true,
                       icon: deleteIcon,
+                      confirmDismiss: (item) =>
+                          confirmDeleteTournament(context, item),
                       onDismissed: (item) =>
                           _deleteTournament(item, dismiss: .startToEnd),
                     ),

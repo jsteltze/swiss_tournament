@@ -94,7 +94,6 @@ void showEditTournamentDialog(
           tournament!.title = titleController.text;
           tournament!.numberOfRounds = int.parse(roundsController.text);
           tournament!.update();
-          Navigator.pop(context);
           onSave(tournament!);
           showSnackbar(
             context,
@@ -106,12 +105,12 @@ void showEditTournamentDialog(
   );
 }
 
-void confirmDeleteTournament(
+Future<bool> confirmDeleteTournament(
   BuildContext context,
-  Tournament tournament,
-  VoidCallback onDelete,
-) {
-  openDialog(
+  Tournament tournament, [
+  VoidCallback? onDelete,
+]) async {
+  int result = await openDialog(
     context,
     title: 'Delete Tournament',
     titleIcon: deleteIcon,
@@ -120,13 +119,13 @@ void confirmDeleteTournament(
     mainAction: DialogAction(
       title: 'Delete',
       onPressed: (_) {
-        Navigator.pop(context);
-        onDelete();
+        onDelete?.call();
         showSnackbar(context, 'Tournament "${tournament.title}" deleted');
       },
       isDestructive: true,
     ),
   );
+  return result == 1;
 }
 
 void showExportTournamentDialog(BuildContext context, Tournament tournament) {
@@ -205,12 +204,7 @@ void showExportTournamentDialog(BuildContext context, Tournament tournament) {
 
         final String jsonContent = jsonEncode(data);
 
-        await ExportHandler.exportToDownloads(
-          context,
-          filename,
-          jsonContent,
-          () => Navigator.pop(context),
-        );
+        await ExportHandler.exportToDownloads(context, filename, jsonContent);
       },
     ),
   );
@@ -295,7 +289,6 @@ void showDuplicateTournamentDialog(
           await storage.updateTournament(newTournament);
 
           if (context.mounted) {
-            Navigator.pop(context); // Close dialog
             onDuplicate();
             showSnackbar(context, 'Tournament "${newTournament.title}" added');
           }
@@ -398,7 +391,6 @@ void showAdvancedSettingsDialog(BuildContext context, Tournament tournament) {
               tournament.settings.baku = currentBaku;
               tournament.settings.bye = currentBye;
               tournament.update();
-              Navigator.pop(context);
               showSnackbar(context, 'Tournament settings saved');
             },
     ),
