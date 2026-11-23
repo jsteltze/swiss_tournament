@@ -181,7 +181,7 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
           DialogAction(
             title: 'Import',
             icon: Icons.file_upload,
-            onPressed: (_) => _importTournaments,
+            onPressed: (_) => _importTournaments(),
           ),
           DialogAction(
             title: 'Export',

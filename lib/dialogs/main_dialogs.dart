@@ -89,9 +89,9 @@ void showImportConfirmationDialog(
     ),
     mainAction: DialogAction(
       title: 'Import Selected',
-      onPressed: (_) => selected.where((s) => s).isEmpty
+      onPressed: selected.where((s) => s).isEmpty
           ? null
-          : () async {
+          : (_) async {
               int count = 0;
               FileLogger.log('Importing $importType from $filename');
               for (int i = 0; i < tournaments.length; i++) {
