@@ -10,57 +10,61 @@ import 'tournament_dialogs.dart';
 
 class TournamentPopupMenu extends StatelessWidget {
   final Tournament tournament;
-  final TournamentStorage storage;
-  final VoidCallback onDelete;
-  final VoidCallback onUpdate;
-  final Function(Tournament) onEdit;
+  final TournamentStorage? storage;
+  final VoidCallback? onDelete;
+  final VoidCallback? onUpdate;
+  final Function(Tournament)? onEdit;
   final Widget? child;
 
   const TournamentPopupMenu({
     super.key,
     this.child,
     required this.tournament,
-    required this.storage,
-    required this.onDelete,
-    required this.onUpdate,
-    required this.onEdit,
+    this.storage,
+    this.onDelete,
+    this.onUpdate,
+    this.onEdit,
   });
 
   @override
   Widget build(BuildContext context) {
     final items = [
-      DialogAction(
-        title: 'Edit',
-        icon: editIcon,
-        onPressed: (_) => showEditTournamentDialog(context, tournament, onEdit),
-      ),
+      if (onEdit != null)
+        DialogAction(
+          title: 'Edit',
+          icon: editIcon,
+          onPressed: (_) =>
+              showEditTournamentDialog(context, tournament, onEdit!),
+        ),
       DialogAction(
         title: 'Settings',
         icon: settingsIcon,
         onPressed: (_) => showAdvancedSettingsDialog(context, tournament),
       ),
-      DialogAction(
-        title: 'Duplicate',
-        icon: copyIcon,
-        onPressed: (_) => showDuplicateTournamentDialog(
-          context,
-          tournament,
-          storage,
-          onUpdate,
+      if (storage != null && onUpdate != null)
+        DialogAction(
+          title: 'Duplicate',
+          icon: copyIcon,
+          onPressed: (_) => showDuplicateTournamentDialog(
+            context,
+            tournament,
+            storage!,
+            onUpdate!,
+          ),
         ),
-      ),
       DialogAction(
         title: 'Export',
         icon: exportIcon,
         onPressed: (_) => showExportTournamentDialog(context, tournament),
       ),
-      DialogAction(
-        title: 'Delete',
-        icon: deleteIcon,
-        isDestructive: true,
-        onPressed: (_) =>
-            confirmDeleteTournament(context, tournament, onDelete),
-      ),
+      if (onDelete != null)
+        DialogAction(
+          title: 'Delete',
+          icon: deleteIcon,
+          isDestructive: true,
+          onPressed: (_) =>
+              confirmDeleteTournament(context, tournament, onDelete!),
+        ),
     ];
     return child == null
         ? createPopupMenu(items)

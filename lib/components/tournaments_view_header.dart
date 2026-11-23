@@ -3,14 +3,16 @@ import 'package:js_flutter/components/view_header.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:swiss_tournament/data/tournament.dart';
 
+enum TournamentFilter { all, inProgress, finished }
+
 class TournamentsViewHeader extends StatefulWidget {
   final List<Tournament> tournaments;
-  final bool filterNotFinished;
-  final Function(bool filterNotFinished) filterCallback;
+  final TournamentFilter initialFilter;
+  final Function(TournamentFilter) filterCallback;
 
   const TournamentsViewHeader(
     this.tournaments,
-    this.filterNotFinished,
+    this.initialFilter,
     this.filterCallback, {
     super.key,
   });
@@ -28,35 +30,36 @@ class _TournamentsViewHeaderState extends State<TournamentsViewHeader> {
         .where((t) => !t.isFinished())
         .length;
     return ViewHeader(
+      padding: EdgeInsets.all(0),
       Column(
         children: [
-          Row(
-            mainAxisAlignment: .spaceBetween,
-            children: [
-              Text(
-                'Your Tournaments',
-                style: Theme.of(context).textTheme.titleMedium,
+          ExpansionTile(
+            title: Text(
+              'YOUR TOURNAMENTS',
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: .normal,
               ),
-              IconButton(
-                icon: _isExpanded
-                    ? Icon(Icons.keyboard_arrow_up)
-                    : Icon(Icons.keyboard_arrow_down),
-                iconSize: 24,
-                onPressed: () {
-                  setState(() {
-                    _isExpanded = !_isExpanded;
-                  });
-                },
-              ),
-            ],
+            ),
+            shape: const Border(),
+            onExpansionChanged: (x) {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            },
           ),
           IntrinsicHeight(
             child: Row(
               spacing: 8,
               children: [
+                SizedBox(width: 8),
                 NumberCard(
                   widget.tournaments.length.toString(),
                   isExpanded: _isExpanded,
+                  isSelected: widget.initialFilter == .all,
+                  onSelect: () {
+                    widget.filterCallback.call(.all);
+                  },
                   label: 'All',
                   icon: Icon(
                     Icons.emoji_events_outlined,
@@ -67,62 +70,37 @@ class _TournamentsViewHeaderState extends State<TournamentsViewHeader> {
                 NumberCard(
                   countNotFinished.toString(),
                   isExpanded: _isExpanded,
+                  isSelected: widget.initialFilter == .inProgress,
+                  onSelect: () {
+                    widget.filterCallback.call(.inProgress);
+                  },
                   label: 'In Progress',
                   variant: .green,
                   icon: Icon(
                     Icons.change_circle,
                     applyTextScaling: true,
-                    color: Colors.green.withAlpha(150),
+                    color: Colors.green,
                   ),
                 ),
                 NumberCard(
                   (widget.tournaments.length - countNotFinished).toString(),
                   label: 'Finished',
                   isExpanded: _isExpanded,
+                  isSelected: widget.initialFilter == .finished,
+                  onSelect: () {
+                    widget.filterCallback.call(.finished);
+                  },
                   icon: Icon(
                     Icons.check,
                     applyTextScaling: true,
                     color: Colors.green,
                   ),
                 ),
+                SizedBox(width: 8),
               ],
             ),
           ),
-          if (countNotFinished > 0)
-            Visibility(
-              visible: _isExpanded,
-              child: Row(
-                mainAxisAlignment: .end,
-                spacing: 10,
-                children: [
-                  Icon(
-                    Icons.filter_alt_outlined,
-                    color: Theme.of(context).colorScheme.secondary
-                        .withAlpha(100),
-                    applyTextScaling: true,
-                    size: 18,
-                  ),
-                  Text(
-                    'Filter:',
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                  FilterChip(
-                    label: Text(
-                      'not finished ($countNotFinished)',
-                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSecondaryContainer,
-                      ),
-                    ),
-                    selected: widget.filterNotFinished,
-                    onSelected: widget.filterCallback,
-                  ),
-                ],
-              ),
-            ),
+          SizedBox(height: 5),
         ],
       ),
     );
