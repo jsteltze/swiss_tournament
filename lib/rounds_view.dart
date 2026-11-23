@@ -204,10 +204,7 @@ class _RoundsViewState extends State<RoundsView> {
       closeButtonTitle: 'Close',
       mainAction: DialogAction(
         title: 'Go to ranking',
-        onPressed: (_) => {
-          Navigator.pop(context),
-          widget.onTournamentFinished?.call(),
-        },
+        onPressed: (_) => {widget.onTournamentFinished?.call()},
       ),
     );
   }
@@ -311,7 +308,6 @@ class _RoundsViewState extends State<RoundsView> {
                 setState(() {
                   _data.removeLast();
                 });
-                Navigator.pop(context);
                 widget.onRoundUpdate?.call();
                 showSnackbar(context, 'Round deleted');
               }

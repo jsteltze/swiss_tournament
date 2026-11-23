@@ -121,7 +121,6 @@ class RankingView extends StatelessWidget {
             'Applying new tiebreak settings: TB1=$selectedTiebreak1, TB2=$selectedTiebreak2',
           );
           applyTiebreak(selectedTiebreak1, selectedTiebreak2);
-          Navigator.pop(context);
           showSnackbar(context, 'Ranking settings saved');
         },
       ),

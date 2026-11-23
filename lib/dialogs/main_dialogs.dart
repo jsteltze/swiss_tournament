@@ -108,7 +108,6 @@ void showImportConfirmationDialog(
               }
               onImportComplete();
               if (context.mounted) {
-                Navigator.pop(context);
                 showSnackbar(context, 'Imported $count tournament(s)');
               }
             },
@@ -165,9 +164,9 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
     ),
     mainAction: DialogAction(
       title: 'Export Selected',
-      onPressed: (_) => selected.where((s) => s).isEmpty
+      onPressed: selected.where((s) => s).isEmpty
           ? null
-          : () async {
+          : (_) async {
               String filename = '${filenameController.text}.json';
               final selectedList = tournaments
                   .where((t) => selected[tournaments.indexOf(t)])
@@ -179,12 +178,7 @@ void showExportDialog(BuildContext context, List<Tournament> tournaments) {
                 selectedList.map((t) => t.toJson()).toList(),
               );
 
-              await ExportHandler.exportToDownloads(
-                context,
-                filename,
-                json,
-                () => Navigator.pop(context),
-              );
+              await ExportHandler.exportToDownloads(context, filename, json);
             },
     ),
   );

@@ -275,7 +275,6 @@ void confirmDeletePlayer(
         );
         tournament.players.remove(player);
         onPlayersChanged?.call();
-        Navigator.pop(context);
         showSnackbar(context, 'Player "${player.name}" deleted');
       },
     ),
@@ -303,7 +302,6 @@ void confirmDisablePlayer(
         );
         player.leftAt = tournament.rounds.length;
         onPlayersChanged?.call();
-        Navigator.pop(context);
         showSnackbar(context, 'Player "${player.name}" disabled');
       },
       isDestructive: true,
@@ -330,7 +328,6 @@ void confirmReenablePlayer(
         FileLogger.log('Re-enabling player "${player.name}"');
         player.leftAt = null;
         onPlayersChanged?.call();
-        Navigator.pop(context);
         showSnackbar(context, 'Player "${player.name}" re-enabled');
       },
     ),
@@ -421,7 +418,6 @@ void showEditPlayerDialog(
             }
           }
           onPlayersChanged?.call();
-          Navigator.pop(context);
           showSnackbar(
             context,
             'Player "${player!.name}" ${isAdding ? 'added' : 'edited'}',
@@ -517,7 +513,6 @@ void selectByePlayersDialog(
         for (final (index, s) in selected.indexed) {
           if (s) playerIds.add(index);
         }
-        Navigator.pop(context);
         onByesSelected.call(playerIds);
       },
     ),

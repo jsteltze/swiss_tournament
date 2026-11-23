@@ -619,7 +619,6 @@ class SingleEncounterView extends StatelessWidget {
           }
           encounter.result = selectedResult!;
           tournament.update();
-          Navigator.of(context).pop();
           updateParent();
         },
       ),

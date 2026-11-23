@@ -45,5 +45,5 @@ This project is a Flutter application written in Dart.
 - Import players
 - Zahlen direkt als Toggle Button
 - Hint: Number of Rounds can be changed later
-- Bestätigungs-Dialog bei Dismiss Tournament
 - Player active als FilterChip machen
+- Alles durchspielen am AGM Turnier
