@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:js_flutter/components/app_layout.dart';
 import 'package:js_flutter/components/floating_action_button.dart';
+import 'package:js_flutter/components/list.dart';
 import 'package:js_flutter/components/no_data_tile.dart';
 import 'package:js_flutter/components/popup_menu.dart';
 import 'package:js_flutter/icons.dart';
@@ -37,9 +38,10 @@ class ChessTournamentApp extends StatefulWidget {
 
 class _ChessTournamentAppState extends State<ChessTournamentApp> {
   List<Tournament> _tournaments = [];
-  List<Tournament> _filteredTournaments = [];
   bool _isLoading = true;
-  bool _filterNotFinished = false;
+  TournamentFilter _filter = .all;
+  final GlobalKey<MyListState<Tournament>> list =
+      GlobalKey<MyListState<Tournament>>();
 
   @override
   void initState() {
@@ -56,13 +58,13 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
     });
   }
 
-  void _doFiltering() {
-    if (_filterNotFinished) {
-      _filteredTournaments = _tournaments
-          .where((t) => !t.isFinished())
-          .toList();
+  List<Tournament> get _filtered {
+    if (_filter == .inProgress) {
+      return _tournaments.where((t) => !t.isFinished()).toList();
+    } else if (_filter == .finished) {
+      return _tournaments.where((t) => t.isFinished()).toList();
     } else {
-      _filteredTournaments = _tournaments;
+      return _tournaments.toList();
     }
   }
 
@@ -75,7 +77,6 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
     setState(() {
       _tournaments = tournaments;
       _isLoading = false;
-      _doFiltering();
     });
     FileLogger.log('Loaded ${tournaments.length} tournaments');
   }
@@ -90,7 +91,6 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
       FileLogger.log('Adding tournament: ${tournament.title}');
       setState(() {
         _tournaments.insert(0, tournament);
-        _doFiltering();
       });
       tournament.update = () => widget._storage.updateTournament(tournament);
       tournament.update();
@@ -98,13 +98,14 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
     });
   }
 
-  void _deleteTournament(Tournament tournament) {
+  void _deleteTournament(Tournament tournament, {DismissDirection? dismiss}) {
     FileLogger.log('Deleting tournament: ${tournament.title}');
+
+    list.currentState?.remove(tournament, dismiss: dismiss);
     setState(() {
       _tournaments.remove(tournament);
-      _doFiltering();
+      _saveTournaments();
     });
-    _saveTournaments();
   }
 
   void _navigateToTournamentDetails(Tournament tournament) {
@@ -174,6 +175,20 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
 
   @override
   Widget build(BuildContext context) {
+    final noDataFiltered = NoDataTile(
+      text: 'No tournaments match the selected filters.',
+      icon: Icons.filter_alt_off,
+      actionButton: DialogAction(
+        title: 'Clear Filters',
+        onPressed: (_) {
+          setState(() {
+            _filter = .all;
+            list.currentState?.doFiltering(_filtered);
+          });
+        },
+      ),
+    );
+
     return createScaffold(
       context: context,
       actions: [
@@ -208,38 +223,38 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
           : Column(
               crossAxisAlignment: .start,
               children: [
-                TournamentsViewHeader(_tournaments, _filterNotFinished, (
-                  selected,
-                ) {
+                TournamentsViewHeader(_tournaments, _filter, (filter) {
                   setState(() {
-                    _filterNotFinished = selected;
-                    _doFiltering();
+                    _filter = filter;
+                    list.currentState?.doFiltering(_filtered);
                   });
                 }),
                 Expanded(
-                  child: _filteredTournaments.isEmpty
-                      ? NoDataTile(
-                          text: 'No tournaments in progress or started.',
-                          icon: Icons.filter_alt_outlined,
-                        )
-                      : ListView.builder(
-                          padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).textScaler.scale(80),
-                          ),
-                          itemCount: _filteredTournaments.length,
-                          itemBuilder: (context, index) => TournamentCard(
-                            tournament: _filteredTournaments[index],
-                            storage: widget._storage,
-                            onEdit: (tournament) {
-                              _loadTournaments();
-                            },
-                            onDelete: () {
-                              _deleteTournament(_filteredTournaments[index]);
-                            },
-                            onUpdate: _loadTournaments,
-                            onTap: _navigateToTournamentDetails,
-                          ),
-                        ),
+                  child: MyList<Tournament>(
+                    key: list,
+                    initialItems: _tournaments,
+                    itemBuilder: (t, animation) => TournamentCard(
+                      animation: animation,
+                      tournament: t,
+                      storage: widget._storage,
+                      onEdit: (_) {
+                        _loadTournaments();
+                      },
+                      onDelete: () {
+                        _deleteTournament(t);
+                      },
+                      onUpdate: _loadTournaments,
+                      onTap: _navigateToTournamentDetails,
+                    ),
+                    onDismissedPrimary: DismissAction(
+                      title: 'delete',
+                      isDestructive: true,
+                      icon: deleteIcon,
+                      onDismissed: (item) =>
+                          _deleteTournament(item, dismiss: .startToEnd),
+                    ),
+                    noDataTile: noDataFiltered,
+                  ),
                 ),
               ],
             ),
