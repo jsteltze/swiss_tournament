@@ -69,8 +69,15 @@ void showImportConfirmationDialog(
             final index = tournaments.indexOf(t);
             return CheckboxListTile(
               title: Text(t.title),
-              subtitle: Text(
-                '${t.players.length} players${importType == 'Full Tournament' ? ', ${t.numberOfRounds} rounds' : ''}',
+              subtitle: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  Text(
+                    '${t.players.length} players${importType == 'Full Tournament' ? ', ${t.numberOfRounds} rounds' : ''}',
+                  ),
+                  if (existing.any((e) => e.title == t.title))
+                    Warning('Same name already exists.'),
+                ],
               ),
               value: selected[index],
               onChanged: (val) {
