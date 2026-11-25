@@ -1,3 +1,4 @@
+import 'package:js_flutter/components/badge.dart';
 import 'package:js_flutter/components/description.dart';
 import 'package:js_flutter/components/info_panel.dart';
 import 'package:js_flutter/components/info_table_row.dart';
@@ -152,17 +153,37 @@ void showPlayerDetailsDialog(
               '',
               contentWidget: r.getPerformanceWidget(context),
             ).build(context),
-            InfoRow(
-              'Status: ',
-              r.player.leftAt == null ? 'active' : 'withdrawn',
-            ).build(context),
             if (r.player.joinedAt > 0)
               InfoRow(
                 'Joined at: ',
                 'Round ${r.player.joinedAt}',
               ).build(context),
-            if (r.player.leftAt != null)
-              InfoRow('Left at: ', 'Round ${r.player.leftAt}').build(context),
+            InfoRow(
+              'Status: ',
+              '',
+              contentWidget: Row(
+                children: [
+                  MyBadge(
+                    r.player.leftAt == null
+                        ? 'active'
+                        : 'withdrawn\n(Round ${r.player.leftAt})',
+                    maxLines: 2,
+                    variant: .outline,
+                    icon: r.player.leftAt == null
+                        ? Icon(
+                            Icons.check,
+                            color: Colors.green,
+                            applyTextScaling: true,
+                          )
+                        : Icon(
+                            Icons.person_off,
+                            applyTextScaling: true,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                  ),
+                ],
+              ),
+            ).build(context),
           ],
         ),
         if (tournament.rounds.isNotEmpty) ...[

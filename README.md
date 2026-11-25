@@ -50,4 +50,3 @@ This project is a Flutter application written in Dart.
 - Encounter Liste auch als Animierte Liste
 - schicke Animation wenn Ergebnis eingetragen wird
 - Doubletten Check beim Anlegen
-- Status im Player-Dialog als Badge mit check icon
