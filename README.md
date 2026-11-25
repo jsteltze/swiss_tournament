@@ -51,4 +51,3 @@ This project is a Flutter application written in Dart.
 - schicke Animation wenn Ergebnis eingetragen wird
 - Doubletten Check beim Anlegen
 - Status im Player-Dialog als Badge mit check icon
-- Import fügt nicht zur Liste hinzu

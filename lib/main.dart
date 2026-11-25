@@ -158,8 +158,16 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
             context,
             result.path!.split('/').last,
             parsedTournaments,
+            _tournaments,
             widget._storage,
-            _loadTournaments,
+            (imported) {
+              setState(() {
+                for (var i in imported) {
+                  list.currentState?.insert(i, index: _tournaments.length);
+                  _tournaments.add(i);
+                }
+              });
+            },
           );
         }
       } else {

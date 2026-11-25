@@ -6,6 +6,7 @@ import 'package:js_flutter/components/input_field.dart';
 import 'package:js_flutter/components/input_title.dart';
 import 'package:js_flutter/components/link.dart';
 import 'package:js_flutter/components/styled_text.dart';
+import 'package:js_flutter/components/warning.dart';
 import 'package:js_flutter/icons.dart';
 import 'package:js_flutter/utils/datetimex.dart';
 import 'package:js_flutter/utils/dialog_utils.dart';
@@ -23,8 +24,9 @@ void showImportConfirmationDialog(
   BuildContext context,
   String filename,
   List<Tournament> tournaments,
+  List<Tournament> existing,
   TournamentStorage storage,
-  VoidCallback onImportComplete,
+  void Function(List<Tournament>) onImportComplete,
 ) {
   String importType = 'Full Tournament';
   List<bool> selected = List.generate(tournaments.length, (index) => true);
@@ -101,6 +103,7 @@ void showImportConfirmationDialog(
           : (_) async {
               int count = 0;
               FileLogger.log('Importing $importType from $filename');
+              List<Tournament> imported = [];
               for (int i = 0; i < tournaments.length; i++) {
                 if (selected[i]) {
                   final t = tournaments[i];
@@ -111,9 +114,10 @@ void showImportConfirmationDialog(
                   FileLogger.log('Saving imported tournament: ${t.title}');
                   await storage.updateTournament(t);
                   count++;
+                  imported.add(t);
                 }
               }
-              onImportComplete();
+              onImportComplete(imported);
               if (context.mounted) {
                 showSnackbar(context, 'Imported $count tournament(s)');
               }
