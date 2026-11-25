@@ -78,9 +78,7 @@ class Tournament {
        rounds = rounds ?? [],
        createdAt = createdAt ?? DateTime.now(),
        settings = settings ?? TournamentSettings(),
-       update = update ?? (() {}) {
-    sortPlayers();
-  }
+       update = update ?? (() {});
 
   void addPlayer(Player player) {
     players.add(player);
