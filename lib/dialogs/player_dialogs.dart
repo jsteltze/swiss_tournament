@@ -363,8 +363,10 @@ void showEditPlayerDialog(
         crossAxisAlignment: .start,
         children: [
           if (isLateJoin) ...[
-            const Warning(
-              'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
+            const InfoPanel(
+              Text(
+                'The tournament has already started!\nLate join players will be paired in future rounds. The existing order of players will not be affected (added to the bottom of the list).',
+              ),
             ),
             const SizedBox(height: 20),
           ],
