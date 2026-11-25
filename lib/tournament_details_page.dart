@@ -139,13 +139,14 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
               mainAxisAlignment: .end,
               spacing: 10,
               children: [
-                SearchField(
-                  onSearch: (value) {
-                    setState(() {
-                      _playerSearch = value;
-                    });
-                  },
-                ),
+                if (widget.tournament.players.isNotEmpty)
+                  SearchField(
+                    onSearch: (value) {
+                      setState(() {
+                        _playerSearch = value;
+                      });
+                    },
+                  ),
                 if (!widget.tournament.isFinished())
                   createFAB(context, 'Add Player', addIcon, _addPlayer),
               ],
