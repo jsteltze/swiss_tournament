@@ -30,79 +30,67 @@ class _TournamentsViewHeaderState extends State<TournamentsViewHeader> {
         .where((t) => !t.isFinished())
         .length;
     return ViewHeader(
-      padding: EdgeInsets.all(0),
-      Column(
-        children: [
-          ExpansionTile(
-            title: Text(
-              'YOUR TOURNAMENTS',
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: .normal,
+      headerTitle: 'YOUR TOURNAMENTS',
+      onExpansionChanged: (x) {
+        setState(() {
+          _isExpanded = !_isExpanded;
+        });
+      },
+      otherWidgets: [
+        IntrinsicHeight(
+          child: Row(
+            spacing: 8,
+            children: [
+              SizedBox(width: 8),
+              NumberCard(
+                widget.tournaments.length.toString(),
+                isExpanded: _isExpanded,
+                isSelected: widget.initialFilter == .all,
+                onSelect: () {
+                  widget.filterCallback.call(.all);
+                },
+                label: 'All',
+                icon: Icon(
+                  Icons.emoji_events_outlined,
+                  applyTextScaling: true,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
-            ),
-            shape: const Border(),
-            onExpansionChanged: (x) {
-              setState(() {
-                _isExpanded = !_isExpanded;
-              });
-            },
+              NumberCard(
+                countNotFinished.toString(),
+                isExpanded: _isExpanded,
+                isSelected: widget.initialFilter == .inProgress,
+                onSelect: () {
+                  widget.filterCallback.call(.inProgress);
+                },
+                label: 'In Progress',
+                variant: .green,
+                icon: Icon(
+                  Icons.change_circle,
+                  applyTextScaling: true,
+                  color: Colors.green,
+                ),
+              ),
+              NumberCard(
+                (widget.tournaments.length - countNotFinished).toString(),
+                label: 'Finished',
+                isExpanded: _isExpanded,
+                isSelected: widget.initialFilter == .finished,
+                onSelect: () {
+                  widget.filterCallback.call(.finished);
+                },
+                icon: Icon(
+                  Icons.check,
+                  applyTextScaling: true,
+                  color: Colors.green,
+                ),
+              ),
+              SizedBox(width: 8),
+            ],
           ),
-          IntrinsicHeight(
-            child: Row(
-              spacing: 8,
-              children: [
-                SizedBox(width: 8),
-                NumberCard(
-                  widget.tournaments.length.toString(),
-                  isExpanded: _isExpanded,
-                  isSelected: widget.initialFilter == .all,
-                  onSelect: () {
-                    widget.filterCallback.call(.all);
-                  },
-                  label: 'All',
-                  icon: Icon(
-                    Icons.emoji_events_outlined,
-                    applyTextScaling: true,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                NumberCard(
-                  countNotFinished.toString(),
-                  isExpanded: _isExpanded,
-                  isSelected: widget.initialFilter == .inProgress,
-                  onSelect: () {
-                    widget.filterCallback.call(.inProgress);
-                  },
-                  label: 'In Progress',
-                  variant: .green,
-                  icon: Icon(
-                    Icons.change_circle,
-                    applyTextScaling: true,
-                    color: Colors.green,
-                  ),
-                ),
-                NumberCard(
-                  (widget.tournaments.length - countNotFinished).toString(),
-                  label: 'Finished',
-                  isExpanded: _isExpanded,
-                  isSelected: widget.initialFilter == .finished,
-                  onSelect: () {
-                    widget.filterCallback.call(.finished);
-                  },
-                  icon: Icon(
-                    Icons.check,
-                    applyTextScaling: true,
-                    color: Colors.green,
-                  ),
-                ),
-                SizedBox(width: 8),
-              ],
-            ),
-          ),
-          SizedBox(height: 5),
-        ],
-      ),
+        ),
+        SizedBox(height: 5),
+      ],
     );
   }
 }

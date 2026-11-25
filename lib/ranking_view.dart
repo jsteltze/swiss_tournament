@@ -192,37 +192,25 @@ class RankingView extends StatelessWidget {
       mainAxisSize: .max,
       children: [
         ViewHeader(
-          Row(
-            spacing: 15,
-            children: [
-              Icon(
-                Icons.leaderboard,
-                size: 24,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: .start,
-                  children: [
-                    Text(
-                      'Ranking',
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    MyBadge(
-                      '${lastRoundFinished ? 'after' : 'currently running'} round $lastRoundNum',
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () => _showSettingsDialog(context, ratings),
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ],
+          headerTitle: 'RANKING',
+          headerIcon: Icon(
+            Icons.leaderboard,
+            size: 24,
+            color: Theme.of(context).colorScheme.primary,
           ),
+          headerWidgets: [
+            MyBadge(
+              '${lastRoundFinished ? 'after' : 'currently running'} round $lastRoundNum',
+            ),
+          ],
+
+          extensionWidgets: [
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () => _showSettingsDialog(context, ratings),
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ],
         ),
         Expanded(
           child: InteractiveViewer(

@@ -42,8 +42,13 @@ This project is a Flutter application written in Dart.
 - Bugfix: Runde exportieren
 - Bugfix: im exportierten Ranking sind die Performance-Pfeile genau anders rum (und Pfeile können dünner sein)
 - Expansion Icon flip animation
-- Import players
+- Import players (from file / other tournament)
 - Zahlen direkt als Toggle Button
 - Hint: Number of Rounds can be changed later
 - Player active als FilterChip machen
 - Alles durchspielen am AGM Turnier
+- Encounter Liste auch als Animierte Liste
+- schicke Animation wenn Ergebnis eingetragen wird
+- Doubletten Check beim Anlegen
+- Animation direkt in der animated list und nicht in den einzelnen Verwendungen
+- Status im Player-Dialog als Badge mit check icon
