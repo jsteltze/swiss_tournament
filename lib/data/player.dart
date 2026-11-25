@@ -33,4 +33,6 @@ class Player {
   String getRatingText(bool addPrefix) {
     return '${addPrefix ? 'Rating: ' : ''}${rating > 0 ? rating : 'N/A'}';
   }
+
+  String get id => '$name$rating';
 }
