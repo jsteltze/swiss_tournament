@@ -51,7 +51,6 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
       checkFirstTime(
         () => showWelcomeDialog(
           context,
-          Icons.emoji_events_outlined,
           'Thank you for using the Chess Swiss Tournament App!\n\nThis app helps you manage chess tournaments using the Swiss system. All data is stored locally on your device.\n\nPlease note that this is not FIDE-approved software.',
         ),
       );
