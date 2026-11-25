@@ -233,15 +233,14 @@ class _ChessTournamentAppState extends State<ChessTournamentApp> {
                   child: MyList<Tournament>(
                     key: list,
                     initialItems: _tournaments,
-                    itemBuilder: (t, animation) => TournamentCard(
-                      animation: animation,
-                      tournament: t,
+                    itemBuilder: (tournament) => TournamentCard(
+                      tournament: tournament,
                       storage: widget._storage,
                       onEdit: (_) {
                         _loadTournaments();
                       },
                       onDelete: () {
-                        _deleteTournament(t);
+                        _deleteTournament(tournament);
                       },
                       onUpdate: _loadTournaments,
                       onTap: _navigateToTournamentDetails,

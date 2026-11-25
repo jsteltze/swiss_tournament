@@ -14,7 +14,6 @@ class TournamentCard extends StatelessWidget {
   final VoidCallback? onUpdate;
   final Function(Tournament)? onEdit;
   final Function(Tournament)? onTap;
-  final Animation<double>? animation;
 
   const TournamentCard({
     super.key,
@@ -24,18 +23,11 @@ class TournamentCard extends StatelessWidget {
     this.onUpdate,
     this.onEdit,
     this.onTap,
-    this.animation,
   });
 
   @override
   Widget build(BuildContext context) {
-    return animation == null
-        ? buildItem(context)
-        : SizeTransition(
-            key: ValueKey(tournament.id),
-            sizeFactor: animation!,
-            child: buildItem(context),
-          );
+    return buildItem(context);
   }
 
   Widget buildItem(BuildContext context) => TournamentPopupMenu(
