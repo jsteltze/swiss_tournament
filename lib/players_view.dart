@@ -65,34 +65,40 @@ class PlayersView extends StatelessWidget {
                         DialogAction(
                           title: 'Edit',
                           icon: editIcon,
-                          onPressed: (_) => showEditPlayerDialog(
-                            context,
-                            tournament,
-                            player,
-                            onPlayersChanged,
-                          ),
+                          onPressed: tournament.isFinished()
+                              ? null
+                              : (_) => showEditPlayerDialog(
+                                  context,
+                                  tournament,
+                                  player,
+                                  onPlayersChanged,
+                                ),
                         ),
                         if (player.leftAt == null)
                           DialogAction(
                             title: 'Withdraw',
                             icon: Icons.person_off,
-                            onPressed: (_) => confirmDisablePlayer(
-                              context,
-                              tournament,
-                              player,
-                              onPlayersChanged,
-                            ),
+                            onPressed: tournament.isFinished()
+                                ? null
+                                : (_) => confirmDisablePlayer(
+                                    context,
+                                    tournament,
+                                    player,
+                                    onPlayersChanged,
+                                  ),
                           )
                         else
                           DialogAction(
                             title: 'Re-enable',
                             icon: Icons.person,
-                            onPressed: (_) => confirmReenablePlayer(
-                              context,
-                              tournament,
-                              player,
-                              onPlayersChanged,
-                            ),
+                            onPressed: tournament.isFinished()
+                                ? null
+                                : (_) => confirmReenablePlayer(
+                                    context,
+                                    tournament,
+                                    player,
+                                    onPlayersChanged,
+                                  ),
                           ),
                         DialogAction(
                           title: 'Delete',
